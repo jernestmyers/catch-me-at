@@ -16,10 +16,6 @@ const center = {
   lat: 39.9526,
   lng: -75.1652,
 };
-const markerPosition = {
-  lat: 39.9526,
-  lng: -75.1652,
-};
 
 const inputStyle = {
   boxSizing: `border-box`,
@@ -45,6 +41,7 @@ const MyComponent = (props) => {
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerNodeValue, setMarkerNodeValue] = useState();
+  const [infoWindowValues, setInfoWindowValues] = useState([]);
 
   useEffect(() => {
     // window.addEventListener(`click`, getNodeValue);
@@ -67,6 +64,7 @@ const MyComponent = (props) => {
       +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
     );
     isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
+    console.log(infoWindowValues);
   };
 
   const onMapClick = (e) => {
@@ -76,6 +74,7 @@ const MyComponent = (props) => {
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
       setAddMarkerButton(e.pixel.x, e.pixel.y);
+      setFormDetails(e.pixel.x, e.pixel.y);
     }
   };
 
@@ -92,15 +91,42 @@ const MyComponent = (props) => {
   const setAddMarkerButton = (x, y) => {
     document.querySelector(`#add-marker-btn`).style.display = `block`;
     document.querySelector(`#add-marker-btn`).style.position = `absolute`;
-    document.querySelector(`#add-marker-btn`).style.top = `${y}px`;
     document.querySelector(`#add-marker-btn`).style.left = `${x}px`;
+    document.querySelector(`#add-marker-btn`).style.top = `${y}px`;
     document.querySelector(`#add-marker-btn`).style.zIndex = `1000`;
+  };
+
+  const setFormDetails = (x, y) => {
+    // document.querySelector(`#add-marker-details`).style.display = `block`;
+    document.querySelector(`#add-marker-details`).style.position = `absolute`;
+    document.querySelector(`#add-marker-details`).style.left = `${x}px`;
+    document.querySelector(`#add-marker-details`).style.top = `${y}px`;
+    document.querySelector(`#add-marker-details`).style.zIndex = `1000`;
   };
 
   const addMarker = () => {
     console.log(newMarkerPosition);
     console.log(markers);
+    // setMarkers([...markers, newMarkerPosition]);
+    document.querySelector(`#add-marker-details`).style.display = `block`;
+    document.querySelector(`#add-marker-btn`).style.display = `none`;
+  };
+
+  const cancelAdd = (e) => {
+    e.preventDefault();
+    document.querySelector(`#add-marker-details`).style.display = `none`;
+  };
+
+  const handleMarkerAndInfo = (e) => {
+    const inputFields = document.querySelectorAll(`.input-field`);
+    const data = [];
+    inputFields.forEach((input) => {
+      data.push({ id: input.id, value: input.value });
+    });
+    e.preventDefault();
+    document.querySelector(`#add-marker-details`).style.display = `none`;
     setMarkers([...markers, newMarkerPosition]);
+    setInfoWindowValues([...infoWindowValues, data]);
   };
 
   return (
@@ -137,7 +163,16 @@ const MyComponent = (props) => {
               position={markers[markerNodeValue - 1]}
               onCloseClick={() => setIsMarkerClicked(false)}
             >
-              <div>This is Window {markerNodeValue}.</div>
+              <div>
+                <h1>This is Window {markerNodeValue}.</h1>
+                {infoWindowValues[markerNodeValue - 1].map((details) => {
+                  return (
+                    <p>
+                      {details.id}: {details.value}
+                    </p>
+                  );
+                })}
+              </div>
             </InfoWindow>
           ) : null}
           <></>
@@ -148,20 +183,31 @@ const MyComponent = (props) => {
       <form id="add-marker-details">
         <div className="form-field">
           <label htmlFor="location">where:</label>
-          <input type="text" id="place" />
+          <input className="input-field" type="text" id="place" />
         </div>
         <div className="form-field">
           <label htmlFor="when">date:</label>
-          <input type="date" id="when" />
+          <input className="input-field" type="date" id="date" />
         </div>
         <div className="form-field">
           <label htmlFor="when-time">time:</label>
-          <input type="time" id="when-time" />
+          <input className="input-field" type="time" id="time" />
         </div>
         <div className="form-field">
           <label htmlFor="what">the plan:</label>
-          <textarea id="what" rows="5" cols="50"></textarea>
+          <textarea
+            className="input-field"
+            id="what"
+            rows="5"
+            cols="50"
+          ></textarea>
         </div>
+        <button className="add-details-btn" onClick={handleMarkerAndInfo}>
+          add
+        </button>
+        <button className="add-details-btn" onClick={cancelAdd}>
+          cancel
+        </button>
       </form>
       <button onClick={addMarker} id="add-marker-btn">
         add marker
