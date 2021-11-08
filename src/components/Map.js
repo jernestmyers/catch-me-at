@@ -4,6 +4,7 @@ import {
   useJsApiLoader,
   Marker,
   InfoWindow,
+  StandaloneSearchBox,
 } from "@react-google-maps/api";
 
 const containerStyle = {
@@ -15,34 +16,56 @@ const center = {
   lat: 39.9526,
   lng: -75.1652,
 };
-
 const markerPosition = {
   lat: 39.9526,
   lng: -75.1652,
 };
 
-const markerLabel = `1`;
+const inputStyle = {
+  boxSizing: `border-box`,
+  border: `1px solid transparent`,
+  width: `240px`,
+  height: `32px`,
+  padding: `0 12px`,
+  borderRadius: `3px`,
+  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+  fontSize: `14px`,
+  outline: `none`,
+  textOverflow: `ellipses`,
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+};
 
-// function MyComponent() {
+const libraries = [`places`];
+
 const MyComponent = (props) => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isMapClicked, setIsMapClicked] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
+  const [markerNodeValue, setMarkerNodeValue] = useState();
 
   useEffect(() => {
-    // onLoad(map);
-  }, [markers]);
+    // window.addEventListener(`click`, getNodeValue);
+  }, []);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
     region: `US`,
+    libraries: libraries,
   });
 
   const [map, setMap] = React.useState(null);
 
   const onMarkerClick = (e) => {
+    console.log(
+      +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
+    );
+    setMarkerNodeValue(
+      +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
+    );
     isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
   };
 
@@ -54,7 +77,6 @@ const MyComponent = (props) => {
     if (e.pixel) {
       setAddMarkerButton(e.pixel.x, e.pixel.y);
     }
-    // setMarkers([{ lat: e.lat, lng: e.lng }]);
   };
 
   const onLoad = React.useCallback(function callback(map) {
@@ -92,22 +114,32 @@ const MyComponent = (props) => {
           onUnmount={onUnmount}
           onClick={onMapClick}
         >
-          {/* <Marker
-            onClick={onMarkerClick}
-            position={markerPosition}
-            label={markerLabel}
-          ></Marker>
+          {/* <StandaloneSearchBox>
+            <input
+              id="search-bar"
+              type="text"
+              placeholder="Customized your placeholder"
+              style={inputStyle}
+            />
+          </StandaloneSearchBox> */}
+
+          {markers.map((object, index) => {
+            return (
+              <Marker
+                onClick={onMarkerClick}
+                label={`${index + 1}`}
+                position={object}
+              ></Marker>
+            );
+          })}
           {isMarkerClicked ? (
             <InfoWindow
-              position={markerPosition}
+              position={markers[markerNodeValue - 1]}
               onCloseClick={() => setIsMarkerClicked(false)}
             >
-              <div>This is the information in this Window about Marker 1.</div>
+              <div>This is Window {markerNodeValue}.</div>
             </InfoWindow>
-          ) : null} */}
-          {markers.map((object, index) => {
-            return <Marker label={`${index + 1}`} position={object}></Marker>;
-          })}
+          ) : null}
           <></>
         </GoogleMap>
       ) : (
