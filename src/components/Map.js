@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
   Marker,
   InfoWindow,
-  StandaloneSearchBox,
+  // StandaloneSearchBox,
 } from "@react-google-maps/api";
+import uniqid from "uniqid";
 
 const containerStyle = {
   width: "400px",
@@ -17,27 +18,29 @@ const center = {
   lng: -75.1652,
 };
 
-const inputStyle = {
-  boxSizing: `border-box`,
-  border: `1px solid transparent`,
-  width: `240px`,
-  height: `32px`,
-  padding: `0 12px`,
-  borderRadius: `3px`,
-  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-  fontSize: `14px`,
-  outline: `none`,
-  textOverflow: `ellipses`,
-  position: "absolute",
-  top: "10px",
-  right: "10px",
-};
+// const inputStyle = {
+//   boxSizing: `border-box`,
+//   border: `1px solid transparent`,
+//   width: `240px`,
+//   height: `32px`,
+//   padding: `0 12px`,
+//   borderRadius: `3px`,
+//   boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+//   fontSize: `14px`,
+//   outline: `none`,
+//   textOverflow: `ellipses`,
+//   position: "absolute",
+//   top: "10px",
+//   right: "10px",
+// };
 
 const libraries = [`places`];
 
 const MyComponent = (props) => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
-  const [isMapClicked, setIsMapClicked] = useState(false);
+  // const [isMapClicked, setIsMapClicked] = useState(false);
+  const [isEditClicked, setIsEditClicked] = useState(false);
+  const [idOfEditClicked, setIdOfEditClicked] = useState();
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerNodeValue, setMarkerNodeValue] = useState();
@@ -64,9 +67,9 @@ const MyComponent = (props) => {
   };
 
   const onMapClick = (e) => {
-    console.log(e);
-    console.log(e.latLng.lat());
-    console.log(e.latLng.lng());
+    // console.log(e);
+    // console.log(e.latLng.lat());
+    // console.log(e.latLng.lng());
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
       setAddMarkerButton(e.pixel.x, e.pixel.y);
@@ -100,14 +103,13 @@ const MyComponent = (props) => {
   };
 
   const addMarker = () => {
-    console.log(newMarkerPosition);
-    console.log(markers);
     document.querySelector(`#add-marker-details`).style.display = `block`;
     document.querySelector(`#add-marker-btn`).style.display = `none`;
   };
 
   const cancelAdd = (e) => {
     e.preventDefault();
+    setIsEditClicked(false);
     document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
@@ -116,29 +118,68 @@ const MyComponent = (props) => {
     const data = [];
     inputFields.forEach((input) => {
       data.push({ id: input.id, value: input.value });
+      input.value = ``;
     });
     e.preventDefault();
     document.querySelector(`#add-marker-details`).style.display = `none`;
     setMarkers([...markers, newMarkerPosition]);
-    setInfoWindowValues([...infoWindowValues, data]);
+    setInfoWindowValues([...infoWindowValues, { id: uniqid(), data }]);
+    setIsEditClicked(false);
   };
 
   const handleDelete = (e) => {
-    console.log(e.target.id);
+    // console.log(e.target.id);
     setMarkers(
       markers.filter((marker, index) => {
-        if (index !== +e.target.id) {
-          return marker;
-        }
+        return index !== +e.target.id ? marker : null;
       })
     );
     setInfoWindowValues(
       infoWindowValues.filter((data, index) => {
-        if (index !== +e.target.id) {
-          return data;
+        return index !== +e.target.id ? data : null;
+      })
+    );
+  };
+
+  const handleEdit = (e) => {
+    setIsEditClicked(true);
+    setIdOfEditClicked(e.target.id);
+    // console.log(e.target.id);
+    const inputFields = document.querySelectorAll(`.input-field`);
+    document.querySelector(`#add-marker-details`).style.display = `block`;
+    document.querySelector(`#add-marker-details`).style.position = `relative`;
+    document.querySelector(`#add-marker-details`).style.left = `0px`;
+    document.querySelector(`#add-marker-details`).style.top = `0px`;
+    infoWindowValues.filter((object) => {
+      if (object.id === e.target.id) {
+        console.log(object);
+        inputFields[0].value = object.data[0].value;
+        inputFields[1].value = object.data[1].value;
+        inputFields[2].value = object.data[2].value;
+        inputFields[3].value = object.data[3].value;
+      }
+    });
+  };
+
+  const editMarker = (e) => {
+    e.preventDefault();
+    const inputFields = document.querySelectorAll(`.input-field`);
+    const data = [];
+    inputFields.forEach((input) => {
+      data.push({ id: input.id, value: input.value });
+      input.value = ``;
+    });
+    setInfoWindowValues(
+      infoWindowValues.map((object) => {
+        if (object.id === idOfEditClicked) {
+          return { id: object.id, data };
+        } else {
+          return object;
         }
       })
     );
+    setIsEditClicked(false);
+    document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
   return (
@@ -176,12 +217,16 @@ const MyComponent = (props) => {
               onCloseClick={() => setIsMarkerClicked(false)}
             >
               <div>
-                <p>where: {infoWindowValues[markerNodeValue - 1][0].value}</p>
                 <p>
-                  when: {infoWindowValues[markerNodeValue - 1][1].value} @{" "}
-                  {infoWindowValues[markerNodeValue - 1][2].value}
+                  where: {infoWindowValues[markerNodeValue - 1].data[0].value}
                 </p>
-                <p>what: {infoWindowValues[markerNodeValue - 1][3].value}</p>
+                <p>
+                  when: {infoWindowValues[markerNodeValue - 1].data[1].value} @{" "}
+                  {infoWindowValues[markerNodeValue - 1].data[2].value}
+                </p>
+                <p>
+                  what: {infoWindowValues[markerNodeValue - 1].data[3].value}
+                </p>
               </div>
             </InfoWindow>
           ) : null}
@@ -191,16 +236,18 @@ const MyComponent = (props) => {
         <></>
       )}
       <div id="itinerary-container">
-        {infoWindowValues.map((details, index) => {
+        {infoWindowValues.map((object, index) => {
           return (
             <div>
               <h1>thing {index + 1}</h1>
-              <p>where: {details[0].value}</p>
+              <p>where: {object.data[0].value}</p>
               <p>
-                when: {details[1].value} @ {details[2].value}
+                when: {object.data[1].value} @ {object.data[2].value}
               </p>
-              <p>what: {details[3].value}</p>
-              <button id={index}>edit</button>
+              <p>what: {object.data[3].value}</p>
+              <button onClick={handleEdit} id={object.id}>
+                edit
+              </button>
               <button onClick={handleDelete} id={index}>
                 delete
               </button>
@@ -230,13 +277,24 @@ const MyComponent = (props) => {
             cols="50"
           ></textarea>
         </div>
-        <button className="add-details-btn" onClick={handleMarkerAndInfo}>
+        {/* <button className="add-details-btn" onClick={handleMarkerAndInfo}>
           add
-        </button>
+        </button> */}
+        {!isEditClicked ? (
+          <button onClick={handleMarkerAndInfo} className="add-details-btn">
+            add
+          </button>
+        ) : (
+          <button onClick={editMarker} id="edit-details-btn">
+            confirm edit
+          </button>
+        )}
+
         <button className="add-details-btn" onClick={cancelAdd}>
           cancel
         </button>
       </form>
+
       <button onClick={addMarker} id="add-marker-btn">
         add marker
       </button>
