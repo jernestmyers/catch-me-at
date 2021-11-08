@@ -43,10 +43,6 @@ const MyComponent = (props) => {
   const [markerNodeValue, setMarkerNodeValue] = useState();
   const [infoWindowValues, setInfoWindowValues] = useState([]);
 
-  useEffect(() => {
-    // window.addEventListener(`click`, getNodeValue);
-  }, []);
-
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -97,7 +93,6 @@ const MyComponent = (props) => {
   };
 
   const setFormDetails = (x, y) => {
-    // document.querySelector(`#add-marker-details`).style.display = `block`;
     document.querySelector(`#add-marker-details`).style.position = `absolute`;
     document.querySelector(`#add-marker-details`).style.left = `${x}px`;
     document.querySelector(`#add-marker-details`).style.top = `${y}px`;
@@ -107,7 +102,6 @@ const MyComponent = (props) => {
   const addMarker = () => {
     console.log(newMarkerPosition);
     console.log(markers);
-    // setMarkers([...markers, newMarkerPosition]);
     document.querySelector(`#add-marker-details`).style.display = `block`;
     document.querySelector(`#add-marker-btn`).style.display = `none`;
   };
@@ -127,6 +121,24 @@ const MyComponent = (props) => {
     document.querySelector(`#add-marker-details`).style.display = `none`;
     setMarkers([...markers, newMarkerPosition]);
     setInfoWindowValues([...infoWindowValues, data]);
+  };
+
+  const handleDelete = (e) => {
+    console.log(e.target.id);
+    setMarkers(
+      markers.filter((marker, index) => {
+        if (index !== +e.target.id) {
+          return marker;
+        }
+      })
+    );
+    setInfoWindowValues(
+      infoWindowValues.filter((data, index) => {
+        if (index !== +e.target.id) {
+          return data;
+        }
+      })
+    );
   };
 
   return (
@@ -164,14 +176,12 @@ const MyComponent = (props) => {
               onCloseClick={() => setIsMarkerClicked(false)}
             >
               <div>
-                <h1>This is Window {markerNodeValue}.</h1>
-                {infoWindowValues[markerNodeValue - 1].map((details) => {
-                  return (
-                    <p>
-                      {details.id}: {details.value}
-                    </p>
-                  );
-                })}
+                <p>where: {infoWindowValues[markerNodeValue - 1][0].value}</p>
+                <p>
+                  when: {infoWindowValues[markerNodeValue - 1][1].value} @{" "}
+                  {infoWindowValues[markerNodeValue - 1][2].value}
+                </p>
+                <p>what: {infoWindowValues[markerNodeValue - 1][3].value}</p>
               </div>
             </InfoWindow>
           ) : null}
@@ -180,6 +190,24 @@ const MyComponent = (props) => {
       ) : (
         <></>
       )}
+      <div id="itinerary-container">
+        {infoWindowValues.map((details, index) => {
+          return (
+            <div>
+              <h1>thing {index + 1}</h1>
+              <p>where: {details[0].value}</p>
+              <p>
+                when: {details[1].value} @ {details[2].value}
+              </p>
+              <p>what: {details[3].value}</p>
+              <button id={index}>edit</button>
+              <button onClick={handleDelete} id={index}>
+                delete
+              </button>
+            </div>
+          );
+        })}
+      </div>
       <form id="add-marker-details">
         <div className="form-field">
           <label htmlFor="location">where:</label>
