@@ -1,24 +1,85 @@
 import React, { useState, useEffect } from "react";
-import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 
-export const Maps = (props) => {
-  const mapStyles = {
-    width: "100%",
-    height: "100%",
+const containerStyle = {
+  width: "400px",
+  height: "400px",
+};
+
+const center = {
+  lat: 39.9526,
+  lng: -75.1652,
+};
+
+const markerPosition = {
+  lat: 39.9526,
+  lng: -75.1652,
+};
+
+const markerLabel = `1`;
+
+// function MyComponent() {
+const MyComponent = () => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
+    region: `US`,
+  });
+
+  const [map, setMap] = React.useState(null);
+
+  const onMarkerClick = () => {
+    isClicked ? setIsClicked(false) : setIsClicked(true);
   };
 
-  return (
-    <Map
-      google={props.google}
-      zoom={8}
-      style={mapStyles}
-      initialCenter={{ lat: 9.761927, lng: 79.95244 }}
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds();
+    map.fitBounds(bounds);
+    setMap(map);
+  }, []);
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
+  return isLoaded ? (
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={10}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
     >
-      <Marker position={{ lat: 9.761927, lng: 79.95244 }} />
-    </Map>
+      <Marker
+        onClick={onMarkerClick}
+        position={markerPosition}
+        label={markerLabel}
+      ></Marker>
+      {isClicked ? (
+        <InfoWindow
+          position={markerPosition}
+          onCloseClick={() => setIsClicked(false)}
+        >
+          <div>This is the information in this Window about Marker 1.</div>
+        </InfoWindow>
+      ) : null}
+      {/* <InfoWindow position={markerPosition}>
+         <div>This is the information in this Window about Marker 1.</div>
+       </InfoWindow> */}
+      {/* Child components, such as markers, info windows, etc. */}
+
+      <></>
+    </GoogleMap>
+  ) : (
+    <></>
   );
 };
 
-export default GoogleApiWrapper({
-  apiKey: process.env.REACT_APP_MAP_API_KEY,
-})(Maps);
+export default React.memo(MyComponent);
