@@ -140,3 +140,7 @@ table {
 #add-marker-btn {
   display: none;
 }
+
+#add-marker-details {
+  display: none;
+}

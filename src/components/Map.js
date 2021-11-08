@@ -51,7 +51,9 @@ const MyComponent = (props) => {
     console.log(e.latLng.lat());
     console.log(e.latLng.lng());
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-    setAddMarkerButton(e.pixel.x, e.pixel.y);
+    if (e.pixel) {
+      setAddMarkerButton(e.pixel.x, e.pixel.y);
+    }
     // setMarkers([{ lat: e.lat, lng: e.lng }]);
   };
 
@@ -111,6 +113,24 @@ const MyComponent = (props) => {
       ) : (
         <></>
       )}
+      <form id="add-marker-details">
+        <div className="form-field">
+          <label htmlFor="location">where:</label>
+          <input type="text" id="place" />
+        </div>
+        <div className="form-field">
+          <label htmlFor="when">date:</label>
+          <input type="date" id="when" />
+        </div>
+        <div className="form-field">
+          <label htmlFor="when-time">time:</label>
+          <input type="time" id="when-time" />
+        </div>
+        <div className="form-field">
+          <label htmlFor="what">the plan:</label>
+          <textarea id="what" rows="5" cols="50"></textarea>
+        </div>
+      </form>
       <button onClick={addMarker} id="add-marker-btn">
         add marker
       </button>
