@@ -9,8 +9,8 @@ import {
 import uniqid from "uniqid";
 
 const containerStyle = {
-  width: "400px",
-  height: "400px",
+  width: "300px",
+  height: "300px",
 };
 
 const center = {
@@ -36,9 +36,8 @@ const center = {
 
 const libraries = [`places`];
 
-const MyComponent = (props) => {
+const MapComponent = (props) => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
-  // const [isMapClicked, setIsMapClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [idOfEditClicked, setIdOfEditClicked] = useState();
   const [markers, setMarkers] = useState([]);
@@ -67,9 +66,6 @@ const MyComponent = (props) => {
   };
 
   const onMapClick = (e) => {
-    // console.log(e);
-    // console.log(e.latLng.lat());
-    // console.log(e.latLng.lng());
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
       setAddMarkerButton(e.pixel.x, e.pixel.y);
@@ -128,7 +124,6 @@ const MyComponent = (props) => {
   };
 
   const handleDelete = (e) => {
-    // console.log(e.target.id);
     setMarkers(
       markers.filter((marker, index) => {
         return index !== +e.target.id ? marker : null;
@@ -144,7 +139,6 @@ const MyComponent = (props) => {
   const handleEdit = (e) => {
     setIsEditClicked(true);
     setIdOfEditClicked(e.target.id);
-    // console.log(e.target.id);
     const inputFields = document.querySelectorAll(`.input-field`);
     document.querySelector(`#add-marker-details`).style.display = `block`;
     document.querySelector(`#add-marker-details`).style.position = `relative`;
@@ -182,6 +176,19 @@ const MyComponent = (props) => {
     document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
+  const handleSaveMap = (e) => {
+    console.log(e.target);
+    // e.target.style.display = `none`;
+    props.setMapsSaved([
+      ...props.mapsSaved,
+      {
+        mapID: uniqid(),
+        marker: markers,
+        info: infoWindowValues,
+      },
+    ]);
+  };
+
   return (
     <div id="map">
       {isLoaded ? (
@@ -201,7 +208,6 @@ const MyComponent = (props) => {
               style={inputStyle}
             />
           </StandaloneSearchBox> */}
-
           {markers.map((object, index) => {
             return (
               <Marker
@@ -277,9 +283,6 @@ const MyComponent = (props) => {
             cols="50"
           ></textarea>
         </div>
-        {/* <button className="add-details-btn" onClick={handleMarkerAndInfo}>
-          add
-        </button> */}
         {!isEditClicked ? (
           <button onClick={handleMarkerAndInfo} className="add-details-btn">
             add
@@ -294,7 +297,7 @@ const MyComponent = (props) => {
           cancel
         </button>
       </form>
-
+      <button onClick={handleSaveMap}>save map</button>
       <button onClick={addMarker} id="add-marker-btn">
         add marker
       </button>
@@ -302,4 +305,4 @@ const MyComponent = (props) => {
   );
 };
 
-export default React.memo(MyComponent);
+export default React.memo(MapComponent);

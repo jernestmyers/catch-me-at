@@ -129,6 +129,10 @@ table {
 }
 /* END OF CSS RESET */
 
+#map {
+  display: flex;
+}
+
 #add-marker-btn {
   display: none;
 }
