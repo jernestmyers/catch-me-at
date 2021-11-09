@@ -13,10 +13,18 @@ const containerStyle = {
   height: "300px",
 };
 
-const center = {
-  lat: 39.9526,
-  lng: -75.1652,
-};
+// const center = {
+//   lat: 39.9526,
+//   lng: -75.1652,
+// };
+
+const defaultBounds = [
+  {
+    lat: 38.393,
+    lng: -78.0392,
+  },
+  { lat: 41.902, lng: -72.4059 },
+];
 
 // const inputStyle = {
 //   boxSizing: `border-box`,
@@ -74,7 +82,10 @@ const MapComponent = (props) => {
   };
 
   const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
+    const bounds = new window.google.maps.LatLngBounds(
+      defaultBounds[0],
+      defaultBounds[1]
+    );
     map.fitBounds(bounds);
     setMap(map);
   }, []);
@@ -194,8 +205,8 @@ const MapComponent = (props) => {
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
+          // center={center}
+          // zoom={10}
           onLoad={onLoad}
           onUnmount={onUnmount}
           onClick={onMapClick}

@@ -35,8 +35,21 @@ const center = {
 
 const libraries = [`places`];
 
+function sortBounds(array) {
+  const sortLatLng = array
+    .sort((a, b) => {
+      return a.lat - b.lat;
+    })
+    .sort((a, b) => {
+      return a.lng - b.lng;
+    });
+  //   return [{ sw: sortLatLng[0] }, { ne: sortLatLng[sortLatLng.length - 1] }];
+  return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
+}
+
 const ShowMap = (props) => {
   console.log(props);
+  console.log(sortBounds(props.mapObject.marker));
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -47,8 +60,12 @@ const ShowMap = (props) => {
   const [map, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
+    const bounds = new window.google.maps.LatLngBounds(
+      sortBounds(props.mapObject.marker)[0],
+      sortBounds(props.mapObject.marker)[1]
+    );
     map.fitBounds(bounds);
+    map.getCenter(bounds);
     setMap(map);
   }, []);
 
