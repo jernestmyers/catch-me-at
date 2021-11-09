@@ -139,4 +139,6 @@ table {
 
 #add-marker-details {
   display: none;
+  background-color: #3a2e39;
+  color: #f4d8cd;
 }

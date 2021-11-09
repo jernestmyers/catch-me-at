@@ -67,7 +67,6 @@ const ShowMap = (props) => {
           onUnmount={onUnmount}
         >
           {props.mapObject.marker.map((object, index) => {
-            // console.log(object);
             return (
               <Marker label={`${index + 1}`} position={object}>
                 <InfoWindow position={object}>
@@ -83,44 +82,12 @@ const ShowMap = (props) => {
               </Marker>
             );
           })}
-          {/* <Marker label={`${index + 1}`} position={object}></Marker>
-          <InfoWindow position={markers[markerNodeValue - 1]}>
-            <div>
-              <p>
-                where: {infoWindowValues[markerNodeValue - 1].data[0].value}
-              </p>
-              <p>
-                when: {infoWindowValues[markerNodeValue - 1].data[1].value} @{" "}
-                {infoWindowValues[markerNodeValue - 1].data[2].value}
-              </p>
-              <p>what: {infoWindowValues[markerNodeValue - 1].data[3].value}</p>
-            </div>
-          </InfoWindow> */}
+
           <></>
         </GoogleMap>
       ) : (
         <></>
       )}
-      {/* <div id="itinerary-container">
-        {infoWindowValues.map((object, index) => {
-          return (
-            <div>
-              <h1>thing {index + 1}</h1>
-              <p>where: {object.data[0].value}</p>
-              <p>
-                when: {object.data[1].value} @ {object.data[2].value}
-              </p>
-              <p>what: {object.data[3].value}</p>
-              <button onClick={handleEdit} id={object.id}>
-                edit
-              </button>
-              <button onClick={handleDelete} id={index}>
-                delete
-              </button>
-            </div>
-          );
-        })}
-      </div> */}
     </div>
   );
 };
