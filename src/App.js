@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import MapComponent from "./components/Map.js";
 import ShowMap from "./components/ShowMap.js";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
+import { getFirebaseConfig } from "./firebase-config.js";
 import "./App.css";
+
+const firebaseAppConfig = getFirebaseConfig();
+initializeApp(firebaseAppConfig);
 
 function App() {
   const [mapsSaved, setMapsSaved] = useState([
