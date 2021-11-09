@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { getFirebaseConfig } from "./firebase-config.js";
 import "./App.css";
+import AuthenticateUser from "./components/AuthenticateUser.js";
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
@@ -48,7 +49,10 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">catch me at _______</header>
+      <header className="App-header">
+        <h1>catch me at _______</h1>
+        <AuthenticateUser></AuthenticateUser>
+      </header>
       <MapComponent
         mapsSaved={mapsSaved}
         setMapsSaved={setMapsSaved}
