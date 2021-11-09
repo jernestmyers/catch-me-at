@@ -13,11 +13,6 @@ const containerStyle = {
   height: "300px",
 };
 
-// const center = {
-//   lat: 39.9526,
-//   lng: -75.1652,
-// };
-
 const defaultBounds = [
   {
     lat: 38.393,
@@ -25,6 +20,10 @@ const defaultBounds = [
   },
   { lat: 41.902, lng: -72.4059 },
 ];
+
+const options = {
+  controlSize: 20,
+};
 
 // const inputStyle = {
 //   boxSizing: `border-box`,
@@ -87,6 +86,7 @@ const MapComponent = (props) => {
       defaultBounds[1]
     );
     map.fitBounds(bounds);
+    map.getCenter(bounds);
     setMap(map);
   }, []);
 
@@ -188,8 +188,6 @@ const MapComponent = (props) => {
   };
 
   const handleSaveMap = (e) => {
-    console.log(e.target);
-    // e.target.style.display = `none`;
     props.setMapsSaved([
       ...props.mapsSaved,
       {
@@ -207,6 +205,7 @@ const MapComponent = (props) => {
           mapContainerStyle={containerStyle}
           // center={center}
           // zoom={10}
+          options={options}
           onLoad={onLoad}
           onUnmount={onUnmount}
           onClick={onMapClick}

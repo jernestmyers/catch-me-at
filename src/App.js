@@ -41,14 +41,9 @@ function App() {
         mapsSaved={mapsSaved}
         setMapsSaved={setMapsSaved}
       ></MapComponent>
-      {/* {mapsSaved */}
       {mapsSaved.map((object, index) => {
         return <ShowMap mapObject={object}></ShowMap>;
       })}
-      {/* : null} */}
-      {/* {mapsSaved.map((object, index) => {
-        <ShowMap mapObject={object}></ShowMap>;
-      })} */}
       <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
     </div>
   );

@@ -12,10 +12,14 @@ const containerStyle = {
   height: "300px",
 };
 
-const center = {
-  lat: 39.9526,
-  lng: -75.1652,
+const options = {
+  controlSize: 20,
 };
+
+// const center = {
+//   lat: 39.9526,
+//   lng: -75.1652,
+// };
 
 // const inputStyle = {
 //   boxSizing: `border-box`,
@@ -43,7 +47,6 @@ function sortBounds(array) {
     .sort((a, b) => {
       return a.lng - b.lng;
     });
-  //   return [{ sw: sortLatLng[0] }, { ne: sortLatLng[sortLatLng.length - 1] }];
   return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
 }
 
@@ -78,10 +81,12 @@ const ShowMap = (props) => {
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
+          // center={center}
+          //   zoom={10}
+          options={options}
           onLoad={onLoad}
           onUnmount={onUnmount}
+          onClick={(e) => console.log(e)}
         >
           {props.mapObject.marker.map((object, index) => {
             return (
@@ -99,7 +104,6 @@ const ShowMap = (props) => {
               </Marker>
             );
           })}
-
           <></>
         </GoogleMap>
       ) : (

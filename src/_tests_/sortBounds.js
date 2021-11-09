@@ -6,6 +6,6 @@ function sortBounds(array) {
     .sort((a, b) => {
       return a.lng - b.lng;
     });
-  return { sw: sortLatLng[0], ne: sortLatLng[sortLatLng.length - 1] };
+  return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
 }
 module.exports = sortBounds;

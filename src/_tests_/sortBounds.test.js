@@ -10,14 +10,14 @@ test("sorts lat and long for SW and NE bounds", () => {
     { lat: 4, lng: -6 },
     { lat: 5, lng: -10 },
   ];
-  expect(sortBounds(objectArray)).toEqual({
-    sw: {
+  expect(sortBounds(objectArray)).toEqual([
+    {
       lat: -3,
       lng: -10,
     },
-    ne: {
+    {
       lat: 5,
       lng: -3,
     },
-  });
+  ]);
 });
