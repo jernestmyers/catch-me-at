@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -15,27 +15,6 @@ const containerStyle = {
 const options = {
   controlSize: 20,
 };
-
-// const center = {
-//   lat: 39.9526,
-//   lng: -75.1652,
-// };
-
-// const inputStyle = {
-//   boxSizing: `border-box`,
-//   border: `1px solid transparent`,
-//   width: `240px`,
-//   height: `32px`,
-//   padding: `0 12px`,
-//   borderRadius: `3px`,
-//   boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-//   fontSize: `14px`,
-//   outline: `none`,
-//   textOverflow: `ellipses`,
-//   position: "absolute",
-//   top: "10px",
-//   right: "10px",
-// };
 
 const libraries = [`places`];
 
@@ -60,9 +39,9 @@ const ShowMap = (props) => {
     libraries: libraries,
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(
       sortBounds(props.mapObject.marker)[0],
       sortBounds(props.mapObject.marker)[1]

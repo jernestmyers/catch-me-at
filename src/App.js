@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import MapComponent from "./components/Map.js";
-import ShowMap from "./components/ShowMap.js";
+import CreateOrEditMap from "./components/CreateOrEditMap.js";
+import RenderMaps from "./components/RenderMaps.js";
 import { initializeApp } from "firebase/app";
 // import {
 //   getAuth,
@@ -59,13 +59,13 @@ function App() {
           setUserAuth={setUserAuth}
         ></AuthenticateUser>
       </header>
-      <MapComponent
+      <CreateOrEditMap
         mapsSaved={mapsSaved}
         setMapsSaved={setMapsSaved}
-      ></MapComponent>
-      {mapsSaved.map((object, index) => {
-        return <ShowMap mapObject={object}></ShowMap>;
-      })}
+      ></CreateOrEditMap>
+      {/* {mapsSaved.map((object, index) => {
+        return <RenderMaps mapObject={object}></RenderMaps>;
+      })} */}
       <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
     </div>
   );

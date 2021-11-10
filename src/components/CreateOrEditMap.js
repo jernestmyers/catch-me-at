@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -7,6 +7,8 @@ import {
   // StandaloneSearchBox,
 } from "@react-google-maps/api";
 import uniqid from "uniqid";
+import ItineraryForm from "./ItineraryForm";
+import ViewItinerary from "./ViewItinerary";
 
 const containerStyle = {
   width: "300px",
@@ -43,7 +45,7 @@ const options = {
 
 const libraries = [`places`];
 
-const MapComponent = (props) => {
+const CreateOrEditMap = (props) => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [idOfEditClicked, setIdOfEditClicked] = useState();
@@ -52,6 +54,7 @@ const MapComponent = (props) => {
   const [markerNodeValue, setMarkerNodeValue] = useState();
   const [infoWindowValues, setInfoWindowValues] = useState([]);
 
+  // !!!!!!---- BEGIN: react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -59,7 +62,22 @@ const MapComponent = (props) => {
     libraries: libraries,
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = useState(null);
+
+  const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(
+      defaultBounds[0],
+      defaultBounds[1]
+    );
+    map.fitBounds(bounds);
+    map.getCenter(bounds);
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+  // !!!!!!---- END: react-google-maps logic ----!!!!!! //
 
   const onMarkerClick = (e) => {
     console.log(
@@ -73,26 +91,13 @@ const MapComponent = (props) => {
   };
 
   const onMapClick = (e) => {
+    console.log(e);
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
-      setAddMarkerButton(e.pixel.x, e.pixel.y);
-      setFormDetails(e.pixel.x, e.pixel.y);
+      setAddMarkerButton(e.domEvent.clientX, e.domEvent.clientY);
+      setFormDetails(e.domEvent.clientX, e.domEvent.clientY);
     }
   };
-
-  const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(
-      defaultBounds[0],
-      defaultBounds[1]
-    );
-    map.fitBounds(bounds);
-    map.getCenter(bounds);
-    setMap(map);
-  }, []);
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null);
-  }, []);
 
   const setAddMarkerButton = (x, y) => {
     document.querySelector(`#add-marker-btn`).style.display = `block`;
@@ -188,14 +193,17 @@ const MapComponent = (props) => {
   };
 
   const handleSaveMap = (e) => {
-    props.setMapsSaved([
-      ...props.mapsSaved,
-      {
-        mapID: uniqid(),
-        marker: markers,
-        info: infoWindowValues,
-      },
-    ]);
+    if (markers.length) {
+      console.log(markers);
+      props.setMapsSaved([
+        ...props.mapsSaved,
+        {
+          mapID: uniqid(),
+          marker: markers,
+          info: infoWindowValues,
+        },
+      ]);
+    }
   };
 
   return (
@@ -251,7 +259,7 @@ const MapComponent = (props) => {
       ) : (
         <></>
       )}
-      <div id="itinerary-container">
+      {/* <div id="itinerary-container">
         {infoWindowValues.map((object, index) => {
           return (
             <div>
@@ -270,8 +278,8 @@ const MapComponent = (props) => {
             </div>
           );
         })}
-      </div>
-      <form id="add-marker-details">
+      </div> */}
+      {/* <form id="add-marker-details">
         <div className="form-field">
           <label htmlFor="location">where:</label>
           <input className="input-field" type="text" id="place" />
@@ -306,7 +314,18 @@ const MapComponent = (props) => {
         <button className="add-details-btn" onClick={cancelAdd}>
           cancel
         </button>
-      </form>
+      </form> */}
+      <ViewItinerary
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+        infoWindowValues={infoWindowValues}
+      ></ViewItinerary>
+      <ItineraryForm
+        isEditClicked={isEditClicked}
+        handleMarkerAndInfo={handleMarkerAndInfo}
+        editMarker={editMarker}
+        cancelAdd={cancelAdd}
+      ></ItineraryForm>
       <button onClick={handleSaveMap}>save map</button>
       <button onClick={addMarker} id="add-marker-btn">
         add marker
@@ -315,4 +334,4 @@ const MapComponent = (props) => {
   );
 };
 
-export default React.memo(MapComponent);
+export default React.memo(CreateOrEditMap);
