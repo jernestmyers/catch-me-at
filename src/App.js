@@ -17,6 +17,8 @@ const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
 
 function App() {
+  console.log(`app mounts`);
+  const [userAuth, setUserAuth] = useState();
   const [mapsSaved, setMapsSaved] = useState([
     {
       mapID: "123456",
@@ -47,11 +49,21 @@ function App() {
     },
   ]);
 
+  // const authStateObserver = (user) => {
+  //   if (user) {
+  //     setUserAuth(getAuth().currentUser);
+  //   }
+  // };
+  // onAuthStateChanged(getAuth(), authStateObserver);
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>catch me at _______</h1>
-        <AuthenticateUser></AuthenticateUser>
+        <AuthenticateUser
+          userAuth={userAuth}
+          setUserAuth={setUserAuth}
+        ></AuthenticateUser>
       </header>
       <MapComponent
         mapsSaved={mapsSaved}

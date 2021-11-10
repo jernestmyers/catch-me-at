@@ -142,3 +142,9 @@ table {
   background-color: #3a2e39;
   color: #f4d8cd;
 }
+
+#sign-in-btn,
+#sign-out-btn,
+#display-user-name {
+  display: hidden;
+}
