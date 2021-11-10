@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import MapComponent from "./components/Map.js";
 import ShowMap from "./components/ShowMap.js";
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+// import {
+//   getAuth,
+//   onAuthStateChanged,
+//   GoogleAuthProvider,
+//   signInWithPopup,
+//   signOut,
+// } from "firebase/auth";
 import { getFirebaseConfig } from "./firebase-config.js";
 import "./App.css";
 import AuthenticateUser from "./components/AuthenticateUser.js";
@@ -19,6 +19,7 @@ initializeApp(firebaseAppConfig);
 function App() {
   console.log(`app mounts`);
   const [userAuth, setUserAuth] = useState();
+
   const [mapsSaved, setMapsSaved] = useState([
     {
       mapID: "123456",
@@ -48,13 +49,6 @@ function App() {
       ],
     },
   ]);
-
-  // const authStateObserver = (user) => {
-  //   if (user) {
-  //     setUserAuth(getAuth().currentUser);
-  //   }
-  // };
-  // onAuthStateChanged(getAuth(), authStateObserver);
 
   return (
     <div className="App">
