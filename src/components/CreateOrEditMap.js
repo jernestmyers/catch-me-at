@@ -24,15 +24,6 @@ const defaultBounds = [
   { lat: 41.902, lng: -72.4059 },
 ];
 
-const testBounds = [
-  // displays the northeast
-  {
-    lat: 30,
-    lng: -70,
-  },
-  { lat: 40, lng: -75 },
-];
-
 const options = {
   controlSize: 20,
 };
@@ -356,9 +347,6 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button>
-      <button onClick={() => map.fitBounds(place[0].geometry.viewport)}>
-        test bounds
       </button>
     </div>
   );
