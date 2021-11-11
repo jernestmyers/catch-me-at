@@ -128,11 +128,17 @@ const CreateOrEditMap = (props) => {
         console.log(places[0].name);
         console.log(places[0].formatted_address);
         console.log(places[0].url);
-        setPlace(places);
+        setPlace(places[0]);
         document.getElementById("search-bar").value = ``;
       });
     }
   }, [searchBar, setSearchBar]);
+
+  useEffect(() => {
+    if (place) {
+      map.fitBounds(place.geometry.viewport);
+    }
+  }, [place, setPlace]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
   const onMarkerClick = (e) => {
