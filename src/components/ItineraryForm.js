@@ -31,11 +31,14 @@ const ItineraryForm = (props) => {
           add
         </button>
       ) : (
-        <button onClick={props.editMarker} id="edit-details-btn">
+        <button
+          onClick={props.confirmEditsToMarkerAndData}
+          id="edit-details-btn"
+        >
           confirm edit
         </button>
       )}
-      <button className="add-details-btn" onClick={props.cancelAdd}>
+      <button className="add-details-btn" onClick={props.cancelAddMarker}>
         cancel
       </button>
     </form>

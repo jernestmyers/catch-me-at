@@ -29,7 +29,7 @@ function sortBounds(array) {
   return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
 }
 
-const ShowMap = (props) => {
+const RenderMaps = (props) => {
   console.log(props);
   console.log(sortBounds(props.mapObject.marker));
   const { isLoaded } = useJsApiLoader({
@@ -92,4 +92,4 @@ const ShowMap = (props) => {
   );
 };
 
-export default React.memo(ShowMap);
+export default React.memo(RenderMaps);

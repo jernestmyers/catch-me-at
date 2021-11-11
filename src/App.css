@@ -129,8 +129,25 @@ table {
 }
 /* END OF CSS RESET */
 
+html,
+body,
+.App {
+  height: 100%;
+  width: 100%;
+}
+
+.App,
 #map {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#map {
+  width: 400px;
+  height: 400px;
+  justify-content: space-evenly;
 }
 
 #add-marker-btn {
@@ -147,4 +164,9 @@ table {
 #sign-out-btn,
 #display-user-name {
   display: hidden;
+}
+
+#itinerary-container {
+  display: flex;
+  gap: 20px;
 }

@@ -14,10 +14,10 @@ const ViewItinerary = (props) => {
               when: {object.data[1].value} @ {object.data[2].value}
             </p>
             <p>what: {object.data[3].value}</p>
-            <button onClick={props.handleEdit} id={object.id}>
+            <button onClick={props.prepareToEditMarkerAndData} id={object.id}>
               edit
             </button>
-            <button onClick={props.handleDelete} id={index}>
+            <button onClick={props.deleteMarkerAndData} id={index}>
               delete
             </button>
           </div>
