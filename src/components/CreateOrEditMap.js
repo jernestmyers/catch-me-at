@@ -96,43 +96,8 @@ const CreateOrEditMap = (props) => {
       defaultBounds[1]
     );
 
-    // const request = {
-    //   placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-    // };
     const service = new window.google.maps.places.PlacesService(map);
     setPlacesService(service);
-
-    // service.getDetails(request, (place, status) => {
-    //   if (
-    //     status === window.google.maps.places.PlacesServiceStatus.OK &&
-    //     place &&
-    //     place.geometry &&
-    //     place.geometry.location
-    //   ) {
-    //     const marker = new window.google.maps.Marker({
-    //       map,
-    //       position: place.geometry.location,
-    //     });
-
-    //     window.google.maps.event.addListener(marker, "click", () => {
-    //       const content = document.createElement("div");
-    //       const nameElement = document.createElement("h2");
-
-    //       nameElement.textContent = place.name;
-    //       content.appendChild(nameElement);
-
-    //       const placeIdElement = document.createElement("p");
-
-    //       placeIdElement.textContent = place.place_id;
-    //       content.appendChild(placeIdElement);
-
-    //       const placeAddressElement = document.createElement("p");
-
-    //       placeAddressElement.textContent = place.formatted_address;
-    //       content.appendChild(placeAddressElement);
-    //     });
-    //   }
-    // });
 
     map.fitBounds(bounds);
     map.getCenter(bounds);
@@ -188,6 +153,7 @@ const CreateOrEditMap = (props) => {
   const onMapClick = (e) => {
     document.querySelector(`#add-marker-details`).style.display = `none`;
     console.log(e);
+    console.log({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.placeId) {
       console.log(e.placeId);
       setPlaceId(e.placeId);
