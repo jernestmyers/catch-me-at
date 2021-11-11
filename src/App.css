@@ -141,6 +141,12 @@ body,
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+#map-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
 }
 
@@ -148,6 +154,7 @@ body,
   width: 400px;
   height: 400px;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 #add-marker-btn {
@@ -155,9 +162,17 @@ body,
 }
 
 #add-marker-details {
-  display: none;
+  /* display: none; */
+  display: flex;
+  flex-direction: column;
   background-color: #3a2e39;
   color: #f4d8cd;
+  width: 300px;
+  height: 300px;
+}
+
+textarea {
+  width: 200px;
 }
 
 #sign-in-btn,
