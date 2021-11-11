@@ -120,6 +120,10 @@ const CreateOrEditMap = (props) => {
         console.log(places[0].formatted_address);
         console.log(places[0].url);
         setPlace(places[0]);
+        setNewMarkerPosition({
+          lat: places[0].geometry.location.lat(),
+          lng: places[0].geometry.location.lng(),
+        });
         document.getElementById("search-bar").value = ``;
       });
     }
@@ -130,6 +134,19 @@ const CreateOrEditMap = (props) => {
       map.fitBounds(place.geometry.viewport);
     }
   }, [place, setPlace]);
+
+  useEffect(() => {
+    if (place && newMarkerPosition) {
+      document.querySelector(`#where`).value =
+        place.name +
+        "\n" +
+        place.formatted_address +
+        "\n" +
+        place.website +
+        "\n" +
+        place.url;
+    }
+  }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
   const onMarkerClick = (e) => {
@@ -343,6 +360,7 @@ const CreateOrEditMap = (props) => {
             place: place,
             searchBar: searchBar,
             placesService: placesService,
+            newMarker: newMarkerPosition,
           })
         }
       >
