@@ -6,8 +6,8 @@ const ItineraryForm = (props) => {
   return (
     <form id="add-marker-details">
       <div className="form-field">
-        <label htmlFor="location">where:</label>
-        <input className="input-field" type="text" id="place" />
+        <label htmlFor="where">where:</label>
+        <textarea className="input-field" id="where" rows="5"></textarea>
       </div>
       <div className="form-field">
         <label htmlFor="when">date:</label>
@@ -19,12 +19,7 @@ const ItineraryForm = (props) => {
       </div>
       <div className="form-field">
         <label htmlFor="what">the plan:</label>
-        <textarea
-          className="input-field"
-          id="what"
-          rows="5"
-          cols="50"
-        ></textarea>
+        <textarea className="input-field" id="what" rows="5"></textarea>
       </div>
       {!props.isEditClicked ? (
         <button onClick={props.handleMarkerAndInfo} className="add-details-btn">
