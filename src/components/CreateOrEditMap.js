@@ -85,6 +85,7 @@ const CreateOrEditMap = (props) => {
           place.geometry.location
         ) {
           console.log({ serviceRequest: place });
+          setPlace(place);
         }
       });
     }
@@ -114,12 +115,14 @@ const CreateOrEditMap = (props) => {
     searchBox.addListener("places_changed", () => {
       const places = searchBox.getPlaces();
       console.log(places);
-      console.log(places[0].geometry.location);
+      // console.log(places[0].geometry.location);
       console.log({
         lat: places[0].geometry.location.lat(),
         lng: places[0].geometry.location.lng(),
       });
       console.log(places[0].name);
+      console.log(places[0].formatted_address);
+      console.log(places[0].url);
       setPlace(places);
       input.value = ``;
     });
@@ -351,7 +354,6 @@ const CreateOrEditMap = (props) => {
         places states
       </button>
     </div>
-    // </div>
   );
 };
 
