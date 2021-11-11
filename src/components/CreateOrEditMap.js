@@ -24,6 +24,15 @@ const defaultBounds = [
   { lat: 41.902, lng: -72.4059 },
 ];
 
+const testBounds = [
+  // displays the northeast
+  {
+    lat: 30,
+    lng: -70,
+  },
+  { lat: 40, lng: -75 },
+];
+
 const options = {
   controlSize: 20,
 };
@@ -31,9 +40,6 @@ const options = {
 const inputStyle = {
   boxSizing: `border-box`,
   border: `1px solid transparent`,
-  // backgroundColor: `rgba(0, 0, 0, 0.5)`,
-  // color: `white`,
-  // fontWeight: `bold`,
   width: `300px`,
   height: `24px`,
   padding: `0 12px`,
@@ -42,9 +48,6 @@ const inputStyle = {
   fontSize: `14px`,
   outline: `none`,
   textOverflow: `ellipses`,
-  // position: "relative",
-  // top: "30px",
-  // left: "5px",
 };
 
 const libraries = [`places`];
@@ -58,7 +61,7 @@ const CreateOrEditMap = (props) => {
   const [markerNodeValue, setMarkerNodeValue] = useState();
   const [infoWindowValues, setInfoWindowValues] = useState([]);
 
-  // !!!!!!---- BEGIN: react-google-maps logic ----!!!!!! //
+  // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -100,6 +103,10 @@ const CreateOrEditMap = (props) => {
     const service = new window.google.maps.places.PlacesService(map);
     setPlacesService(service);
 
+    const input = document.getElementById("search-bar");
+    const searchBox = new window.google.maps.places.SearchBox(input);
+    setSearchBar(searchBox);
+
     map.fitBounds(bounds);
     map.getCenter(bounds);
     setMap(map);
@@ -109,38 +116,24 @@ const CreateOrEditMap = (props) => {
     setMap(null);
   }, []);
 
-  const handleSearchBar = useCallback(function callback(bar) {
-    const input = document.getElementById("search-bar");
-    const searchBox = new window.google.maps.places.SearchBox(input);
-    searchBox.addListener("places_changed", () => {
-      const places = searchBox.getPlaces();
-      console.log(places);
-      // console.log(places[0].geometry.location);
-      console.log({
-        lat: places[0].geometry.location.lat(),
-        lng: places[0].geometry.location.lng(),
+  useEffect(() => {
+    if (searchBar) {
+      searchBar.addListener("places_changed", () => {
+        const places = searchBar.getPlaces();
+        console.log(places);
+        console.log({
+          lat: places[0].geometry.location.lat(),
+          lng: places[0].geometry.location.lng(),
+        });
+        console.log(places[0].name);
+        console.log(places[0].formatted_address);
+        console.log(places[0].url);
+        setPlace(places);
+        document.getElementById("search-bar").value = ``;
       });
-      console.log(places[0].name);
-      console.log(places[0].formatted_address);
-      console.log(places[0].url);
-      setPlace(places);
-      input.value = ``;
-    });
-    // const input = document.getElementById("search-bar");
-    // const box = new window.google.maps.places.SearchBox(input);
-    // box.addListener("places_changed", handlePlacesData);
-    setSearchBar(searchBox);
-    // return box.removeListener("places_changed", handlePlacesData);
-  }, []);
-
-  // const handlePlacesData = () => {
-  //   setPlace(searchBar.getPlaces());
-  // };
-
-  // const onSearchBarUnmount = useCallback(function callback(bar) {
-  //   setSearchBar(null);
-  // }, []);
-  // !!!!!!---- END: react-google-maps logic ----!!!!!! //
+    }
+  }, [searchBar, setSearchBar]);
+  // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
   const onMarkerClick = (e) => {
     console.log(
@@ -154,7 +147,7 @@ const CreateOrEditMap = (props) => {
   };
 
   const onMapClick = (e) => {
-    document.querySelector(`#add-marker-details`).style.display = `none`;
+    // document.querySelector(`#add-marker-details`).style.display = `none`;
     console.log(e);
     console.log({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.placeId) {
@@ -164,7 +157,7 @@ const CreateOrEditMap = (props) => {
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
       positiontoggleAddMarkerButton(e.domEvent.clientX, e.domEvent.clientY);
-      positionInfoMarkerForm(e.domEvent.clientX, e.domEvent.clientY);
+      // positionInfoMarkerForm(e.domEvent.clientX, e.domEvent.clientY);
     }
   };
 
@@ -184,14 +177,14 @@ const CreateOrEditMap = (props) => {
   };
 
   const toggleAddMarker = () => {
-    document.querySelector(`#add-marker-details`).style.display = `block`;
+    // document.querySelector(`#add-marker-details`).style.display = `block`;
     document.querySelector(`#add-marker-btn`).style.display = `none`;
   };
 
   const cancelAddMarker = (e) => {
     e.preventDefault();
     setIsEditClicked(false);
-    document.querySelector(`#add-marker-details`).style.display = `none`;
+    // document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
   const handleMarkerAndInfo = (e) => {
@@ -202,7 +195,7 @@ const CreateOrEditMap = (props) => {
       input.value = ``;
     });
     e.preventDefault();
-    document.querySelector(`#add-marker-details`).style.display = `none`;
+    // document.querySelector(`#add-marker-details`).style.display = `none`;
     setMarkers([...markers, newMarkerPosition]);
     setInfoWindowValues([...infoWindowValues, { id: uniqid(), data }]);
     setIsEditClicked(false);
@@ -324,7 +317,7 @@ const CreateOrEditMap = (props) => {
               type="text"
               placeholder="Search for places..."
               style={inputStyle}
-              onChange={handleSearchBar}
+              // onLoad={handleSearchBar}
             />
           </StandaloneSearchBox>
         </div>
@@ -348,10 +341,18 @@ const CreateOrEditMap = (props) => {
       </button>
       <button
         onClick={() =>
-          console.log({ place: place, bar: searchBar, service: placesService })
+          console.log({
+            map: map,
+            place: place,
+            searchBar: searchBar,
+            placesService: placesService,
+          })
         }
       >
-        places states
+        states checker
+      </button>
+      <button onClick={() => map.fitBounds(place[0].geometry.viewport)}>
+        test bounds
       </button>
     </div>
   );
