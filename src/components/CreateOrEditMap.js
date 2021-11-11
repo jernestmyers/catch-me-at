@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -68,8 +68,27 @@ const CreateOrEditMap = (props) => {
 
   const [map, setMap] = useState(null);
   const [place, setPlace] = useState(null);
+  const [placeId, setPlaceId] = useState(null);
   const [searchBar, setSearchBar] = useState(null);
-  // const [placesService, setPlacesService] = useState(null);
+  const [placesService, setPlacesService] = useState(null);
+
+  useEffect(() => {
+    if (placeId && placesService) {
+      const request = {
+        placeId: `${placeId}`,
+      };
+      placesService.getDetails(request, (place, status) => {
+        if (
+          status === window.google.maps.places.PlacesServiceStatus.OK &&
+          place &&
+          place.geometry &&
+          place.geometry.location
+        ) {
+          console.log({ serviceRequest: place });
+        }
+      });
+    }
+  }, [placeId, setPlaceId]);
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(
@@ -80,7 +99,8 @@ const CreateOrEditMap = (props) => {
     // const request = {
     //   placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
     // };
-    // const service = new window.google.maps.places.PlacesService(map);
+    const service = new window.google.maps.places.PlacesService(map);
+    setPlacesService(service);
 
     // service.getDetails(request, (place, status) => {
     //   if (
@@ -168,7 +188,10 @@ const CreateOrEditMap = (props) => {
   const onMapClick = (e) => {
     document.querySelector(`#add-marker-details`).style.display = `none`;
     console.log(e);
-    console.log(e.placeId);
+    if (e.placeId) {
+      console.log(e.placeId);
+      setPlaceId(e.placeId);
+    }
     setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.pixel) {
       positiontoggleAddMarkerButton(e.domEvent.clientX, e.domEvent.clientY);
@@ -296,15 +319,6 @@ const CreateOrEditMap = (props) => {
             onUnmount={onUnmount}
             onClick={onMapClick}
           >
-            {/* <StandaloneSearchBox>
-              <input
-                id="search-bar"
-                type="text"
-                placeholder="Search for places..."
-                style={inputStyle}
-                options={options}
-              />
-            </StandaloneSearchBox> */}
             {markers.map((object, index) => {
               return (
                 <Marker
@@ -342,73 +356,12 @@ const CreateOrEditMap = (props) => {
               placeholder="Search for places..."
               style={inputStyle}
               onChange={handleSearchBar}
-              // onChange={onSearchBarLoad}
-              // onUnmount={onSearchBarUnmount}
-              // onChange={(e) => console.log(e.target.value)}
-              // onClick={(e) => console.log(e.target.value)}
-              // onKeyPress={(e) => console.log(e.target.value)}
             />
           </StandaloneSearchBox>
         </div>
       ) : (
         <></>
       )}
-      {/* <div id="itinerary-container">
-        {infoWindowValues.map((object, index) => {
-          return (
-            <div>
-              <h1>thing {index + 1}</h1>
-              <p>where: {object.data[0].value}</p>
-              <p>
-                when: {object.data[1].value} @ {object.data[2].value}
-              </p>
-              <p>what: {object.data[3].value}</p>
-              <button onClick={prepareToEditMarkerAndData} id={object.id}>
-                edit
-              </button>
-              <button onClick={deleteMarkerAndData} id={index}>
-                delete
-              </button>
-            </div>
-          );
-        })}
-      </div> */}
-      {/* <form id="add-marker-details">
-        <div className="form-field">
-          <label htmlFor="location">where:</label>
-          <input className="input-field" type="text" id="place" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="when">date:</label>
-          <input className="input-field" type="date" id="date" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="when-time">time:</label>
-          <input className="input-field" type="time" id="time" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="what">the plan:</label>
-          <textarea
-            className="input-field"
-            id="what"
-            rows="5"
-            cols="50"
-          ></textarea>
-        </div>
-        {!isEditClicked ? (
-          <button onClick={handleMarkerAndInfo} className="add-details-btn">
-            add
-          </button>
-        ) : (
-          <button onClick={editMarker} id="edit-details-btn">
-            confirm edit
-          </button>
-        )}
-
-        <button className="add-details-btn" onClick={cancelAddMarker}>
-          cancel
-        </button>
-      </form> */}
       <ViewItinerary
         prepareToEditMarkerAndData={prepareToEditMarkerAndData}
         deleteMarkerAndData={deleteMarkerAndData}
@@ -424,8 +377,12 @@ const CreateOrEditMap = (props) => {
       <button onClick={toggleAddMarker} id="add-marker-btn">
         add marker
       </button>
-      <button onClick={() => console.log({ place: place, bar: searchBar })}>
-        search bar
+      <button
+        onClick={() =>
+          console.log({ place: place, bar: searchBar, service: placesService })
+        }
+      >
+        places states
       </button>
     </div>
     // </div>
