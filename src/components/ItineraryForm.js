@@ -5,10 +5,11 @@ const ItineraryForm = (props) => {
   //   console.log(props.isEditClicked);
   return (
     <form id="add-marker-details">
-      <div className="form-field">
+      {/* <div className="form-field">
         <label htmlFor="where">where:</label>
         <textarea className="input-field" id="where" rows="5"></textarea>
-      </div>
+      </div> */}
+      <div id="where-container"></div>
       <div className="form-field">
         <label htmlFor="when">date:</label>
         <input className="input-field" type="date" id="date" />

@@ -21,10 +21,10 @@ const libraries = [`places`];
 function sortBounds(array) {
   const sortLatLng = array
     .sort((a, b) => {
-      return a.lat - b.lat;
+      return a.coordinates.lat - b.coordinates.lat;
     })
     .sort((a, b) => {
-      return a.lng - b.lng;
+      return a.coordinates.lng - b.coordinates.lng;
     });
   return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
 }
@@ -43,8 +43,8 @@ const RenderMaps = (props) => {
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(
-      sortBounds(props.mapObject.marker)[0],
-      sortBounds(props.mapObject.marker)[1]
+      sortBounds(props.mapObject.marker)[0].coordinates,
+      sortBounds(props.mapObject.marker)[1].coordinates
     );
     map.fitBounds(bounds);
     map.getCenter(bounds);
@@ -60,8 +60,6 @@ const RenderMaps = (props) => {
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          // center={center}
-          //   zoom={10}
           options={options}
           onLoad={onLoad}
           onUnmount={onUnmount}
@@ -69,18 +67,10 @@ const RenderMaps = (props) => {
         >
           {props.mapObject.marker.map((object, index) => {
             return (
-              <Marker label={`${index + 1}`} position={object}>
-                <InfoWindow position={object}>
-                  <div>
-                    <p>where: {props.mapObject.info[index].data[0].value}</p>
-                    <p>
-                      when: {props.mapObject.info[index].data[1].value} @{" "}
-                      {props.mapObject.info[index].data[2].value}
-                    </p>
-                    <p>what: {props.mapObject.info[index].data[3].value}</p>
-                  </div>
-                </InfoWindow>
-              </Marker>
+              <Marker
+                label={`${index + 1}`}
+                position={object.coordinates}
+              ></Marker>
             );
           })}
           <></>

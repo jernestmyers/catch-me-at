@@ -50,7 +50,6 @@ const CreateOrEditMap = (props) => {
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerNodeValue, setMarkerNodeValue] = useState();
-  const [infoWindowValues, setInfoWindowValues] = useState([]);
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
@@ -137,62 +136,50 @@ const CreateOrEditMap = (props) => {
 
   useEffect(() => {
     if (place && newMarkerPosition) {
-      document.querySelector(`#where`).value =
-        place.name +
-        "\n" +
-        place.formatted_address +
-        "\n" +
-        place.website +
-        "\n" +
-        place.url;
+      const whereContainer = document.querySelector(`#where-container`);
+      while (whereContainer.firstChild) {
+        whereContainer.removeChild(whereContainer.firstChild);
+      }
+      const placeName = document.createElement(`p`);
+      placeName.textContent = place.name;
+      whereContainer.appendChild(placeName);
+      const placeAddress = document.createElement(`p`);
+      placeAddress.textContent = place.formatted_address;
+      whereContainer.appendChild(placeAddress);
+      if (place.website) {
+        const placeWebsite = document.createElement(`a`);
+        placeWebsite.href = place.website;
+        placeWebsite.textContent = `Visit the website`;
+        whereContainer.appendChild(placeWebsite);
+      }
+      const placeGoogleUrl = document.createElement(`a`);
+      placeGoogleUrl.href = place.url;
+      placeGoogleUrl.textContent = `View on Google Maps`;
+      whereContainer.appendChild(placeGoogleUrl);
     }
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
-  const onMarkerClick = (e) => {
-    console.log(
-      +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
-    );
-    setMarkerNodeValue(
-      +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
-    );
-    isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
-    console.log(infoWindowValues);
-  };
+  // const onMarkerClick = (e) => {
+  //   console.log(
+  //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
+  //   );
+  //   setMarkerNodeValue(
+  //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
+  //   );
+  //   isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
+  //   console.log(infoWindowValues);
+  // };
 
   const onMapClick = (e) => {
     // document.querySelector(`#add-marker-details`).style.display = `none`;
-    console.log(e);
-    console.log({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+    // console.log(e);
+    // console.log({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.placeId) {
       console.log(e.placeId);
       setPlaceId(e.placeId);
+      setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     }
-    setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-    if (e.pixel) {
-      positiontoggleAddMarkerButton(e.domEvent.clientX, e.domEvent.clientY);
-      // positionInfoMarkerForm(e.domEvent.clientX, e.domEvent.clientY);
-    }
-  };
-
-  const positiontoggleAddMarkerButton = (x, y) => {
-    document.querySelector(`#add-marker-btn`).style.display = `block`;
-    document.querySelector(`#add-marker-btn`).style.position = `absolute`;
-    document.querySelector(`#add-marker-btn`).style.left = `${x}px`;
-    document.querySelector(`#add-marker-btn`).style.top = `${y}px`;
-    document.querySelector(`#add-marker-btn`).style.zIndex = `1000`;
-  };
-
-  const positionInfoMarkerForm = (x, y) => {
-    document.querySelector(`#add-marker-details`).style.position = `absolute`;
-    document.querySelector(`#add-marker-details`).style.left = `${x}px`;
-    document.querySelector(`#add-marker-details`).style.top = `${y}px`;
-    document.querySelector(`#add-marker-details`).style.zIndex = `1000`;
-  };
-
-  const toggleAddMarker = () => {
-    // document.querySelector(`#add-marker-details`).style.display = `block`;
-    document.querySelector(`#add-marker-btn`).style.display = `none`;
   };
 
   const cancelAddMarker = (e) => {
@@ -210,8 +197,15 @@ const CreateOrEditMap = (props) => {
     });
     e.preventDefault();
     // document.querySelector(`#add-marker-details`).style.display = `none`;
-    setMarkers([...markers, newMarkerPosition]);
-    setInfoWindowValues([...infoWindowValues, { id: uniqid(), data }]);
+    setMarkers([
+      ...markers,
+      {
+        id: uniqid(),
+        coordinates: newMarkerPosition,
+        place: place,
+        userInputData: data,
+      },
+    ]);
     setIsEditClicked(false);
   };
 
@@ -219,11 +213,6 @@ const CreateOrEditMap = (props) => {
     setMarkers(
       markers.filter((marker, index) => {
         return index !== +e.target.id ? marker : null;
-      })
-    );
-    setInfoWindowValues(
-      infoWindowValues.filter((data, index) => {
-        return index !== +e.target.id ? data : null;
       })
     );
   };
@@ -236,15 +225,6 @@ const CreateOrEditMap = (props) => {
     document.querySelector(`#add-marker-details`).style.position = `relative`;
     document.querySelector(`#add-marker-details`).style.left = `0px`;
     document.querySelector(`#add-marker-details`).style.top = `0px`;
-    infoWindowValues.filter((object) => {
-      if (object.id === e.target.id) {
-        console.log(object);
-        inputFields[0].value = object.data[0].value;
-        inputFields[1].value = object.data[1].value;
-        inputFields[2].value = object.data[2].value;
-        inputFields[3].value = object.data[3].value;
-      }
-    });
   };
 
   const confirmEditsToMarkerAndData = (e) => {
@@ -255,15 +235,6 @@ const CreateOrEditMap = (props) => {
       data.push({ id: input.id, value: input.value });
       input.value = ``;
     });
-    setInfoWindowValues(
-      infoWindowValues.map((object) => {
-        if (object.id === idOfEditClicked) {
-          return { id: object.id, data };
-        } else {
-          return object;
-        }
-      })
-    );
     setIsEditClicked(false);
     document.querySelector(`#add-marker-details`).style.display = `none`;
   };
@@ -276,7 +247,6 @@ const CreateOrEditMap = (props) => {
         {
           mapID: uniqid(),
           marker: markers,
-          info: infoWindowValues,
         },
       ]);
     }
@@ -288,8 +258,6 @@ const CreateOrEditMap = (props) => {
         <div id="map">
           <GoogleMap
             mapContainerStyle={containerStyle}
-            // center={center}
-            // zoom={10}
             options={options}
             onLoad={onLoad}
             onUnmount={onUnmount}
@@ -298,31 +266,12 @@ const CreateOrEditMap = (props) => {
             {markers.map((object, index) => {
               return (
                 <Marker
-                  onClick={onMarkerClick}
+                  // onClick={onMarkerClick}
                   label={`${index + 1}`}
-                  position={object}
+                  position={object.coordinates}
                 ></Marker>
               );
             })}
-            {isMarkerClicked ? (
-              <InfoWindow
-                position={markers[markerNodeValue - 1]}
-                onCloseClick={() => setIsMarkerClicked(false)}
-              >
-                <div>
-                  <p>
-                    where: {infoWindowValues[markerNodeValue - 1].data[0].value}
-                  </p>
-                  <p>
-                    when: {infoWindowValues[markerNodeValue - 1].data[1].value}{" "}
-                    @ {infoWindowValues[markerNodeValue - 1].data[2].value}
-                  </p>
-                  <p>
-                    what: {infoWindowValues[markerNodeValue - 1].data[3].value}
-                  </p>
-                </div>
-              </InfoWindow>
-            ) : null}
             <></>
           </GoogleMap>
           <StandaloneSearchBox>
@@ -331,7 +280,6 @@ const CreateOrEditMap = (props) => {
               type="text"
               placeholder="Search for places..."
               style={inputStyle}
-              // onLoad={handleSearchBar}
             />
           </StandaloneSearchBox>
         </div>
@@ -341,7 +289,7 @@ const CreateOrEditMap = (props) => {
       <ViewItinerary
         prepareToEditMarkerAndData={prepareToEditMarkerAndData}
         deleteMarkerAndData={deleteMarkerAndData}
-        infoWindowValues={infoWindowValues}
+        markers={markers}
       ></ViewItinerary>
       <ItineraryForm
         isEditClicked={isEditClicked}
@@ -350,9 +298,6 @@ const CreateOrEditMap = (props) => {
         cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
       <button onClick={handleSaveMap}>save map</button>
-      <button onClick={toggleAddMarker} id="add-marker-btn">
-        add marker
-      </button>
       <button
         onClick={() =>
           console.log({
@@ -361,6 +306,7 @@ const CreateOrEditMap = (props) => {
             searchBar: searchBar,
             placesService: placesService,
             newMarker: newMarkerPosition,
+            marker: markers,
           })
         }
       >
