@@ -17,38 +17,8 @@ const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
 
 function App() {
-  console.log(`app mounts`);
   const [userAuth, setUserAuth] = useState();
-
-  const [mapsSaved, setMapsSaved] = useState([
-    {
-      mapID: "123456",
-      marker: [
-        { lat: 0.032958, lng: 179.604 },
-        { lat: 76.059, lng: 150.495 },
-      ],
-      info: [
-        {
-          id: "abcd",
-          data: [
-            { id: "place", value: "ocean" },
-            { id: "date", value: "today" },
-            { id: "time", value: "now" },
-            { id: "what", value: "diving" },
-          ],
-        },
-        {
-          id: "efgh",
-          data: [
-            { id: "place", value: "somewhere" },
-            { id: "date", value: "tomorrow" },
-            { id: "time", value: "not now" },
-            { id: "what", value: "no idea" },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [mapsSaved, setMapsSaved] = useState([]);
 
   return (
     <div className="App">
