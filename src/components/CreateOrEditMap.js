@@ -140,26 +140,43 @@ const CreateOrEditMap = (props) => {
       while (whereContainer.firstChild) {
         whereContainer.removeChild(whereContainer.firstChild);
       }
-      const placeName = document.createElement(`p`);
-      placeName.textContent = place.name;
-      whereContainer.appendChild(placeName);
-      const placeAddress = document.createElement(`p`);
-      placeAddress.textContent = place.formatted_address;
-      whereContainer.appendChild(placeAddress);
-      if (place.website) {
-        const placeWebsite = document.createElement(`a`);
-        placeWebsite.href = place.website;
-        placeWebsite.textContent = `Visit the website`;
-        whereContainer.appendChild(placeWebsite);
+      // const placeName = document.createElement(`p`);
+      // placeName.textContent = place.name;
+      const elements = createElementsForWhereContainer(place);
+      whereContainer.appendChild(elements[0]);
+      // const placeAddress = document.createElement(`p`);
+      // placeAddress.textContent = place.formatted_address;
+      whereContainer.appendChild(elements[1]);
+      if (elements[2]) {
+        // const placeWebsite = document.createElement(`a`);
+        // placeWebsite.href = place.website;
+        // placeWebsite.textContent = `Visit the website`;
+        whereContainer.appendChild(elements[2]);
       }
-      const placeGoogleUrl = document.createElement(`a`);
-      placeGoogleUrl.href = place.url;
-      placeGoogleUrl.textContent = `View on Google Maps`;
-      whereContainer.appendChild(placeGoogleUrl);
+      // const placeGoogleUrl = document.createElement(`a`);
+      // placeGoogleUrl.href = place.url;
+      // placeGoogleUrl.textContent = `View on Google Maps`;
+      whereContainer.appendChild(elements[3]);
     }
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
+  function createElementsForWhereContainer(placeObject) {
+    const placeName = document.createElement(`p`);
+    placeName.textContent = placeObject.name;
+    const placeAddress = document.createElement(`p`);
+    placeAddress.textContent = placeObject.formatted_address;
+    let placeWebsite = null;
+    if (placeObject.website) {
+      placeWebsite = document.createElement(`a`);
+      placeWebsite.href = placeObject.website;
+      placeWebsite.textContent = `Visit the website`;
+    }
+    const placeGoogleUrl = document.createElement(`a`);
+    placeGoogleUrl.href = placeObject.url;
+    placeGoogleUrl.textContent = `View on Google Maps`;
+    return [placeName, placeAddress, placeWebsite, placeGoogleUrl];
+  }
   // const onMarkerClick = (e) => {
   //   console.log(
   //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
