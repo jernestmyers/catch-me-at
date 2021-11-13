@@ -63,6 +63,8 @@ const CreateOrEditMap = (props) => {
   const [placeId, setPlaceId] = useState(null);
   const [searchBar, setSearchBar] = useState(null);
   const [placesService, setPlacesService] = useState(null);
+  const [infoWindow, setInfoWindow] = useState(null);
+  const [googleMarker, setGoogleMarker] = useState(null);
 
   const fields = [
     `name`,
@@ -103,6 +105,14 @@ const CreateOrEditMap = (props) => {
     const service = new window.google.maps.places.PlacesService(map);
     setPlacesService(service);
 
+    const getInfoWindow = new window.google.maps.InfoWindow();
+    setInfoWindow(getInfoWindow);
+    const getGoogleMarker = new window.google.maps.Marker({
+      map,
+      anchorPoint: new window.google.maps.Point(0, -29),
+    });
+    setGoogleMarker(getGoogleMarker);
+
     const input = document.getElementById("search-bar");
     const searchBox = new window.google.maps.places.Autocomplete(input, {
       fields: fields,
@@ -121,6 +131,8 @@ const CreateOrEditMap = (props) => {
   useEffect(() => {
     if (searchBar) {
       searchBar.addListener("place_changed", () => {
+        infoWindow.close();
+        googleMarker.setVisible(false);
         const place = searchBar.getPlace();
         setPlace(place);
         setNewMarkerPosition({
@@ -128,6 +140,18 @@ const CreateOrEditMap = (props) => {
           lng: place.geometry.location.lng(),
         });
         document.getElementById("search-bar").value = ``;
+        googleMarker.setPosition(place.geometry.location);
+        googleMarker.setVisible(true);
+        infoWindow.setContent(
+          `<div>
+            <p>
+              <strong>${place.name}</strong>
+            </p>
+            <p>${place.formatted_address}</p>
+            <a href=${place.url}>View on Google Maps</a>
+          </div>`
+        );
+        infoWindow.open(map, googleMarker);
       });
     }
   }, [searchBar, setSearchBar]);
@@ -168,9 +192,10 @@ const CreateOrEditMap = (props) => {
       setPlaceId(e.placeId);
       setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     }
+    googleMarker.setVisible(false);
   };
 
-  const handleMarkerAndInfo = (e) => {
+  const addMarkerAndInfo = (e) => {
     const inputFields = document.querySelectorAll(`.input-field`);
     const data = [];
     inputFields.forEach((input) => {
@@ -193,33 +218,44 @@ const CreateOrEditMap = (props) => {
   };
 
   const deleteMarkerAndData = (e) => {
+    const markerItineraryContainer = e.target.parentElement.dataset.id;
     setMarkers(
-      markers.filter((marker, index) => {
-        return index !== +e.target.id ? marker : null;
+      markers.filter((marker) => {
+        return marker.id !== markerItineraryContainer ? marker : null;
       })
     );
   };
 
-  const prepareToEditMarkerAndData = (e) => {
-    setIsEditClicked(true);
-    setIdOfEditClicked(e.target.id);
-    const inputFields = document.querySelectorAll(`.input-field`);
-    document.querySelector(`#add-marker-details`).style.display = `block`;
-    document.querySelector(`#add-marker-details`).style.position = `relative`;
-    document.querySelector(`#add-marker-details`).style.left = `0px`;
-    document.querySelector(`#add-marker-details`).style.top = `0px`;
-  };
+  // const prepareToEditMarkerAndData = (e) => {
+  //   setIsEditClicked(true);
+  //   setIdOfEditClicked(e.target.id);
+  //   const inputFields = document.querySelectorAll(`.input-field`);
+  //   document.querySelector(`#add-marker-details`).style.display = `block`;
+  //   document.querySelector(`#add-marker-details`).style.position = `relative`;
+  //   document.querySelector(`#add-marker-details`).style.left = `0px`;
+  //   document.querySelector(`#add-marker-details`).style.top = `0px`;
+  // };
 
-  const confirmEditsToMarkerAndData = (e) => {
+  // const confirmEditsToMarkerAndData = (e) => {
+  //   e.preventDefault();
+  //   const inputFields = document.querySelectorAll(`.input-field`);
+  //   const data = [];
+  //   inputFields.forEach((input) => {
+  //     data.push({ id: input.id, value: input.value });
+  //     input.value = ``;
+  //   });
+  //   setIsEditClicked(false);
+  //   document.querySelector(`#add-marker-details`).style.display = `none`;
+  // };
+
+  const cancelAddMarker = (e) => {
     e.preventDefault();
-    const inputFields = document.querySelectorAll(`.input-field`);
-    const data = [];
-    inputFields.forEach((input) => {
-      data.push({ id: input.id, value: input.value });
-      input.value = ``;
-    });
-    setIsEditClicked(false);
-    document.querySelector(`#add-marker-details`).style.display = `none`;
+    infoWindow.close();
+    infoWindow.setContent();
+    googleMarker.setVisible(false);
+    clearContainer(document.querySelector(`#where-data`));
+    clearFormInputs(document.querySelectorAll(`.input-field`));
+    // document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
   const handleSaveMap = (e) => {
@@ -268,15 +304,15 @@ const CreateOrEditMap = (props) => {
         <></>
       )}
       <ViewItinerary
-        prepareToEditMarkerAndData={prepareToEditMarkerAndData}
+        // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
         deleteMarkerAndData={deleteMarkerAndData}
         markers={markers}
       ></ViewItinerary>
       <ItineraryForm
         isEditClicked={isEditClicked}
-        handleMarkerAndInfo={handleMarkerAndInfo}
-        confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
-        // cancelAddMarker={cancelAddMarker}
+        addMarkerAndInfo={addMarkerAndInfo}
+        // confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
+        cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
       <button onClick={handleSaveMap}>save map</button>
       <button

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { clearContainer, clearFormInputs } from "../functions/helperDOMMethods";
-import uniqid from "uniqid";
+import React from "react";
+// import { clearContainer, clearFormInputs } from "../functions/helperDOMMethods";
+// import uniqid from "uniqid";
 
 const ItineraryForm = (props) => {
   //   console.log(props.isEditClicked);
 
-  const cancelAddMarker = (e) => {
-    e.preventDefault();
-    clearContainer(document.querySelector(`#where-data`));
-    clearFormInputs(document.querySelectorAll(`.input-field`));
-    // document.querySelector(`#add-marker-details`).style.display = `none`;
-  };
+  // const cancelAddMarker = (e) => {
+  //   e.preventDefault();
+  //   clearContainer(document.querySelector(`#where-data`));
+  //   clearFormInputs(document.querySelectorAll(`.input-field`));
+  //   // document.querySelector(`#add-marker-details`).style.display = `none`;
+  // };
 
   return (
     <form id="add-marker-details">
@@ -35,7 +35,7 @@ const ItineraryForm = (props) => {
         <textarea className="input-field" id="what" rows="5"></textarea>
       </div>
       {!props.isEditClicked ? (
-        <button onClick={props.handleMarkerAndInfo} className="add-details-btn">
+        <button onClick={props.addMarkerAndInfo} className="add-details-btn">
           add
         </button>
       ) : (
@@ -46,7 +46,7 @@ const ItineraryForm = (props) => {
           confirm edit
         </button>
       )}
-      <button className="add-details-btn" onClick={cancelAddMarker}>
+      <button className="add-details-btn" onClick={props.cancelAddMarker}>
         cancel
       </button>
     </form>
