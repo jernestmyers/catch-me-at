@@ -3,6 +3,11 @@ import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import uniqid from "uniqid";
 import ItineraryForm from "./ItineraryForm";
 import ViewItinerary from "./ViewItinerary";
+import {
+  clearContainer,
+  clearFormInputs,
+  createWhereElements,
+} from "../functions/helperDOMMethods";
 
 const containerStyle = {
   width: "300px",
@@ -135,28 +140,16 @@ const CreateOrEditMap = (props) => {
 
   useEffect(() => {
     if (place && newMarkerPosition) {
-      const whereContainer = document.querySelector(`#where-container`);
-      while (whereContainer.firstChild) {
-        whereContainer.removeChild(whereContainer.firstChild);
-      }
-      const elements = createElementsForWhereContainer(place);
+      const whereContainer = document.querySelector(`#where-data`);
+      clearContainer(whereContainer);
+      const elements = createWhereElements(place);
       whereContainer.appendChild(elements[0]);
       whereContainer.appendChild(elements[1]);
       whereContainer.appendChild(elements[2]);
     }
+    clearFormInputs(document.querySelectorAll(`.input-field`));
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
-
-  function createElementsForWhereContainer(placeObject) {
-    const placeName = document.createElement(`p`);
-    placeName.textContent = placeObject.name;
-    const placeAddress = document.createElement(`p`);
-    placeAddress.textContent = placeObject.formatted_address;
-    const placeGoogleUrl = document.createElement(`a`);
-    placeGoogleUrl.href = placeObject.url;
-    placeGoogleUrl.textContent = `View on Google Maps`;
-    return [placeName, placeAddress, placeGoogleUrl];
-  }
 
   // const onMarkerClick = (e) => {
   //   console.log(
@@ -172,16 +165,9 @@ const CreateOrEditMap = (props) => {
   const onMapClick = (e) => {
     // document.querySelector(`#add-marker-details`).style.display = `none`;
     if (e.placeId) {
-      console.log(e.placeId);
       setPlaceId(e.placeId);
       setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     }
-  };
-
-  const cancelAddMarker = (e) => {
-    e.preventDefault();
-    setIsEditClicked(false);
-    // document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
   const handleMarkerAndInfo = (e) => {
@@ -189,8 +175,9 @@ const CreateOrEditMap = (props) => {
     const data = [];
     inputFields.forEach((input) => {
       data.push({ id: input.id, value: input.value });
-      input.value = ``;
     });
+    clearContainer(document.querySelector(`#where-data`));
+    clearFormInputs(inputFields);
     e.preventDefault();
     // document.querySelector(`#add-marker-details`).style.display = `none`;
     setMarkers([
@@ -289,7 +276,7 @@ const CreateOrEditMap = (props) => {
         isEditClicked={isEditClicked}
         handleMarkerAndInfo={handleMarkerAndInfo}
         confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
-        cancelAddMarker={cancelAddMarker}
+        // cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
       <button onClick={handleSaveMap}>save map</button>
       <button
