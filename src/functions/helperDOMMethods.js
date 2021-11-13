@@ -21,4 +21,15 @@ function createWhereElements(placeObject) {
   return [placeName, placeAddress, placeGoogleUrl];
 }
 
-export { clearContainer, clearFormInputs, createWhereElements };
+function appendWhereElements(parent, elementArray) {
+  parent.appendChild(elementArray[0]);
+  parent.appendChild(elementArray[1]);
+  parent.appendChild(elementArray[2]);
+}
+
+export {
+  clearContainer,
+  clearFormInputs,
+  createWhereElements,
+  appendWhereElements,
+};
