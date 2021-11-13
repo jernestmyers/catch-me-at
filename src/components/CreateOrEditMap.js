@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import uniqid from "uniqid";
 import ItineraryForm from "./ItineraryForm";
 import ViewItinerary from "./ViewItinerary";
@@ -65,24 +59,35 @@ const CreateOrEditMap = (props) => {
   const [searchBar, setSearchBar] = useState(null);
   const [placesService, setPlacesService] = useState(null);
 
+  const fields = [
+    `name`,
+    `address_component`,
+    `formatted_address`,
+    `url`,
+    `geometry`,
+    `type`,
+    `place_id`,
+  ];
+
+  // BEGIN COMMENT -- this useEffect makes the getDetails request onMapClick
   useEffect(() => {
     if (placeId && placesService) {
-      const request = {
-        placeId: `${placeId}`,
-      };
-      placesService.getDetails(request, (place, status) => {
-        if (
-          status === window.google.maps.places.PlacesServiceStatus.OK &&
-          place &&
-          place.geometry &&
-          place.geometry.location
-        ) {
-          console.log({ serviceRequest: place });
-          setPlace(place);
+      placesService.getDetails(
+        { placeId: placeId, fields: fields },
+        (place, status) => {
+          if (
+            status === window.google.maps.places.PlacesServiceStatus.OK &&
+            place &&
+            place.geometry &&
+            place.geometry.location
+          ) {
+            setPlace(place);
+          }
         }
-      });
+      );
     }
   }, [placeId, setPlaceId]);
+  // END COMMENT -- this useEffect makes the getDetails request onMapClick
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(
@@ -94,7 +99,9 @@ const CreateOrEditMap = (props) => {
     setPlacesService(service);
 
     const input = document.getElementById("search-bar");
-    const searchBox = new window.google.maps.places.SearchBox(input);
+    const searchBox = new window.google.maps.places.Autocomplete(input, {
+      fields: fields,
+    });
     setSearchBar(searchBox);
 
     map.fitBounds(bounds);
@@ -108,20 +115,12 @@ const CreateOrEditMap = (props) => {
 
   useEffect(() => {
     if (searchBar) {
-      searchBar.addListener("places_changed", () => {
-        const places = searchBar.getPlaces();
-        console.log(places);
-        console.log({
-          lat: places[0].geometry.location.lat(),
-          lng: places[0].geometry.location.lng(),
-        });
-        console.log(places[0].name);
-        console.log(places[0].formatted_address);
-        console.log(places[0].url);
-        setPlace(places[0]);
+      searchBar.addListener("place_changed", () => {
+        const place = searchBar.getPlace();
+        setPlace(place);
         setNewMarkerPosition({
-          lat: places[0].geometry.location.lat(),
-          lng: places[0].geometry.location.lng(),
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
         });
         document.getElementById("search-bar").value = ``;
       });
@@ -140,23 +139,10 @@ const CreateOrEditMap = (props) => {
       while (whereContainer.firstChild) {
         whereContainer.removeChild(whereContainer.firstChild);
       }
-      // const placeName = document.createElement(`p`);
-      // placeName.textContent = place.name;
       const elements = createElementsForWhereContainer(place);
       whereContainer.appendChild(elements[0]);
-      // const placeAddress = document.createElement(`p`);
-      // placeAddress.textContent = place.formatted_address;
       whereContainer.appendChild(elements[1]);
-      if (elements[2]) {
-        // const placeWebsite = document.createElement(`a`);
-        // placeWebsite.href = place.website;
-        // placeWebsite.textContent = `Visit the website`;
-        whereContainer.appendChild(elements[2]);
-      }
-      // const placeGoogleUrl = document.createElement(`a`);
-      // placeGoogleUrl.href = place.url;
-      // placeGoogleUrl.textContent = `View on Google Maps`;
-      whereContainer.appendChild(elements[3]);
+      whereContainer.appendChild(elements[2]);
     }
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
@@ -166,17 +152,12 @@ const CreateOrEditMap = (props) => {
     placeName.textContent = placeObject.name;
     const placeAddress = document.createElement(`p`);
     placeAddress.textContent = placeObject.formatted_address;
-    let placeWebsite = null;
-    if (placeObject.website) {
-      placeWebsite = document.createElement(`a`);
-      placeWebsite.href = placeObject.website;
-      placeWebsite.textContent = `Visit the website`;
-    }
     const placeGoogleUrl = document.createElement(`a`);
     placeGoogleUrl.href = placeObject.url;
     placeGoogleUrl.textContent = `View on Google Maps`;
-    return [placeName, placeAddress, placeWebsite, placeGoogleUrl];
+    return [placeName, placeAddress, placeGoogleUrl];
   }
+
   // const onMarkerClick = (e) => {
   //   console.log(
   //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
@@ -190,8 +171,6 @@ const CreateOrEditMap = (props) => {
 
   const onMapClick = (e) => {
     // document.querySelector(`#add-marker-details`).style.display = `none`;
-    // console.log(e);
-    // console.log({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     if (e.placeId) {
       console.log(e.placeId);
       setPlaceId(e.placeId);
@@ -291,14 +270,12 @@ const CreateOrEditMap = (props) => {
             })}
             <></>
           </GoogleMap>
-          <StandaloneSearchBox>
-            <input
-              id="search-bar"
-              type="text"
-              placeholder="Search for places..."
-              style={inputStyle}
-            />
-          </StandaloneSearchBox>
+          <input
+            id="search-bar"
+            type="text"
+            placeholder="Search for places..."
+            style={inputStyle}
+          />
         </div>
       ) : (
         <></>
