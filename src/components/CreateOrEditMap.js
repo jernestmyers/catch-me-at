@@ -45,12 +45,12 @@ const inputStyle = {
 const libraries = [`places`];
 
 const CreateOrEditMap = (props) => {
-  const [isMarkerClicked, setIsMarkerClicked] = useState(false);
+  // const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
-  const [idOfEditClicked, setIdOfEditClicked] = useState();
+  // const [idOfEditClicked, setIdOfEditClicked] = useState();
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
-  const [markerNodeValue, setMarkerNodeValue] = useState();
+  // const [markerNodeValue, setMarkerNodeValue] = useState();
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({

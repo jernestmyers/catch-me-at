@@ -1,16 +1,7 @@
 import React from "react";
-// import { clearContainer, clearFormInputs } from "../functions/helperDOMMethods";
-// import uniqid from "uniqid";
 
 const ItineraryForm = (props) => {
   //   console.log(props.isEditClicked);
-
-  // const cancelAddMarker = (e) => {
-  //   e.preventDefault();
-  //   clearContainer(document.querySelector(`#where-data`));
-  //   clearFormInputs(document.querySelectorAll(`.input-field`));
-  //   // document.querySelector(`#add-marker-details`).style.display = `none`;
-  // };
 
   return (
     <form id="add-marker-details">

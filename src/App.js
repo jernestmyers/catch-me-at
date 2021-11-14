@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
-import RenderMaps from "./components/RenderMaps.js";
+// import RenderMaps from "./components/RenderMaps.js";
 import { initializeApp } from "firebase/app";
-// import {
-//   getAuth,
-//   onAuthStateChanged,
-//   GoogleAuthProvider,
-//   signInWithPopup,
-//   signOut,
-// } from "firebase/auth";
 import { getFirebaseConfig } from "./firebase-config.js";
 import "./App.css";
 import AuthenticateUser from "./components/AuthenticateUser.js";
