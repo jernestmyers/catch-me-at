@@ -27,9 +27,18 @@ function appendWhereElements(parent, elementArray) {
   parent.appendChild(elementArray[2]);
 }
 
+function getFormData(inputs) {
+  const data = [];
+  inputs.forEach((input) => {
+    data.push({ id: input.id, value: input.value });
+  });
+  return data;
+}
+
 export {
   clearContainer,
   clearFormInputs,
   createWhereElements,
   appendWhereElements,
+  getFormData,
 };

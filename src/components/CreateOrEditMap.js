@@ -7,6 +7,8 @@ import {
   clearContainer,
   clearFormInputs,
   createWhereElements,
+  appendWhereElements,
+  getFormData,
 } from "../functions/helperDOMMethods";
 
 const containerStyle = {
@@ -167,9 +169,7 @@ const CreateOrEditMap = (props) => {
       const whereContainer = document.querySelector(`#where-data`);
       clearContainer(whereContainer);
       const elements = createWhereElements(place);
-      whereContainer.appendChild(elements[0]);
-      whereContainer.appendChild(elements[1]);
-      whereContainer.appendChild(elements[2]);
+      appendWhereElements(whereContainer, elements);
     }
     clearFormInputs(document.querySelectorAll(`.input-field`));
   }, [place, newMarkerPosition, setNewMarkerPosition]);
@@ -197,10 +197,7 @@ const CreateOrEditMap = (props) => {
 
   const addMarkerAndInfo = (e) => {
     const inputFields = document.querySelectorAll(`.input-field`);
-    const data = [];
-    inputFields.forEach((input) => {
-      data.push({ id: input.id, value: input.value });
-    });
+    const formData = getFormData(inputFields);
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(inputFields);
     e.preventDefault();
@@ -211,7 +208,7 @@ const CreateOrEditMap = (props) => {
         id: uniqid(),
         coordinates: newMarkerPosition,
         place: place,
-        userInputData: data,
+        userInputData: formData,
       },
     ]);
     setIsEditClicked(false);
