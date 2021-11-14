@@ -3,6 +3,7 @@ import {
   getAuth,
   onAuthStateChanged,
   GoogleAuthProvider,
+  signInAnonymously,
   signInWithRedirect,
   signOut,
 } from "firebase/auth";
@@ -17,6 +18,10 @@ export default function AuthenticateUser(props) {
   const logUserIn = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
+  };
+
+  const logInAsGuest = () => {
+    signInAnonymously(auth);
   };
 
   const logUserOut = () => {
@@ -46,12 +51,21 @@ export default function AuthenticateUser(props) {
     <div id="auth-container">
       {props.userAuth ? (
         <div>
-          <p>Hi, {getFirstName(auth.currentUser.displayName)}!</p>
+          {props.userAuth.displayName ? (
+            <p>Hi, {getFirstName(auth.currentUser.displayName)}!</p>
+          ) : (
+            <p>Welcome, Guest!</p>
+          )}
           <button onClick={logUserOut}>sign out</button>
         </div>
       ) : (
         <div>
-          <button onClick={logUserIn}>sign in</button>
+          <div>
+            <button onClick={logUserIn}>sign in with google</button>
+          </div>
+          <div>
+            <button onClick={logInAsGuest}>sign in as guest</button>
+          </div>
         </div>
       )}
       <button
