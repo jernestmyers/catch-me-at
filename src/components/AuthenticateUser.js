@@ -71,7 +71,7 @@ export default function AuthenticateUser(props) {
       <button
         onClick={() =>
           console.log({
-            auth: auth.currentUser,
+            auth: auth,
             user: props.userAuth,
           })
         }
