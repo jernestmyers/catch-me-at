@@ -205,6 +205,7 @@ const CreateOrEditMap = (props) => {
 
   useEffect(() => {
     if (markers.length) {
+      console.log(`invoke updateFirestore`);
       setMarkers([]);
       setNewMarkerPosition({});
       setPlace(null);

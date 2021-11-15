@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
-// import RenderMaps from "./components/RenderMaps.js";
+import RenderMaps from "./components/RenderMaps.js";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config.js";
 import {
@@ -32,6 +32,7 @@ function App() {
   const [userAuth, setUserAuth] = useState();
   const [userData, setUserData] = useState();
   const [mapsSaved, setMapsSaved] = useState([]);
+  const [isUserDataSet, setIsUserDataSet] = useState();
 
   useEffect(() => {
     if (userAuth) {
@@ -41,12 +42,19 @@ function App() {
     }
   }, [userAuth, setUserAuth]);
 
+  useEffect(() => {
+    if (userData && !isUserDataSet) {
+      console.log(`userData - let's go!`);
+      setIsUserDataSet(true);
+      setMapsSaved(userData.mapsOwned);
+    }
+  }, [userData, setUserData]);
+
   const checkForUserData = async () => {
     try {
       let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
       const fetchedUserIds = storeFetchAsArray(fetchUserIds);
-      console.log(fetchedUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
           doesUserExist = true;
@@ -105,8 +113,8 @@ function App() {
         mapsSaved={mapsSaved}
         setMapsSaved={setMapsSaved}
       ></CreateOrEditMap>
-      {/* {mapsSaved.map((object, index) => {
-        return <RenderMaps mapObject={object}></RenderMaps>;
+      {/* {mapsSaved.map((object) => {
+        return <RenderMaps key={object.id} mapObject={object}></RenderMaps>;
       })} */}
       <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
       <button onClick={() => console.log(userData)}>see data fetch</button>

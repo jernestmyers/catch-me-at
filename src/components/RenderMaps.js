@@ -3,7 +3,7 @@ import {
   GoogleMap,
   useJsApiLoader,
   Marker,
-  InfoWindow,
+  // InfoWindow,
 } from "@react-google-maps/api";
 // import uniqid from "uniqid";
 
@@ -30,8 +30,6 @@ function sortBounds(array) {
 }
 
 const RenderMaps = (props) => {
-  console.log(props);
-  console.log(sortBounds(props.mapObject.marker));
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -43,8 +41,8 @@ const RenderMaps = (props) => {
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(
-      sortBounds(props.mapObject.marker)[0].coordinates,
-      sortBounds(props.mapObject.marker)[1].coordinates
+      sortBounds(props.mapObject.markers)[0].coordinates,
+      sortBounds(props.mapObject.markers)[1].coordinates
     );
     map.fitBounds(bounds);
     map.getCenter(bounds);
@@ -65,9 +63,10 @@ const RenderMaps = (props) => {
           onUnmount={onUnmount}
           onClick={(e) => console.log(e)}
         >
-          {props.mapObject.marker.map((object, index) => {
+          {props.mapObject.markers.map((object, index) => {
             return (
               <Marker
+                key={object.id}
                 label={`${index + 1}`}
                 position={object.coordinates}
               ></Marker>
