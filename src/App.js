@@ -18,6 +18,15 @@ const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
 const db = getFirestore();
 
+const newUserObject = {
+  mapsOwned: null,
+  connections: null,
+  mapsSharedWithUser: null,
+  publicMapsSaved: null,
+  likesByUser: null,
+  commentsByUser: null,
+};
+
 function App() {
   const [userAuth, setUserAuth] = useState();
   const [userData, setUserData] = useState();
@@ -33,15 +42,17 @@ function App() {
 
   const checkForUserData = async () => {
     try {
-      let userExists;
+      let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
       const fetchedUserIds = storeFetchAsArray(fetchUserIds);
+      console.log(fetchedUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
-          userExists = true;
+          doesUserExist = true;
         }
       });
-      return userExists;
+      console.log(doesUserExist);
+      return doesUserExist;
     } catch (error) {
       alert(
         `Hmm, we're experiencing the following error: "${error}." Try again later.`
@@ -51,13 +62,14 @@ function App() {
 
   const getOrSetUserData = async () => {
     try {
-      if (checkForUserData()) {
+      const doesUserExist = await checkForUserData();
+      if (doesUserExist) {
         console.log(`get user's data!`);
         const fetchUserData = await getDoc(doc(db, "users", userAuth.uid));
         setUserData(fetchUserData.data());
       } else {
         console.log(`create new user!`);
-        setDoc(doc(db, "users", userAuth.uid), {});
+        setDoc(doc(db, "users", userAuth.uid), newUserObject);
       }
     } catch (error) {
       alert(
