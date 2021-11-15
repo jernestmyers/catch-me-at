@@ -15,9 +15,8 @@ import {
   // collection,
   // getDocs,
   // getDoc,
-  setDoc,
+  // setDoc,
   updateDoc,
-  arrayUnion,
   doc,
 } from "firebase/firestore";
 
@@ -80,7 +79,6 @@ const CreateOrEditMap = (props) => {
 
   const fields = [
     `name`,
-    `address_component`,
     `formatted_address`,
     `url`,
     `geometry`,
@@ -100,7 +98,17 @@ const CreateOrEditMap = (props) => {
             place.geometry &&
             place.geometry.location
           ) {
-            setPlace(place);
+            const geometryObject = Object.assign(place.geometry, {
+              location: {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+              },
+            });
+            setPlace(
+              Object.assign(place, {
+                geometry: geometryObject,
+              })
+            );
           }
         }
       );
@@ -146,7 +154,6 @@ const CreateOrEditMap = (props) => {
         infoWindow.close();
         googleMarker.setVisible(false);
         const place = searchBar.getPlace();
-        setPlace(place);
         setNewMarkerPosition({
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -156,12 +163,23 @@ const CreateOrEditMap = (props) => {
         googleMarker.setVisible(true);
         infoWindow.setContent(
           `<div>
-            <p>
-              <strong>${place.name}</strong>
-            </p>
-            <p>${place.formatted_address}</p>
-            <a href=${place.url}>View on Google Maps</a>
+          <p>
+          <strong>${place.name}</strong>
+          </p>
+          <p>${place.formatted_address}</p>
+          <a href=${place.url}>View on Google Maps</a>
           </div>`
+        );
+        const geometryObject = Object.assign(place.geometry, {
+          location: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          },
+        });
+        setPlace(
+          Object.assign(place, {
+            geometry: geometryObject,
+          })
         );
         infoWindow.open(map, googleMarker);
       });
@@ -201,12 +219,10 @@ const CreateOrEditMap = (props) => {
   }, [props.mapsSaved, props.setMapsSaved]);
 
   const updateFirestore = async () => {
-    console.log(props.mapsSaved);
-    // const mapsForFirestore = props.mapsSaved.map((obj) => {
-    //   return Object.assign({}, obj);
-    // });
     const userRef = doc(props.db, "users", props.userAuth.uid);
-    await updateDoc(userRef, { mapsOwned: props.mapsSaved });
+    await updateDoc(userRef, {
+      mapsOwned: JSON.parse(JSON.stringify(props.mapsSaved)),
+    });
   };
 
   // const onMarkerClick = (e) => {

@@ -9,11 +9,11 @@ import {
   getDocs,
   getDoc,
   setDoc,
-  updateDoc,
   doc,
 } from "firebase/firestore";
 import "./App.css";
 import AuthenticateUser from "./components/AuthenticateUser.js";
+// import uniqid from "uniqid";
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
@@ -87,83 +87,6 @@ function App() {
     return dataHelper;
   };
 
-  const testArray = [
-    {
-      ownerId: "0RkquKMMUkdwM5s92OpMjMBW2Ix1",
-      mapID: "kw05zb46",
-      markers: [
-        {
-          id: "kw05z767",
-          coordinates: {
-            lat: 39.9525839,
-            lng: -75.1652215,
-          },
-          place: {
-            address_components: [
-              {
-                long_name: "Philadelphia",
-                short_name: "Philadelphia",
-                types: ["locality", "political"],
-              },
-              {
-                long_name: "Philadelphia County",
-                short_name: "Philadelphia County",
-                types: ["administrative_area_level_2", "political"],
-              },
-              {
-                long_name: "Pennsylvania",
-                short_name: "PA",
-                types: ["administrative_area_level_1", "political"],
-              },
-              {
-                long_name: "United States",
-                short_name: "US",
-                types: ["country", "political"],
-              },
-            ],
-            formatted_address: "Philadelphia, PA, USA",
-            geometry: {
-              location: {},
-              viewport: {
-                Ab: {
-                  g: 39.86700406742303,
-                  h: 40.13799186419682,
-                },
-                Ra: {
-                  g: -75.28029371735357,
-                  h: -74.95576291304663,
-                },
-              },
-            },
-            name: "Philadelphia",
-            place_id: "ChIJ60u11Ni3xokRwVg-jNgU9Yk",
-            types: ["locality", "political"],
-            url: "https://maps.google.com/?q=Philadelphia,+PA,+USA&ftid=0x89c6b7d8d4b54beb:0x89f514d88c3e58c1",
-            html_attributions: [],
-          },
-          userInputData: [
-            {
-              id: "date",
-              value: "",
-            },
-            {
-              id: "time",
-              value: "",
-            },
-            {
-              id: "what",
-              value: "",
-            },
-          ],
-        },
-      ],
-      isPublished: false,
-      isPrivate: false,
-      likes: null,
-      comments: [],
-    },
-  ];
-
   return (
     <div className="App">
       <header className="App-header">
@@ -187,15 +110,6 @@ function App() {
       })} */}
       <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
       <button onClick={() => console.log(userData)}>see data fetch</button>
-      <button
-        onClick={async () => {
-          const userRef = doc(db, "users", userAuth.uid);
-          await updateDoc(userRef, { mapsOwned: [...testArray] });
-        }}
-      >
-        {" "}
-        test firestore
-      </button>
     </div>
   );
 }
