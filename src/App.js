@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
+import AuthenticateUser from "./components/AuthenticateUser.js";
+import NavBar from "./components/NavBar.js";
+import Home from "./components/Home.js";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
 import RenderMaps from "./components/RenderMaps.js";
+import ViewItinerary from "./components/ViewItinerary.js";
+import Connections from "./components/Connections.js";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config.js";
 import {
@@ -11,8 +16,8 @@ import {
   setDoc,
   doc,
 } from "firebase/firestore";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import AuthenticateUser from "./components/AuthenticateUser.js";
 // import uniqid from "uniqid";
 
 const firebaseAppConfig = getFirebaseConfig();
@@ -32,6 +37,7 @@ function App() {
   const [userAuth, setUserAuth] = useState();
   const [userData, setUserData] = useState();
   const [mapsSaved, setMapsSaved] = useState([]);
+  const [mapClicked, setMapClicked] = useState([]);
   const [isUserDataSet, setIsUserDataSet] = useState();
 
   useEffect(() => {
@@ -96,29 +102,82 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>catch me at _______</h1>
-        <AuthenticateUser
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>catch me at</h1>
+          <AuthenticateUser
+            db={db}
+            userAuth={userAuth}
+            setUserAuth={setUserAuth}
+          ></AuthenticateUser>
+          <NavBar></NavBar>
+        </header>
+        <Routes>
+          <Route
+            path="/catch-me-at"
+            exact
+            element={<Home userAuth={userAuth}></Home>}
+          ></Route>
+
+          <Route
+            path="/catch-me-at/create"
+            element={
+              <CreateOrEditMap
+                db={db}
+                userAuth={userAuth}
+                userData={userData}
+                setUserData={setUserData}
+                mapsSaved={mapsSaved}
+                setMapsSaved={setMapsSaved}
+              ></CreateOrEditMap>
+            }
+          ></Route>
+          <Route
+            path="/catch-me-at/view"
+            element={mapsSaved.map((object) => {
+              return (
+                // <Link to={`/catch-me-at/view/${object.id}`}>
+                <div>
+                  <RenderMaps key={object.id} mapObject={object}></RenderMaps>
+                  <ViewItinerary markers={object.markers}></ViewItinerary>
+                </div>
+                // </Link>
+              );
+            })}
+          ></Route>
+          {/* <Route
+            path={`/catch-me-at/view/${mapClicked.id}`}
+            element={mapClicked.map((object) => {
+              return (
+                <div>
+                  <RenderMaps key={object.id} mapObject={object}></RenderMaps>
+                  <ViewItinerary markers={object.markers}></ViewItinerary>
+                </div>
+              );
+            })}
+          ></Route> */}
+          <Route
+            path="/catch-me-at/connect"
+            exact
+            element={<Connections userData={userData}></Connections>}
+          ></Route>
+        </Routes>
+        {/* <CreateOrEditMap
           db={db}
           userAuth={userAuth}
-          setUserAuth={setUserAuth}
-        ></AuthenticateUser>
-      </header>
-      <CreateOrEditMap
-        db={db}
-        userAuth={userAuth}
-        userData={userData}
-        setUserData={setUserData}
-        mapsSaved={mapsSaved}
-        setMapsSaved={setMapsSaved}
-      ></CreateOrEditMap>
-      {/* {mapsSaved.map((object) => {
-        return <RenderMaps key={object.id} mapObject={object}></RenderMaps>;
-      })} */}
-      <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
-      <button onClick={() => console.log(userData)}>see data fetch</button>
-    </div>
+          userData={userData}
+          setUserData={setUserData}
+          mapsSaved={mapsSaved}
+          setMapsSaved={setMapsSaved}
+        ></CreateOrEditMap>
+        {mapsSaved.map((object) => {
+          return <RenderMaps key={object.id} mapObject={object}></RenderMaps>;
+        })} */}
+        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
+        {/* <button onClick={() => console.log(userData)}>see data fetch</button> */}
+      </div>
+    </Router>
   );
 }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
 
 const ViewItinerary = (props) => {
-  //   console.log(props);
+  console.log(props);
 
   return (
     <div id="itinerary-container">
