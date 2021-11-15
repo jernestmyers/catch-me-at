@@ -35,10 +35,26 @@ function getFormData(inputs) {
   return data;
 }
 
+function getMapStatusValues(inputs) {
+  const publishCheckbox = document.querySelector(`#publish-checkbox`);
+  const privateCheckbox = document.querySelector(`#private-checkbox`);
+  const getDatePublished = () => {
+    if (publishCheckbox.checked) {
+      return new Date();
+    }
+  };
+  return {
+    datePublished: getDatePublished(),
+    isPublished: publishCheckbox.checked,
+    isPrivate: privateCheckbox.checked,
+  };
+}
+
 export {
   clearContainer,
   clearFormInputs,
   createWhereElements,
   appendWhereElements,
   getFormData,
+  getMapStatusValues,
 };

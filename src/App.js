@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import CreateOrEditMap from "./components/CreateOrEditMap.js";
+import CreateOrEditMap from "./components/CreateOrEditMap.js";
 // import RenderMaps from "./components/RenderMaps.js";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config.js";
@@ -96,11 +96,11 @@ function App() {
           setUserAuth={setUserAuth}
         ></AuthenticateUser>
       </header>
-      {/* <CreateOrEditMap
+      <CreateOrEditMap
         userAuth={userAuth}
         mapsSaved={mapsSaved}
         setMapsSaved={setMapsSaved}
-      ></CreateOrEditMap> */}
+      ></CreateOrEditMap>
       {/* {mapsSaved.map((object, index) => {
         return <RenderMaps mapObject={object}></RenderMaps>;
       })} */}

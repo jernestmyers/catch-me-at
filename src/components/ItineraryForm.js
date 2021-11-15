@@ -25,6 +25,12 @@ const ItineraryForm = (props) => {
         <label htmlFor="what">the plan:</label>
         <textarea className="input-field" id="what" rows="5"></textarea>
       </div>
+      <div id="status-container">
+        <label htmlFor="publish-checkbox">Ready to Publish?</label>
+        <input type="checkbox" id="publish-checkbox" name="publish-checkbox" />
+        <label htmlFor="private-checkbox">Set as private?</label>
+        <input type="checkbox" id="private-checkbox" name="private-checkbox" />
+      </div>
       {!props.isEditClicked ? (
         <button onClick={props.addMarkerAndInfo} className="add-details-btn">
           add

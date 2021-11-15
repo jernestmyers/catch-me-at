@@ -9,6 +9,7 @@ import {
   createWhereElements,
   appendWhereElements,
   getFormData,
+  getMapStatusValues,
 } from "../functions/helperDOMMethods";
 
 const containerStyle = {
@@ -175,6 +176,17 @@ const CreateOrEditMap = (props) => {
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
+  useEffect(() => {
+    if (markers.length) {
+      setMarkers([]);
+      setNewMarkerPosition({});
+      setPlace(null);
+      setPlaceId(null);
+      infoWindow.close();
+      googleMarker.setVisible(false);
+    }
+  }, [props.mapsSaved, props.setMapsSaved]);
+
   // const onMarkerClick = (e) => {
   //   console.log(
   //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
@@ -212,6 +224,8 @@ const CreateOrEditMap = (props) => {
       },
     ]);
     setIsEditClicked(false);
+    infoWindow.close();
+    googleMarker.setVisible(false);
   };
 
   const deleteMarkerAndData = (e) => {
@@ -256,15 +270,23 @@ const CreateOrEditMap = (props) => {
   };
 
   const handleSaveMap = (e) => {
-    if (markers.length) {
-      console.log(markers);
-      props.setMapsSaved([
-        ...props.mapsSaved,
-        {
-          mapID: uniqid(),
-          marker: markers,
-        },
-      ]);
+    if (markers.length && props.userAuth) {
+      if (!props.userAuth.isAnonymous) {
+        console.log(markers);
+        props.setMapsSaved([
+          ...props.mapsSaved,
+          {
+            ownerId: props.userAuth.uid,
+            mapID: uniqid(),
+            markers: markers,
+            datePublished: getMapStatusValues().datePublished,
+            isPublished: getMapStatusValues().isPublished,
+            isPrivate: getMapStatusValues().isPrivate,
+            likes: null,
+            comments: [],
+          },
+        ]);
+      }
     }
   };
 
