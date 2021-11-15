@@ -11,6 +11,15 @@ import {
   getFormData,
   getMapStatusValues,
 } from "../functions/helperDOMMethods";
+import {
+  // collection,
+  // getDocs,
+  // getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  doc,
+} from "firebase/firestore";
 
 const containerStyle = {
   width: "300px",
@@ -184,8 +193,21 @@ const CreateOrEditMap = (props) => {
       setPlaceId(null);
       infoWindow.close();
       googleMarker.setVisible(false);
+      props.setUserData((prevState) => {
+        return { ...prevState, mapsOwned: props.mapsSaved };
+      });
+      updateFirestore();
     }
   }, [props.mapsSaved, props.setMapsSaved]);
+
+  const updateFirestore = async () => {
+    console.log(props.mapsSaved);
+    // const mapsForFirestore = props.mapsSaved.map((obj) => {
+    //   return Object.assign({}, obj);
+    // });
+    const userRef = doc(props.db, "users", props.userAuth.uid);
+    await updateDoc(userRef, { mapsOwned: props.mapsSaved });
+  };
 
   // const onMarkerClick = (e) => {
   //   console.log(
