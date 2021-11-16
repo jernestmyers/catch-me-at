@@ -384,11 +384,12 @@ const CreateOrEditMap = (props) => {
       ) : (
         <></>
       )}
-      {/* <ViewItinerary
+      <ViewItinerary
         // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
+        userAuth={props.userAuth}
         deleteMarkerAndData={deleteMarkerAndData}
         markers={markers}
-      ></ViewItinerary> */}
+      ></ViewItinerary>
       <ItineraryForm
         isEditClicked={isEditClicked}
         addMarkerAndInfo={addMarkerAndInfo}

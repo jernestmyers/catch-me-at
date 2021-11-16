@@ -1,8 +1,14 @@
 import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
+import { useParams, useLocation } from "react-router-dom";
 
 const ViewItinerary = (props) => {
   console.log(props);
+  console.log(useParams());
+  console.log(useLocation());
+
+  const currentPath = useLocation().pathname;
+  console.log(currentPath);
 
   return (
     <div id="itinerary-container">
@@ -24,14 +30,19 @@ const ViewItinerary = (props) => {
               {object.userInputData[1].value}
             </p>
             <p>what: {object.userInputData[2].value}</p>
-            {props.userAuth.uid === props.mapObject.ownerId ? (
+            {currentPath === "/create" ? (
+              <div>
+                <button onClick={props.prepareToEditMarkerAndData}>edit</button>
+                <button onClick={props.deleteMarkerAndData}>delete</button>
+              </div>
+            ) : props.userAuth.uid === props.mapObject.ownerId ? (
               <div>
                 <button onClick={props.prepareToEditMarkerAndData}>edit</button>
                 <button onClick={props.deleteMarkerAndData}>delete</button>
               </div>
             ) : null}
-            {/* <button onClick={props.prepareToEditMarkerAndData}>edit</button> */}
-            {/* <button onClick={props.deleteMarkerAndData}>delete</button> */}
+            {/* <button onClick={props.prepareToEditMarkerAndData}>edit</button>
+            <button onClick={props.deleteMarkerAndData}>delete</button> */}
           </div>
         );
       })}
