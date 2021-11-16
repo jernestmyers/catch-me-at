@@ -6,24 +6,24 @@ function NavBar(props) {
     <nav>
       <ul>
         <li>
-          <Link id="home-nav" to="/catch-me-at">
+          <Link id="home-nav" to="/">
             home
           </Link>
         </li>
         <li>
-          <Link id="about-nav" to="/catch-me-at/create">
+          <Link id="about-nav" to="/create">
             create itinerary
           </Link>
         </li>
         <li>
-          <Link id="shop-nav" to="catch-me-at/view">
+          <Link id="shop-nav" to="/view">
             view itineraries
           </Link>
         </li>
 
         <li id="nav-cart">
-          <Link id="nav-cart-link" to="catch-me-at/connect">
-            connections
+          <Link id="nav-cart-link" to="/connect">
+            connect
           </Link>
         </li>
       </ul>

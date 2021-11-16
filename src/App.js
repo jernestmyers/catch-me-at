@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import AuthenticateUser from "./components/AuthenticateUser.js";
 import NavBar from "./components/NavBar.js";
 import Home from "./components/Home.js";
+import ViewMaps from "./components/ViewMaps.js";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
-import RenderMaps from "./components/RenderMaps.js";
-import ViewItinerary from "./components/ViewItinerary.js";
 import Connections from "./components/Connections.js";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config.js";
@@ -18,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
+import ViewMapItinerary from "./components/ViewMapItinerary.js";
 // import uniqid from "uniqid";
 
 const firebaseAppConfig = getFirebaseConfig();
@@ -35,10 +35,30 @@ const newUserObject = {
 
 function App() {
   const [userAuth, setUserAuth] = useState();
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState(null);
   const [mapsSaved, setMapsSaved] = useState([]);
-  const [mapClicked, setMapClicked] = useState([]);
+  const [publicMaps, setPublicMaps] = useState([]);
   const [isUserDataSet, setIsUserDataSet] = useState();
+
+  useEffect(() => {
+    getPublicMaps();
+  }, []);
+
+  const getPublicMaps = async () => {
+    try {
+      const fetchPublicMaps = await getDocs(collection(db, "publicMaps"));
+      // const fetchedPublicMaps = storeFetchAsArray(
+      //   "publicMaps",
+      //   fetchPublicMaps
+      // );
+      setPublicMaps(storeFetchAsArray("publicMaps", fetchPublicMaps));
+      // console.log(fetchedPublicMaps);
+    } catch (error) {
+      alert(
+        `Hmm, we're experiencing the following error: "${error}." Try again later.`
+      );
+    }
+  };
 
   useEffect(() => {
     if (userAuth) {
@@ -60,7 +80,8 @@ function App() {
     try {
       let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
-      const fetchedUserIds = storeFetchAsArray(fetchUserIds);
+      const fetchedUserIds = storeFetchAsArray("users", fetchUserIds);
+      console.log(fetchedUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
           doesUserExist = true;
@@ -93,11 +114,17 @@ function App() {
     }
   };
 
-  const storeFetchAsArray = (users) => {
+  const storeFetchAsArray = (collection, data) => {
     const dataHelper = [];
-    users.forEach((doc) => {
-      dataHelper.push(doc.id);
-    });
+    if (collection === `users`) {
+      data.forEach((doc) => {
+        dataHelper.push(doc.id);
+      });
+    } else if (collection === `publicMaps`) {
+      data.forEach((doc) => {
+        dataHelper.push([doc.id, doc.data()]);
+      });
+    }
     return dataHelper;
   };
 
@@ -115,13 +142,18 @@ function App() {
         </header>
         <Routes>
           <Route
-            path="/catch-me-at"
-            exact
-            element={<Home userAuth={userAuth}></Home>}
+            path="/"
+            element={
+              <Home
+                userAuth={userAuth}
+                mapsSaved={mapsSaved}
+                publicMaps={publicMaps}
+              ></Home>
+            }
           ></Route>
 
           <Route
-            path="/catch-me-at/create"
+            path="/create"
             element={
               <CreateOrEditMap
                 db={db}
@@ -134,47 +166,24 @@ function App() {
             }
           ></Route>
           <Route
-            path="/catch-me-at/view"
-            element={mapsSaved.map((object) => {
-              return (
-                // <Link to={`/catch-me-at/view/${object.id}`}>
-                <div>
-                  <RenderMaps key={object.id} mapObject={object}></RenderMaps>
-                  <ViewItinerary markers={object.markers}></ViewItinerary>
-                </div>
-                // </Link>
-              );
-            })}
+            path="/view"
+            element={<ViewMaps id="test-param" userData={userData}></ViewMaps>}
           ></Route>
-          {/* <Route
-            path={`/catch-me-at/view/${mapClicked.id}`}
-            element={mapClicked.map((object) => {
-              return (
-                <div>
-                  <RenderMaps key={object.id} mapObject={object}></RenderMaps>
-                  <ViewItinerary markers={object.markers}></ViewItinerary>
-                </div>
-              );
-            })}
-          ></Route> */}
           <Route
-            path="/catch-me-at/connect"
-            exact
+            path="/view/*"
+            element={
+              <ViewMapItinerary
+                userData={userData}
+                publicMaps={publicMaps}
+              ></ViewMapItinerary>
+            }
+          ></Route>
+          <Route
+            path="/connect"
             element={<Connections userData={userData}></Connections>}
           ></Route>
         </Routes>
-        {/* <CreateOrEditMap
-          db={db}
-          userAuth={userAuth}
-          userData={userData}
-          setUserData={setUserData}
-          mapsSaved={mapsSaved}
-          setMapsSaved={setMapsSaved}
-        ></CreateOrEditMap>
-        {mapsSaved.map((object) => {
-          return <RenderMaps key={object.id} mapObject={object}></RenderMaps>;
-        })} */}
-        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
+        <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
         {/* <button onClick={() => console.log(userData)}>see data fetch</button> */}
       </div>
     </Router>
