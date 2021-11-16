@@ -167,12 +167,13 @@ function App() {
           ></Route>
           <Route
             path="/view"
-            element={<ViewMaps id="test-param" userData={userData}></ViewMaps>}
+            element={<ViewMaps userData={userData}></ViewMaps>}
           ></Route>
           <Route
             path="/view/*"
             element={
               <ViewMapItinerary
+                userAuth={userAuth}
                 userData={userData}
                 publicMaps={publicMaps}
               ></ViewMapItinerary>

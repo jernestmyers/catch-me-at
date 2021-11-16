@@ -24,8 +24,14 @@ const ViewItinerary = (props) => {
               {object.userInputData[1].value}
             </p>
             <p>what: {object.userInputData[2].value}</p>
-            <button onClick={props.prepareToEditMarkerAndData}>edit</button>
-            <button onClick={props.deleteMarkerAndData}>delete</button>
+            {props.userAuth.uid === props.mapObject.ownerId ? (
+              <div>
+                <button onClick={props.prepareToEditMarkerAndData}>edit</button>
+                <button onClick={props.deleteMarkerAndData}>delete</button>
+              </div>
+            ) : null}
+            {/* <button onClick={props.prepareToEditMarkerAndData}>edit</button> */}
+            {/* <button onClick={props.deleteMarkerAndData}>delete</button> */}
           </div>
         );
       })}

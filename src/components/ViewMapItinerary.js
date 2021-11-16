@@ -16,7 +16,11 @@ function ViewMapItinerary(props, match) {
           return (
             <div>
               <RenderMaps mapObject={map}></RenderMaps>
-              <ViewItinerary markers={map.markers}></ViewItinerary>
+              <ViewItinerary
+                mapObject={map}
+                markers={map.markers}
+                userAuth={props.userAuth}
+              ></ViewItinerary>
             </div>
           );
         }

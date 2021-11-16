@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import uniqid from "uniqid";
 import ItineraryForm from "./ItineraryForm";
 import ViewItinerary from "./ViewItinerary";
@@ -54,12 +59,12 @@ const inputStyle = {
 const libraries = [`places`];
 
 const CreateOrEditMap = (props) => {
-  // const [isMarkerClicked, setIsMarkerClicked] = useState(false);
+  const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
   // const [idOfEditClicked, setIdOfEditClicked] = useState();
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
-  // const [markerNodeValue, setMarkerNodeValue] = useState();
+  const [markerClickedId, setMarkerClickedId] = useState();
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
@@ -163,9 +168,7 @@ const CreateOrEditMap = (props) => {
         googleMarker.setVisible(true);
         infoWindow.setContent(
           `<div>
-          <p>
-          <strong>${place.name}</strong>
-          </p>
+          <p>${place.name}</p>
           <p>${place.formatted_address}</p>
           <a href=${place.url}>View on Google Maps</a>
           </div>`
@@ -226,16 +229,11 @@ const CreateOrEditMap = (props) => {
     });
   };
 
-  // const onMarkerClick = (e) => {
-  //   console.log(
-  //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
-  //   );
-  //   setMarkerNodeValue(
-  //     +e.domEvent.explicitOriginalTarget.offsetParent.attributes[1].nodeValue
-  //   );
-  //   isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
-  //   console.log(infoWindowValues);
-  // };
+  const onMarkerClick = (e) => {
+    console.log(e.domEvent.explicitOriginalTarget.title);
+    setMarkerClickedId(e.domEvent.explicitOriginalTarget.title);
+    isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
+  };
 
   const onMapClick = (e) => {
     // document.querySelector(`#add-marker-details`).style.display = `none`;
@@ -244,6 +242,7 @@ const CreateOrEditMap = (props) => {
       setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     }
     googleMarker.setVisible(false);
+    setIsMarkerClicked(false);
   };
 
   const addMarkerAndInfo = (e) => {
@@ -343,13 +342,37 @@ const CreateOrEditMap = (props) => {
             {markers.map((object, index) => {
               return (
                 <Marker
-                  // onClick={onMarkerClick}
+                  onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
+                  title={object.id}
                 ></Marker>
               );
             })}
-            <></>
+            {isMarkerClicked
+              ? markers.map((object) => {
+                  if (object.id === markerClickedId) {
+                    return (
+                      <InfoWindow
+                        position={{
+                          lat: object.coordinates.lat,
+                          lng: object.coordinates.lng,
+                        }}
+                        onCloseClick={() => {
+                          setIsMarkerClicked(false);
+                          setMarkerClickedId(null);
+                        }}
+                      >
+                        <div>
+                          <p>{object.place.name}</p>
+                          <p>{object.place.formatted_address}</p>
+                          <a href={object.place.url}>View on Google Maps</a>
+                        </div>
+                      </InfoWindow>
+                    );
+                  }
+                })
+              : null}
           </GoogleMap>
           <input
             id="search-bar"
@@ -361,11 +384,11 @@ const CreateOrEditMap = (props) => {
       ) : (
         <></>
       )}
-      <ViewItinerary
+      {/* <ViewItinerary
         // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
         deleteMarkerAndData={deleteMarkerAndData}
         markers={markers}
-      ></ViewItinerary>
+      ></ViewItinerary> */}
       <ItineraryForm
         isEditClicked={isEditClicked}
         addMarkerAndInfo={addMarkerAndInfo}
