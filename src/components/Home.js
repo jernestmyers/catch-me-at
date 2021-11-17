@@ -16,7 +16,6 @@ function Home(props) {
             return (
               <div>
                 <RenderMaps mapObject={mapArray[1].mapObject}></RenderMaps>
-                <Link to={`/view/${mapArray[0]}`}>More details</Link>
               </div>
             );
           })}

@@ -5,6 +5,7 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import { Link, useLocation } from "react-router-dom";
 // import uniqid from "uniqid";
 
 const containerStyle = {
@@ -31,6 +32,8 @@ function sortBounds(array) {
 
 const RenderMaps = (props) => {
   // console.log(props);
+  const currentPath = useLocation().pathname;
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -77,7 +80,6 @@ const RenderMaps = (props) => {
     <div className="map-container" id="render-map-container">
       {isLoaded ? (
         <div id="map">
-          <h1>{props.mapObject.mapTitle}</h1>
           <GoogleMap
             mapContainerStyle={containerStyle}
             options={options}
@@ -126,6 +128,15 @@ const RenderMaps = (props) => {
                 })
               : null}
           </GoogleMap>
+          {currentPath === `/view` ? (
+            <Link to={`${props.mapObject.mapID}`}>
+              <h1>{props.mapObject.mapTitle}</h1>
+            </Link>
+          ) : (
+            <Link to={`/view/${props.mapObject.mapID}`}>
+              <h1>{props.mapObject.mapTitle}</h1>
+            </Link>
+          )}
         </div>
       ) : (
         <></>
