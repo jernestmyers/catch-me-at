@@ -162,32 +162,34 @@ const CreateOrEditMap = (props) => {
         infoWindow.close();
         googleMarker.setVisible(false);
         const place = searchBar.getPlace();
-        setNewMarkerPosition({
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        });
-        document.getElementById("search-bar").value = ``;
-        googleMarker.setPosition(place.geometry.location);
-        googleMarker.setVisible(true);
-        infoWindow.setContent(
-          `<div>
+        if (searchBar.getPlace().place_id) {
+          setNewMarkerPosition({
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          });
+          document.getElementById("search-bar").value = ``;
+          googleMarker.setPosition(place.geometry.location);
+          googleMarker.setVisible(true);
+          infoWindow.setContent(
+            `<div>
           <p>${place.name}</p>
           <p>${place.formatted_address}</p>
           <a href=${place.url}>View on Google Maps</a>
           </div>`
-        );
-        const geometryObject = Object.assign(place.geometry, {
-          location: {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          },
-        });
-        setPlace(
-          Object.assign(place, {
-            geometry: geometryObject,
-          })
-        );
-        infoWindow.open(map, googleMarker);
+          );
+          const geometryObject = Object.assign(place.geometry, {
+            location: {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng(),
+            },
+          });
+          setPlace(
+            Object.assign(place, {
+              geometry: geometryObject,
+            })
+          );
+          infoWindow.open(map, googleMarker);
+        }
       });
     }
   }, [searchBar, setSearchBar]);
