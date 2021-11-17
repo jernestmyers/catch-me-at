@@ -15,7 +15,7 @@ import {
   setDoc,
   doc,
 } from "firebase/firestore";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import ViewMapItinerary from "./components/ViewMapItinerary.js";
 // import uniqid from "uniqid";
@@ -26,7 +26,11 @@ const db = getFirestore();
 
 const newUserObject = {
   mapsOwned: [],
-  connections: [],
+  connections: {
+    active: [],
+    pendingReceived: [],
+    pendingSent: [],
+  },
   mapsSharedWithUser: [],
   publicMapsSaved: [],
   likesByUser: [],
@@ -47,12 +51,7 @@ function App() {
   const getPublicMaps = async () => {
     try {
       const fetchPublicMaps = await getDocs(collection(db, "publicMaps"));
-      // const fetchedPublicMaps = storeFetchAsArray(
-      //   "publicMaps",
-      //   fetchPublicMaps
-      // );
       setPublicMaps(storeFetchAsArray("publicMaps", fetchPublicMaps));
-      // console.log(fetchedPublicMaps);
     } catch (error) {
       alert(
         `Hmm, we're experiencing the following error: "${error}." Try again later.`
@@ -70,7 +69,7 @@ function App() {
 
   useEffect(() => {
     if (userData && !isUserDataSet) {
-      console.log(`userData - let's go!`);
+      // console.log(`userData - let's go!`);
       setIsUserDataSet(true);
       setMapsSaved(userData.mapsOwned);
     }
@@ -100,11 +99,11 @@ function App() {
     try {
       const doesUserExist = await checkForUserData();
       if (doesUserExist) {
-        console.log(`get user's data!`);
+        // console.log(`get user's data!`);
         const fetchUserData = await getDoc(doc(db, "users", userAuth.uid));
         setUserData(fetchUserData.data());
       } else {
-        console.log(`create new user!`);
+        // console.log(`create new user!`);
         setDoc(doc(db, "users", userAuth.uid), newUserObject);
       }
     } catch (error) {

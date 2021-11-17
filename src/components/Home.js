@@ -1,10 +1,10 @@
 import React from "react";
 import RenderMaps from "./RenderMaps";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 // import { useParams, useLocation } from "react-router-dom";
 
 function Home(props) {
-  console.log(props);
+  // console.log(props);
 
   return (
     <div id="home-container">

@@ -235,7 +235,6 @@ const CreateOrEditMap = (props) => {
   };
 
   const onMarkerClick = (e) => {
-    console.log(e.domEvent.explicitOriginalTarget.title);
     setMarkerClickedId(e.domEvent.explicitOriginalTarget.title);
     isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
   };
@@ -315,7 +314,6 @@ const CreateOrEditMap = (props) => {
   const handleSaveMap = (e) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
-        console.log(markers);
         const mapToUpdate = {
           ownerId: props.userAuth.uid,
           mapID: uniqid(),

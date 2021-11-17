@@ -1,9 +1,9 @@
 import React from "react";
 import RenderMaps from "./RenderMaps";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 function ViewMaps(props) {
-  console.log(props.userData.mapsOwned);
+  // console.log(props.userData.mapsOwned);
   return (
     <div id="view-maps-container">
       <div id="mapsOwned-container">

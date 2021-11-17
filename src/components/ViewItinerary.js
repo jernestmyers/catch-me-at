@@ -1,14 +1,10 @@
 import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
-import { useParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const ViewItinerary = (props) => {
-  console.log(props);
-  console.log(useParams());
-  console.log(useLocation());
-
+  // console.log(props);
   const currentPath = useLocation().pathname;
-  console.log(currentPath);
 
   return (
     <div id="itinerary-container">

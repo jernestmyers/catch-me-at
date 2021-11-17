@@ -4,7 +4,7 @@ import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
 
 function ViewMapItinerary(props, match) {
-  console.log(props);
+  // console.log(props);
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps
     .map((array) => {
@@ -14,8 +14,8 @@ function ViewMapItinerary(props, match) {
       return object.mapObject;
     });
   const mapsArray = [...props.userData.mapsOwned, ...publicMapsArray];
-  console.log(mapsArray);
-  console.log(mapID);
+  // console.log(mapsArray);
+  // console.log(mapID);
   return (
     <div id="detailed-view-container">
       {mapsArray.map((map) => {

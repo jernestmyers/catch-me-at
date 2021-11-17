@@ -65,7 +65,6 @@ const RenderMaps = (props) => {
   }, []);
 
   const onMarkerClick = (e) => {
-    console.log(e.domEvent.explicitOriginalTarget.title);
     setMarkerClickedIdInRender(e.domEvent.explicitOriginalTarget.title);
     isMarkerClickedInRender
       ? setIsMarkerClickedInRender(false)
