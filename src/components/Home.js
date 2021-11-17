@@ -8,10 +8,9 @@ function Home(props) {
 
   return (
     <div id="home-container">
-      <h1>HOME</h1>
+      <h1>Activity Feed - Get inspired!</h1>
       {props.userAuth ? (
-        <div>
-          <h1>This is Home when logged in, even as a guest.</h1>
+        <div className="map-feed">
           {props.publicMaps.map((mapArray) => {
             return (
               <div>

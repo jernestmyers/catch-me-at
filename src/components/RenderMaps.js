@@ -130,11 +130,11 @@ const RenderMaps = (props) => {
           </GoogleMap>
           {currentPath === `/view` ? (
             <Link to={`${props.mapObject.mapID}`}>
-              <h1>{props.mapObject.mapTitle}</h1>
+              {props.mapObject.mapTitle}
             </Link>
           ) : (
             <Link to={`/view/${props.mapObject.mapID}`}>
-              <h1>{props.mapObject.mapTitle}</h1>
+              {props.mapObject.mapTitle}
             </Link>
           )}
         </div>

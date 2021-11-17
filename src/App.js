@@ -132,7 +132,7 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <h1>catch me at</h1>
+          <h1 id="app-title">catch me at</h1>
           <AuthenticateUser
             db={db}
             userAuth={userAuth}
@@ -184,8 +184,8 @@ function App() {
             element={<Connections userData={userData}></Connections>}
           ></Route>
         </Routes>
-        <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
-        <button onClick={() => console.log(userData)}>see data fetch</button>
+        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
+        {/* <button onClick={() => console.log(userData)}>see data fetch</button> */}
       </div>
     </Router>
   );

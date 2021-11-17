@@ -50,25 +50,28 @@ export default function AuthenticateUser(props) {
   return (
     <div id="auth-container">
       {props.userAuth ? (
-        <div>
+        <div id="sign-in-container">
           {props.userAuth.displayName ? (
-            <p>Hi, {getFirstName(auth.currentUser.displayName)}!</p>
+            <p id="user-greeting">
+              Hi, {getFirstName(auth.currentUser.displayName)}!
+            </p>
           ) : (
-            <p>Welcome, Guest!</p>
+            <p id="user-greeting">Welcome, Guest!</p>
           )}
           <button onClick={logUserOut}>sign out</button>
         </div>
       ) : (
         <div>
-          <div>
+          <div id="sign-in-container">
             <button onClick={logUserIn}>sign in with google</button>
-          </div>
-          <div>
+            <span>&nbsp;or&nbsp;</span>
             <button onClick={logInAsGuest}>sign in as guest</button>
           </div>
+          {/* <div>
+          </div> */}
         </div>
       )}
-      <button
+      {/* <button
         onClick={() =>
           console.log({
             auth: auth,
@@ -77,7 +80,7 @@ export default function AuthenticateUser(props) {
         }
       >
         click for auth
-      </button>
+      </button> */}
     </div>
   );
 }
