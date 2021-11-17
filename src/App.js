@@ -81,13 +81,13 @@ function App() {
       let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
       const fetchedUserIds = storeFetchAsArray("users", fetchUserIds);
-      console.log(fetchedUserIds);
+      // console.log(fetchedUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
           doesUserExist = true;
         }
       });
-      console.log(doesUserExist);
+      // console.log(doesUserExist);
       return doesUserExist;
     } catch (error) {
       alert(
@@ -128,6 +128,21 @@ function App() {
     return dataHelper;
   };
 
+  const testArray = [
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5],
+  ];
+
+  const testArrayIDs = testArray
+    .map((data) => {
+      return data[0];
+    })
+    .includes(3);
+
+  console.log(testArrayIDs);
+
   return (
     <Router>
       <div className="App">
@@ -162,6 +177,7 @@ function App() {
                 setUserData={setUserData}
                 mapsSaved={mapsSaved}
                 setMapsSaved={setMapsSaved}
+                publicMaps={publicMaps}
               ></CreateOrEditMap>
             }
           ></Route>
@@ -185,7 +201,7 @@ function App() {
           ></Route>
         </Routes>
         <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
-        {/* <button onClick={() => console.log(userData)}>see data fetch</button> */}
+        <button onClick={() => console.log(userData)}>see data fetch</button>
       </div>
     </Router>
   );

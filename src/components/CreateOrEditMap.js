@@ -18,7 +18,14 @@ import {
   getMapTitle,
   clearTitleAndStatus,
 } from "../functions/helperDOMMethods";
-import { updateDoc, doc } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  // collection,
+  // getDocs,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { format } from "date-fns";
 
 const containerStyle = {
@@ -214,11 +221,11 @@ const CreateOrEditMap = (props) => {
       props.setUserData((prevState) => {
         return { ...prevState, mapsOwned: props.mapsSaved };
       });
-      updateFirestore();
+      updateMapsOwnedInFirestore();
     }
   }, [props.mapsSaved, props.setMapsSaved]);
 
-  const updateFirestore = async () => {
+  const updateMapsOwnedInFirestore = async () => {
     const userRef = doc(props.db, "users", props.userAuth.uid);
     await updateDoc(userRef, {
       mapsOwned: JSON.parse(JSON.stringify(props.mapsSaved)),
@@ -307,22 +314,41 @@ const CreateOrEditMap = (props) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
         console.log(markers);
-        props.setMapsSaved([
-          ...props.mapsSaved,
-          {
-            ownerId: props.userAuth.uid,
-            mapID: uniqid(),
-            mapTitle: getMapTitle(document.querySelector(`#map-title-input`)),
-            markers: markers,
-            datePublished: getMapStatusValues().datePublished,
-            isPublished: getMapStatusValues().isPublished,
-            isPrivate: getMapStatusValues().isPrivate,
-            likes: null,
-            comments: [],
-          },
-        ]);
+        const mapToUpdate = {
+          ownerId: props.userAuth.uid,
+          mapID: uniqid(),
+          mapTitle: getMapTitle(document.querySelector(`#map-title-input`)),
+          markers: markers,
+          datePublished: getMapStatusValues().datePublished,
+          isPublished: getMapStatusValues().isPublished,
+          isPrivate: getMapStatusValues().isPrivate,
+          likes: null,
+          comments: [],
+        };
+        props.setMapsSaved([...props.mapsSaved, mapToUpdate]);
         clearTitleAndStatus();
+        updatePublicMapsInFirestore(mapToUpdate);
       }
+    }
+  };
+
+  const updatePublicMapsInFirestore = async (map) => {
+    const docRef = doc(props.db, "publicMaps", map.mapID);
+    const isMapStoredAsPublic = props.publicMaps
+      .map((publicMapObject) => {
+        return publicMapObject[0];
+      })
+      .includes(map.mapID);
+    if (!isMapStoredAsPublic && map.isPublished && !map.isPrivate) {
+      await setDoc(docRef, {
+        mapObject: JSON.parse(JSON.stringify(map)),
+      });
+    } else if (isMapStoredAsPublic && map.isPublished) {
+      map.isPrivate
+        ? await deleteDoc(docRef)
+        : await updateDoc(docRef, {
+            mapObject: JSON.parse(JSON.stringify(map)),
+          });
     }
   };
 
