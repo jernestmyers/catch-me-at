@@ -128,21 +128,6 @@ function App() {
     return dataHelper;
   };
 
-  const testArray = [
-    [1, 2],
-    [2, 3],
-    [3, 4],
-    [4, 5],
-  ];
-
-  const testArrayIDs = testArray
-    .map((data) => {
-      return data[0];
-    })
-    .includes(3);
-
-  console.log(testArrayIDs);
-
   return (
     <Router>
       <div className="App">
@@ -166,7 +151,6 @@ function App() {
               ></Home>
             }
           ></Route>
-
           <Route
             path="/create"
             element={

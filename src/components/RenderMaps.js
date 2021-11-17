@@ -30,8 +30,7 @@ function sortBounds(array) {
 }
 
 const RenderMaps = (props) => {
-  console.log(props);
-  console.log(props.mapObject.markers[0].place.geometry.viewport);
+  // console.log(props);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
