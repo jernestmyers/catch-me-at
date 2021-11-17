@@ -131,19 +131,25 @@ table {
 
 html,
 body,
+#root,
 .App {
   height: 100%;
   width: 100%;
 }
 
+div {
+  width: inherit;
+}
+
 header {
-  height: 5rem;
+  height: 4rem;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  margin: 0.25rem 0;
+  grid-template-rows: 1fr 1.25fr;
+  align-items: center;
 }
+
 #app-title {
   margin-left: 0.5rem;
 }
@@ -156,7 +162,7 @@ header {
 #sign-in-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 #user-greeting {
@@ -183,6 +189,7 @@ h1 {
 }
 
 a {
+  color: black;
   text-decoration: none;
 }
 a:visited {
@@ -200,6 +207,10 @@ a:hover {
   align-items: center;
 }
 
+#home-container {
+  width: 100%;
+}
+
 #map-container {
   display: flex;
   flex-wrap: wrap;
@@ -207,12 +218,13 @@ a:hover {
   align-items: center;
 }
 
-#map {
+/* #map {
   width: 400px;
   height: 400px;
-}
+} */
 
 .map-feed {
+  width: 100%;
   display: flex;
   justify-content: space-evenly;
 }
@@ -244,4 +256,53 @@ textarea {
 #itinerary-container {
   display: flex;
   gap: 20px;
+}
+
+/* BEGIN CONNECT CSS */
+#connections-container {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#active-connects-container {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* margin-bottom: 2rem; */
+}
+
+#active-connects-header {
+  text-align: center;
+}
+
+#manage-connects-container {
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 1rem auto;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "title title"
+    "received sent";
+}
+
+.pending-connects-container,
+.manage-connects,
+#search-connections-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.manage-connects {
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 0.5rem 0;
+}
+
+#manage-header {
+  grid-area: title;
 }
