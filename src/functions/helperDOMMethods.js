@@ -35,6 +35,14 @@ function getFormData(inputs) {
   return data;
 }
 
+function getMapTitle(titleInput) {
+  if (!titleInput.value) {
+    return titleInput.placeholder;
+  } else {
+    return titleInput.value;
+  }
+}
+
 function getMapStatusValues(inputs) {
   const publishCheckbox = document.querySelector(`#publish-checkbox`);
   const privateCheckbox = document.querySelector(`#private-checkbox`);
@@ -57,4 +65,5 @@ export {
   appendWhereElements,
   getFormData,
   getMapStatusValues,
+  getMapTitle,
 };

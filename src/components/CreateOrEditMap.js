@@ -15,15 +15,10 @@ import {
   appendWhereElements,
   getFormData,
   getMapStatusValues,
+  getMapTitle,
 } from "../functions/helperDOMMethods";
-import {
-  // collection,
-  // getDocs,
-  // getDoc,
-  // setDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
+import { format } from "date-fns";
 
 const containerStyle = {
   width: "300px",
@@ -316,6 +311,7 @@ const CreateOrEditMap = (props) => {
           {
             ownerId: props.userAuth.uid,
             mapID: uniqid(),
+            mapTitle: getMapTitle(document.querySelector(`#map-title-input`)),
             markers: markers,
             datePublished: getMapStatusValues().datePublished,
             isPublished: getMapStatusValues().isPublished,
@@ -329,9 +325,17 @@ const CreateOrEditMap = (props) => {
   };
 
   return (
-    <div id="map-container">
+    <div className="map-container" id="create-map-container">
       {isLoaded ? (
         <div id="map">
+          <div id="map-title-input-container">
+            <label htmlFor="map-title-input">Map Title:</label>
+            <input
+              id="map-title-input"
+              type="text"
+              placeholder={`Untitled - ${format(new Date(), "MM/dd/yyyy")}`}
+            />
+          </div>
           <GoogleMap
             mapContainerStyle={containerStyle}
             options={options}

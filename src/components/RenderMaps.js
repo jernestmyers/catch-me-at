@@ -69,50 +69,53 @@ const RenderMaps = (props) => {
   };
 
   return (
-    <div id="map">
+    <div className="map-container" id="render-map-container">
       {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          options={options}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-          onClick={onMapClick}
-        >
-          {props.mapObject.markers.map((object, index) => {
-            return (
-              <Marker
-                onClick={onMarkerClick}
-                label={`${index + 1}`}
-                position={object.coordinates}
-                title={object.id}
-              ></Marker>
-            );
-          })}
-          {isMarkerClickedInRender
-            ? props.mapObject.markers.map((object) => {
-                if (object.id === markerClickedIdInRender) {
-                  return (
-                    <InfoWindow
-                      position={{
-                        lat: object.coordinates.lat,
-                        lng: object.coordinates.lng,
-                      }}
-                      onCloseClick={() => {
-                        setIsMarkerClickedInRender(false);
-                        setMarkerClickedIdInRender(null);
-                      }}
-                    >
-                      <div>
-                        <p>{object.place.name}</p>
-                        <p>{object.place.formatted_address}</p>
-                        <a href={object.place.url}>View on Google Maps</a>
-                      </div>
-                    </InfoWindow>
-                  );
-                }
-              })
-            : null}
-        </GoogleMap>
+        <div id="map">
+          <h1>{props.mapObject.mapTitle}</h1>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            options={options}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            onClick={onMapClick}
+          >
+            {props.mapObject.markers.map((object, index) => {
+              return (
+                <Marker
+                  onClick={onMarkerClick}
+                  label={`${index + 1}`}
+                  position={object.coordinates}
+                  title={object.id}
+                ></Marker>
+              );
+            })}
+            {isMarkerClickedInRender
+              ? props.mapObject.markers.map((object) => {
+                  if (object.id === markerClickedIdInRender) {
+                    return (
+                      <InfoWindow
+                        position={{
+                          lat: object.coordinates.lat,
+                          lng: object.coordinates.lng,
+                        }}
+                        onCloseClick={() => {
+                          setIsMarkerClickedInRender(false);
+                          setMarkerClickedIdInRender(null);
+                        }}
+                      >
+                        <div>
+                          <p>{object.place.name}</p>
+                          <p>{object.place.formatted_address}</p>
+                          <a href={object.place.url}>View on Google Maps</a>
+                        </div>
+                      </InfoWindow>
+                    );
+                  }
+                })
+              : null}
+          </GoogleMap>
+        </div>
       ) : (
         <></>
       )}
