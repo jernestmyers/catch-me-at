@@ -112,7 +112,13 @@ const RenderMaps = (props) => {
                         <div>
                           <p>{object.place.name}</p>
                           <p>{object.place.formatted_address}</p>
-                          <a href={object.place.url}>View on Google Maps</a>
+                          <a
+                            href={object.place.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            View on Google Maps
+                          </a>
                         </div>
                       </InfoWindow>
                     );

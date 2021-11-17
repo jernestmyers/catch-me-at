@@ -17,6 +17,8 @@ function createWhereElements(placeObject) {
   placeAddress.textContent = placeObject.formatted_address;
   const placeGoogleUrl = document.createElement(`a`);
   placeGoogleUrl.href = placeObject.url;
+  placeGoogleUrl.target = `_blank`;
+  placeGoogleUrl.rel = `noreferrer`;
   placeGoogleUrl.textContent = `View on Google Maps`;
   return [placeName, placeAddress, placeGoogleUrl];
 }

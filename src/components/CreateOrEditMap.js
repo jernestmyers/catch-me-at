@@ -174,7 +174,7 @@ const CreateOrEditMap = (props) => {
             `<div>
           <p>${place.name}</p>
           <p>${place.formatted_address}</p>
-          <a href=${place.url}>View on Google Maps</a>
+          <a href=${place.url} target="_blank" rel="noreferrer">View on Google Maps</a>
           </div>`
           );
           const geometryObject = Object.assign(place.geometry, {
@@ -400,7 +400,13 @@ const CreateOrEditMap = (props) => {
                         <div>
                           <p>{object.place.name}</p>
                           <p>{object.place.formatted_address}</p>
-                          <a href={object.place.url}>View on Google Maps</a>
+                          <a
+                            href={object.place.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            View on Google Maps
+                          </a>
                         </div>
                       </InfoWindow>
                     );

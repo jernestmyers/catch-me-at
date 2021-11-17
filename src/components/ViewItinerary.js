@@ -23,7 +23,9 @@ const ViewItinerary = (props) => {
               <br></br>
               {whereElements[1].innerHTML}
               <br></br>
-              <a href={whereElements[2].href}>{whereElements[2].innerHTML}</a>
+              <a href={whereElements[2].href} target="_blank" rel="noreferrer">
+                {whereElements[2].innerHTML}
+              </a>
             </div>
             <p>
               when: {object.userInputData[0].value} @{" "}
