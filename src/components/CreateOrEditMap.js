@@ -16,6 +16,7 @@ import {
   getFormData,
   getMapStatusValues,
   getMapTitle,
+  clearTitleAndStatus,
 } from "../functions/helperDOMMethods";
 import { updateDoc, doc } from "firebase/firestore";
 import { format } from "date-fns";
@@ -320,6 +321,7 @@ const CreateOrEditMap = (props) => {
             comments: [],
           },
         ]);
+        clearTitleAndStatus();
       }
     }
   };
@@ -400,8 +402,14 @@ const CreateOrEditMap = (props) => {
         // confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
         cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
+      <div id="status-container">
+        <label htmlFor="publish-checkbox">Ready to Publish?</label>
+        <input type="checkbox" id="publish-checkbox" name="publish-checkbox" />
+        <label htmlFor="private-checkbox">Set as private?</label>
+        <input type="checkbox" id="private-checkbox" name="private-checkbox" />
+      </div>
       <button onClick={handleSaveMap}>save map</button>
-      <button
+      {/* <button
         onClick={() =>
           console.log({
             map: map,
@@ -414,7 +422,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button>
+      </button> */}
     </div>
   );
 };

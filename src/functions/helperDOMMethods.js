@@ -43,7 +43,7 @@ function getMapTitle(titleInput) {
   }
 }
 
-function getMapStatusValues(inputs) {
+function getMapStatusValues() {
   const publishCheckbox = document.querySelector(`#publish-checkbox`);
   const privateCheckbox = document.querySelector(`#private-checkbox`);
   const getDatePublished = () => {
@@ -58,9 +58,16 @@ function getMapStatusValues(inputs) {
   };
 }
 
+function clearTitleAndStatus() {
+  document.querySelector(`#publish-checkbox`).checked = ``;
+  document.querySelector(`#private-checkbox`).checked = ``;
+  document.querySelector(`#map-title-input`).value = ``;
+}
+
 export {
   clearContainer,
   clearFormInputs,
+  clearTitleAndStatus,
   createWhereElements,
   appendWhereElements,
   getFormData,
