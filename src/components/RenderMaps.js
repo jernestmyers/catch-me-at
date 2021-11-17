@@ -31,6 +31,7 @@ function sortBounds(array) {
 
 const RenderMaps = (props) => {
   console.log(props);
+  console.log(props.mapObject.markers[0].place.geometry.viewport);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${process.env.REACT_APP_MAP_API_KEY}`,
@@ -43,13 +44,18 @@ const RenderMaps = (props) => {
   const [markerClickedIdInRender, setMarkerClickedIdInRender] = useState();
 
   const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(
-      sortBounds(props.mapObject.markers)[0].coordinates,
-      sortBounds(props.mapObject.markers)[1].coordinates
-    );
-    map.fitBounds(bounds);
-    map.getCenter(bounds);
-    setMap(map);
+    if (props.mapObject.markers.length > 1) {
+      const bounds = new window.google.maps.LatLngBounds(
+        sortBounds(props.mapObject.markers)[0].coordinates,
+        sortBounds(props.mapObject.markers)[1].coordinates
+      );
+      map.fitBounds(bounds);
+      map.getCenter(bounds);
+      setMap(map);
+    } else {
+      map.fitBounds(props.mapObject.markers[0].place.geometry.viewport);
+      setMap(map);
+    }
   }, []);
 
   const onUnmount = React.useCallback(function callback(map) {
