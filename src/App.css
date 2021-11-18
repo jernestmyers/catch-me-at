@@ -248,23 +248,6 @@ a:hover {
   justify-content: space-evenly;
 }
 
-#add-marker-btn {
-  display: none;
-}
-
-#add-marker-details {
-  /* display: none; */
-  display: flex;
-  flex-direction: column;
-  background-color: #3a2e39;
-  color: #f4d8cd;
-  width: 300px;
-}
-
-textarea {
-  width: 200px;
-}
-
 #sign-in-btn,
 #sign-out-btn,
 #display-user-name {
@@ -445,4 +428,165 @@ textarea {
   font-weight: bold;
   margin: 0.5rem 0;
   margin-left: 0.5rem;
+}
+
+/* SWITCH FROM WEATHER APP */
+#toggle-units-container {
+  margin-right: 2rem;
+  justify-self: end;
+  display: flex;
+  grid-column: 3 / 4;
+  align-self: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 32.5px;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  top: 1px;
+  left: 1px;
+  transition: all 0.3s;
+}
+
+.checkbox:checked + .switch::after {
+  left: 28.5px;
+}
+
+.checkbox {
+  display: none;
+}
+
+/* CREATE MAP */
+#create-map-container {
+  width: auto;
+  height: auto;
+  display: grid;
+  border: none;
+  box-shadow: none;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  align-items: start;
+  justify-items: center;
+}
+
+#map-title-input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+#search-bar {
+  margin: 0.5rem 0;
+}
+
+#itinerary-container {
+  width: calc(var(--map-width) * 2);
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  grid-column: 1 / 3;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+
+.itinerary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(var(--map-width) * 0.9);
+}
+
+#add-marker-btn {
+  display: none;
+}
+
+#add-marker-details {
+  /* display: none; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  margin-left: 1rem;
+}
+
+#where-container,
+#when-container,
+.form-field,
+#form-btns {
+  width: 100%;
+}
+
+#when-container,
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.when-form,
+#form-btns {
+  width: 75%;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+textarea.input-field {
+  width: 90%;
+}
+
+.form-section-header {
+  /* height: 1.5rem; */
+  padding-top: 0.25rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #fcfcfc;
+  background-color: #5e5c6c;
+  font-weight: bold;
+}
+
+.input-field,
+#where-data {
+  margin: 0.5rem;
+}
+
+#form-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.add-details-btn {
+  margin: 0 0.5rem;
+  font-size: 1rem;
+}
+
+#status-container {
+  width: 60%;
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+#save-map-btn {
+  grid-column: 1 / 3;
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 }

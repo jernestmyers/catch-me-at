@@ -443,25 +443,47 @@ const CreateOrEditMap = (props) => {
       ) : (
         <></>
       )}
-      <ViewItinerary
-        // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
-        userAuth={props.userAuth}
-        deleteMarkerAndData={deleteMarkerAndData}
-        markers={markers}
-      ></ViewItinerary>
       <ItineraryForm
         isEditClicked={isEditClicked}
         addMarkerAndInfo={addMarkerAndInfo}
         // confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
         cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
+      <ViewItinerary
+        // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
+        userAuth={props.userAuth}
+        deleteMarkerAndData={deleteMarkerAndData}
+        markers={markers}
+      ></ViewItinerary>
+      {/* <div id="toggle-units-container">
+        <div class="units-display">
+          <p>Publish</p>
+        </div>
+        <input type="checkbox" id="toggle-units" class="checkbox" />
+        <label for="toggle-units" class="switch"></label>
+      </div> */}
       <div id="status-container">
-        <label htmlFor="publish-checkbox">Ready to Publish?</label>
-        <input type="checkbox" id="publish-checkbox" name="publish-checkbox" />
-        <label htmlFor="private-checkbox">Set as private?</label>
-        <input type="checkbox" id="private-checkbox" name="private-checkbox" />
+        <div>
+          <label htmlFor="publish-checkbox">Ready to publish?</label>
+          <input
+            type="checkbox"
+            id="publish-checkbox"
+            name="publish-checkbox"
+          />
+        </div>
+        <div>
+          <label htmlFor="private-checkbox">Set as private?</label>
+
+          <input
+            type="checkbox"
+            id="private-checkbox"
+            name="private-checkbox"
+          />
+        </div>{" "}
+        <button id="save-map-btn" onClick={handleSaveMap}>
+          Save Map
+        </button>
       </div>
-      <button onClick={handleSaveMap}>save map</button>
       {/* <button
         onClick={() =>
           console.log({

@@ -11,9 +11,9 @@ const ViewItinerary = (props) => {
       {props.markers.map((object, index) => {
         const whereElements = createWhereElements(object.place);
         return (
-          <div key={object.id} data-id={object.id}>
+          <div className="itinerary-item" key={object.id} data-id={object.id}>
             <h1>thing {index + 1}</h1>
-            <h2>where</h2>
+            <h2>Where</h2>
             <div id="view-where">
               {whereElements[0].innerHTML}
               <br></br>
@@ -23,11 +23,17 @@ const ViewItinerary = (props) => {
                 {whereElements[2].innerHTML}
               </a>
             </div>
-            <p>
-              when: {object.userInputData[0].value} @{" "}
-              {object.userInputData[1].value}
-            </p>
-            <p>what: {object.userInputData[2].value}</p>
+            <h2>When</h2>
+            <div>
+              <p>
+                {object.userInputData[0].value} @{" "}
+                {object.userInputData[1].value}
+              </p>
+            </div>
+            <h2>What</h2>
+            <div>
+              <p>{object.userInputData[2].value}</p>
+            </div>
             {currentPath === "/create" ? (
               <div>
                 <button onClick={props.prepareToEditMarkerAndData}>edit</button>
