@@ -61,6 +61,13 @@ const inputStyle = {
 
 const libraries = [`places`];
 
+// sets the default date to today's date
+Date.prototype.toDateInputValue = function () {
+  var local = new Date(this);
+  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  return local.toJSON().slice(0, 10);
+};
+
 const CreateOrEditMap = (props) => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
@@ -207,7 +214,7 @@ const CreateOrEditMap = (props) => {
       const elements = createWhereElements(place);
       appendWhereElements(whereContainer, elements);
     }
-    clearFormInputs(document.querySelectorAll(`.input-field`));
+    // clearFormInputs(document.querySelectorAll(`.input-field`));
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
@@ -351,6 +358,17 @@ const CreateOrEditMap = (props) => {
           });
     }
   };
+
+  useEffect(() => {
+    const dateInput = document.querySelector("#date");
+    const timeInput = document.querySelector("#time");
+    if (!timeInput.value) {
+      timeInput.value = "12:00";
+    }
+    if (!dateInput.value) {
+      dateInput.value = new Date().toDateInputValue();
+    }
+  });
 
   return (
     <div className="map-container" id="create-map-container">
