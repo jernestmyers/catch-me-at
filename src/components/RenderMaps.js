@@ -5,6 +5,7 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
 // import uniqid from "uniqid";
 
@@ -127,13 +128,73 @@ const RenderMaps = (props) => {
                 })
               : null}
           </GoogleMap>
+          <Engagement></Engagement>
+
           {currentPath === `/view` ? (
             <Link to={`${props.mapObject.mapID}`}>
               {props.mapObject.mapTitle}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 64 64"
+                role="img"
+                className="inline-icons"
+              >
+                <path
+                  className="link-icon"
+                  data-name="layer2"
+                  fill="none"
+                  stroke="#202020"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
+                  d="M30 62h32V2H2v32"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></path>
+                <path
+                  className="link-icon"
+                  data-name="layer1"
+                  fill="none"
+                  stroke="#202020"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
+                  d="M26 56V38H8m18 0L2 62"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></path>
+              </svg>
             </Link>
           ) : (
             <Link to={`/view/${props.mapObject.mapID}`}>
               {props.mapObject.mapTitle}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 64 64"
+                role="img"
+                className="inline-icons"
+              >
+                <path
+                  className="link-icon"
+                  data-name="layer2"
+                  fill="none"
+                  stroke="#202020"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
+                  d="M30 62h32V2H2v32"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></path>
+                <path
+                  className="link-icon"
+                  data-name="layer1"
+                  fill="none"
+                  stroke="#202020"
+                  strokeMiterlimit="10"
+                  strokeWidth="2"
+                  d="M26 56V38H8m18 0L2 62"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></path>
+              </svg>
             </Link>
           )}
         </div>
