@@ -322,7 +322,10 @@ const CreateOrEditMap = (props) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
         const mapToUpdate = {
-          ownerId: props.userAuth.uid,
+          owner: {
+            ownerName: props.userAuth.displayName,
+            ownerId: props.userAuth.uid,
+          },
           mapID: uniqid(),
           mapTitle: getMapTitle(document.querySelector(`#map-title-input`)),
           markers: markers,

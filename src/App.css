@@ -232,9 +232,10 @@ a:hover {
 
 .map-container {
   width: calc(var(--map-width) + 1rem);
-  border: 1px solid black;
+  /* border: 1px solid black; */
   box-shadow: 5px 5px 10px #1c1c1c;
   margin: 0.5rem;
+  padding-top: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -428,7 +429,21 @@ textarea {
 }
 
 /* RENDERMAPS */
+.view-map-link-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.map-owner-name {
+  text-align: right;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
 .view-map-link {
   font-weight: bold;
   margin: 0.5rem 0;
+  margin-left: 0.5rem;
 }
