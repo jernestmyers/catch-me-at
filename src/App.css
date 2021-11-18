@@ -234,7 +234,7 @@ a:hover {
   width: calc(var(--map-width) + 1rem);
   /* border: 1px solid black; */
   box-shadow: 5px 5px 10px #1c1c1c;
-  margin: 0.5rem;
+  margin: 1rem 0.5rem;
   padding-top: 0.5rem;
   display: flex;
   justify-content: center;
@@ -243,7 +243,6 @@ a:hover {
 
 .map-feed {
   width: 100%;
-  margin-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;

@@ -200,7 +200,15 @@ const RenderMaps = (props) => {
               </Link>
             )}
             <div className="map-owner-name">
-              by {props.mapObject.owner.ownerName}
+              by{" "}
+              {props.mapObject.owner.ownerName ===
+              props.userAuth.displayName ? (
+                `you`
+              ) : (
+                <Link to={`/user/${props.mapObject.owner.ownerId}`}>
+                  {props.mapObject.owner.ownerName}
+                </Link>
+              )}
             </div>
           </div>
           <Engagement
