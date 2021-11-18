@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const ItineraryForm = (props) => {
   //   console.log(props.isEditClicked);
@@ -12,33 +12,33 @@ const ItineraryForm = (props) => {
       <div id="when-container">
         <h2>WHEN</h2>
         <div className="form-field">
-          <label htmlFor="when">date:</label>
+          <label htmlFor="when">Date:</label>
           <input className="input-field" type="date" id="date" />
         </div>
         <div className="form-field">
-          <label htmlFor="when-time">time:</label>
+          <label htmlFor="when-time">Time:</label>
           <input className="input-field" type="time" id="time" />
         </div>
       </div>
       <div className="form-field">
         <h2>WHAT</h2>
-        <label htmlFor="what">the plan:</label>
+        <label htmlFor="what">The Plan:</label>
         <textarea className="input-field" id="what" rows="5"></textarea>
       </div>
       {!props.isEditClicked ? (
         <button onClick={props.addMarkerAndInfo} className="add-details-btn">
-          add
+          Add
         </button>
       ) : (
         <button
           onClick={props.confirmEditsToMarkerAndData}
           id="edit-details-btn"
         >
-          confirm edit
+          Update
         </button>
       )}
       <button className="add-details-btn" onClick={props.cancelAddMarker}>
-        cancel
+        Cancel
       </button>
     </form>
   );
