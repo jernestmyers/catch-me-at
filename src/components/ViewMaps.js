@@ -11,7 +11,10 @@ function ViewMaps(props) {
         {props.userData.mapsOwned.map((mapObject) => {
           return (
             <div>
-              <RenderMaps mapObject={mapObject}></RenderMaps>
+              <RenderMaps
+                userAuth={props.userAuth}
+                mapObject={mapObject}
+              ></RenderMaps>
             </div>
           );
         })}

@@ -128,10 +128,8 @@ const RenderMaps = (props) => {
                 })
               : null}
           </GoogleMap>
-          <Engagement></Engagement>
-
           {currentPath === `/view` ? (
-            <Link to={`${props.mapObject.mapID}`}>
+            <Link className="view-map-link" to={`${props.mapObject.mapID}`}>
               {props.mapObject.mapTitle}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +162,10 @@ const RenderMaps = (props) => {
               </svg>
             </Link>
           ) : (
-            <Link to={`/view/${props.mapObject.mapID}`}>
+            <Link
+              className="view-map-link"
+              to={`/view/${props.mapObject.mapID}`}
+            >
               {props.mapObject.mapTitle}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -197,6 +198,12 @@ const RenderMaps = (props) => {
               </svg>
             </Link>
           )}
+          <Engagement
+            likes={props.mapObject.likes}
+            comments={props.mapObject.comments}
+            mapID={props.mapObject.mapID}
+            userAuth={props.userAuth}
+          ></Engagement>
         </div>
       ) : (
         <></>

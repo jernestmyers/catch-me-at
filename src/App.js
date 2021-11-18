@@ -207,7 +207,9 @@ function App() {
           ></Route>
           <Route
             path="/view"
-            element={<ViewMaps userData={userData}></ViewMaps>}
+            element={
+              <ViewMaps userAuth={userAuth} userData={userData}></ViewMaps>
+            }
           ></Route>
           <Route
             path="/view/*"

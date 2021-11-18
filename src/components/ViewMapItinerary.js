@@ -22,7 +22,10 @@ function ViewMapItinerary(props, match) {
         if (mapID === map.mapID) {
           return (
             <div>
-              <RenderMaps mapObject={map}></RenderMaps>
+              <RenderMaps
+                userAuth={props.userAuth}
+                mapObject={map}
+              ></RenderMaps>
               <ViewItinerary
                 mapObject={map}
                 markers={map.markers}

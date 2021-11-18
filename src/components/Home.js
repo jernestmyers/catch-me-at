@@ -14,7 +14,10 @@ function Home(props) {
           {props.publicMaps.map((mapArray) => {
             return (
               <div>
-                <RenderMaps mapObject={mapArray[1].mapObject}></RenderMaps>
+                <RenderMaps
+                  userAuth={props.userAuth}
+                  mapObject={mapArray[1].mapObject}
+                ></RenderMaps>
               </div>
             );
           })}
