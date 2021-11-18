@@ -137,9 +137,9 @@ body,
   width: 100%;
 }
 
-div {
+/* div {
   width: inherit;
-}
+} */
 
 header {
   height: 4rem;
@@ -240,7 +240,7 @@ a:hover {
   background-color: #3a2e39;
   color: #f4d8cd;
   width: 300px;
-  height: 300px;
+  /* height: 300px; */
 }
 
 textarea {
