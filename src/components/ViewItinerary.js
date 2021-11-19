@@ -6,17 +6,45 @@ const ViewItinerary = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
 
-  const sortedMarkers = props.markers.sort((a, b) => {
+  const sortedMarkers = [...props.markers];
+  sortedMarkers.sort((a, b) => {
     return a.order - b.order;
   });
 
   return (
     <div id="itinerary-container">
-      {sortedMarkers.map((object, index) => {
+      {sortedMarkers.map((object) => {
         const whereElements = createWhereElements(object.place);
         return (
           <div className="itinerary-item" key={object.id} data-id={object.id}>
-            <h1>thing {index + 1}</h1>
+            <h1 className="marker-header-number">{object.order}</h1>
+            <svg
+              className="marker-details-header"
+              viewBox="0 0 64 64"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <path
+                d="M38.1 46H52l8 16H4l8-16h13.9"
+                strokeWidth="2"
+                strokeMiterlimit="10"
+                stroke="#202020"
+                fill="#A2BCE0"
+                data-name="layer2"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              ></path>
+              <path
+                strokeWidth="2"
+                strokeMiterlimit="10"
+                stroke="#202020"
+                fill="red"
+                d="M32 2a18.1 18.1 0 0 0-18.1 18.1C13.9 36.4 32 52.4 32 52.4s18.1-16 18.1-32.3A18.1 18.1 0 0 0 32 2z"
+                data-name="layer1"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              ></path>
+            </svg>
             <h2>Where</h2>
             <div id="view-where">
               {whereElements[0].innerHTML}

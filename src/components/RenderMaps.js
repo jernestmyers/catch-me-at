@@ -22,14 +22,12 @@ const libraries = [`places`];
 function sortBounds(array) {
   const latArray = [...array];
   const lngArray = [...array];
-
   latArray.sort((a, b) => {
     return a.coordinates.lat - b.coordinates.lat;
   });
   lngArray.sort((a, b) => {
     return a.coordinates.lng - b.coordinates.lng;
   });
-
   return [
     { lat: latArray[0].coordinates.lat, lng: lngArray[0].coordinates.lng },
     {
@@ -43,7 +41,8 @@ const RenderMaps = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
 
-  const sortedMarkers = props.mapObject.markers.sort((a, b) => {
+  const sortedMarkers = [...props.mapObject.markers];
+  sortedMarkers.sort((a, b) => {
     return a.order - b.order;
   });
 
@@ -61,8 +60,6 @@ const RenderMaps = (props) => {
   const onLoad = useCallback(function callback(map) {
     if (props.mapObject.markers.length > 1) {
       const sortedBounds = sortBounds(props.mapObject.markers);
-      console.log(sortedBounds[0]);
-      console.log(sortedBounds[1]);
       const bounds = new window.google.maps.LatLngBounds(
         sortedBounds[0],
         sortedBounds[1]
@@ -102,11 +99,11 @@ const RenderMaps = (props) => {
             onUnmount={onUnmount}
             onClick={onMapClick}
           >
-            {sortedMarkers.map((object, index) => {
+            {sortedMarkers.map((object) => {
               return (
                 <Marker
                   onClick={onMarkerClick}
-                  label={`${index + 1}`}
+                  label={`${object.order}`}
                   position={object.coordinates}
                   title={object.id}
                 ></Marker>

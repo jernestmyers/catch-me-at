@@ -590,3 +590,15 @@ textarea.input-field {
   margin-top: 0.5rem;
   margin-bottom: 2rem;
 }
+
+/* VIEW ITINERARY */
+.marker-details-header {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.marker-header-number {
+  position: relative;
+  font-size: 1rem;
+  top: 1.5rem;
+}
