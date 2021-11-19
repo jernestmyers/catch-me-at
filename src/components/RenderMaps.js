@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -7,7 +7,6 @@ import {
 } from "@react-google-maps/api";
 import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
-// import uniqid from "uniqid";
 
 const containerStyle = {
   width: "300px",
@@ -21,19 +20,32 @@ const options = {
 const libraries = [`places`];
 
 function sortBounds(array) {
-  const sortLatLng = array
-    .sort((a, b) => {
-      return a.coordinates.lat - b.coordinates.lat;
-    })
-    .sort((a, b) => {
-      return a.coordinates.lng - b.coordinates.lng;
-    });
-  return [sortLatLng[0], sortLatLng[sortLatLng.length - 1]];
+  const latArray = [...array];
+  const lngArray = [...array];
+
+  latArray.sort((a, b) => {
+    return a.coordinates.lat - b.coordinates.lat;
+  });
+  lngArray.sort((a, b) => {
+    return a.coordinates.lng - b.coordinates.lng;
+  });
+
+  return [
+    { lat: latArray[0].coordinates.lat, lng: lngArray[0].coordinates.lng },
+    {
+      lat: latArray[latArray.length - 1].coordinates.lat,
+      lng: lngArray[lngArray.length - 1].coordinates.lng,
+    },
+  ];
 }
 
 const RenderMaps = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
+
+  const sortedMarkers = props.mapObject.markers.sort((a, b) => {
+    return a.order - b.order;
+  });
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -48,9 +60,12 @@ const RenderMaps = (props) => {
 
   const onLoad = useCallback(function callback(map) {
     if (props.mapObject.markers.length > 1) {
+      const sortedBounds = sortBounds(props.mapObject.markers);
+      console.log(sortedBounds[0]);
+      console.log(sortedBounds[1]);
       const bounds = new window.google.maps.LatLngBounds(
-        sortBounds(props.mapObject.markers)[0].coordinates,
-        sortBounds(props.mapObject.markers)[1].coordinates
+        sortedBounds[0],
+        sortedBounds[1]
       );
       map.fitBounds(bounds);
       map.getCenter(bounds);
@@ -87,7 +102,7 @@ const RenderMaps = (props) => {
             onUnmount={onUnmount}
             onClick={onMapClick}
           >
-            {props.mapObject.markers.map((object, index) => {
+            {sortedMarkers.map((object, index) => {
               return (
                 <Marker
                   onClick={onMarkerClick}
@@ -98,7 +113,7 @@ const RenderMaps = (props) => {
               );
             })}
             {isMarkerClickedInRender
-              ? props.mapObject.markers.map((object) => {
+              ? sortedMarkers.map((object) => {
                   if (object.id === markerClickedIdInRender) {
                     return (
                       <InfoWindow

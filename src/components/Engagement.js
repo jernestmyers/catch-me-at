@@ -13,7 +13,7 @@ function Engagement(props) {
   const handleAddComment = (e) => {
     console.log(e.target.closest(`div`));
     const mapID = e.target.closest(`div`).dataset.mapid;
-    console.log(mapID);
+    // console.log(mapID);
     if (!props.comments.length) {
       console.log(`open a comment form`);
     } else {

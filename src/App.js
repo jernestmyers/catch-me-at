@@ -80,13 +80,11 @@ function App() {
       let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
       const fetchedUserIds = storeFetchAsArray("users", fetchUserIds);
-      // console.log(fetchedUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
           doesUserExist = true;
         }
       });
-      // console.log(doesUserExist);
       return doesUserExist;
     } catch (error) {
       alert(
@@ -99,11 +97,9 @@ function App() {
     try {
       const doesUserExist = await checkForUserData();
       if (doesUserExist) {
-        // console.log(`get user's data!`);
         const fetchUserData = await getDoc(doc(db, "users", userAuth.uid));
         setUserData(fetchUserData.data());
       } else {
-        // console.log(`create new user!`);
         setDoc(doc(db, "users", userAuth.uid), newUserObject);
       }
     } catch (error) {
@@ -227,7 +223,9 @@ function App() {
           ></Route>
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
-        {/* <button onClick={() => console.log(userData)}>see data fetch</button> */}
+        <button onClick={() => console.log({ userData, publicMaps })}>
+          see data fetch
+        </button>
       </div>
     </Router>
   );

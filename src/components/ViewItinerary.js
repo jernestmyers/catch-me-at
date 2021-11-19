@@ -6,9 +6,13 @@ const ViewItinerary = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
 
+  const sortedMarkers = props.markers.sort((a, b) => {
+    return a.order - b.order;
+  });
+
   return (
     <div id="itinerary-container">
-      {props.markers.map((object, index) => {
+      {sortedMarkers.map((object, index) => {
         const whereElements = createWhereElements(object.place);
         return (
           <div className="itinerary-item" key={object.id} data-id={object.id}>
