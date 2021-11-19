@@ -134,6 +134,10 @@ body {
   --map-width: 300px;
 }
 
+body {
+  font: 18px sans-serif, Helvetica, Arial;
+}
+
 html,
 body,
 #root,
@@ -145,10 +149,6 @@ body,
 h1 {
   font-size: 1.25rem;
 }
-
-/* div {
-  width: inherit;
-} */
 
 /* BEGIN HEADER CSS */
 header {
@@ -165,7 +165,6 @@ header {
   height: 2rem;
   display: flex;
   align-items: center;
-  /* border-bottom: 1px solid black; */
 }
 
 #app-title {
@@ -200,10 +199,6 @@ nav > ul {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-}
-
-body {
-  font: 18px sans-serif, Helvetica, Arial;
 }
 
 a {

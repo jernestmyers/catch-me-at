@@ -1,14 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RenderMaps from "./RenderMaps";
+import TypewriterEffect from "./TypewriterEffect";
 // import { Link } from "react-router-dom";
 // import { useParams, useLocation } from "react-router-dom";
 
 function Home(props) {
-  // console.log(props);
+  console.log(props);
+
+  useEffect(() => {
+    // function waitForUserAuth() {
+    if (!props.userAuth) {
+      document.querySelector(`#typewriter-container`).style.display = `grid`;
+      TypewriterEffect();
+    }
+    if (props.userAuth) {
+      document.querySelector(`#typewriter-container`).style.display = `none`;
+    }
+    // }
+    // setTimeout(waitForUserAuth, 5000);
+  }, [props.userAuth, props.setUserAuth]);
 
   return (
     <div id="home-container">
-      <h1>Activity Feed - Get inspired!</h1>
+      <div id="typewriter-container">
+        <div id="typewriter-prefix">Catch me at&nbsp;</div>
+        <div id="typed-text-container">
+          <div id="typed-text"></div>
+        </div>
+      </div>
+
       {props.userAuth ? (
         <div className="map-feed">
           {props.publicMaps.map((mapArray) => {
@@ -22,9 +42,8 @@ function Home(props) {
             );
           })}
         </div>
-      ) : (
-        <h1>This is Home when NOT logged in.</h1>
-      )}
+      ) : // <TypewriterEffect></TypewriterEffect>
+      null}
     </div>
   );
 }

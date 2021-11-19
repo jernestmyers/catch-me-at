@@ -1,0 +1,28 @@
+#typewriter-container {
+  display: none;
+  width: 100%;
+  /* display: grid; */
+  grid-template-columns: 0.75fr 1fr;
+  font-size: 2rem;
+  color: #5e5c6c;
+}
+
+#typewriter-prefix {
+  font-weight: bold;
+  text-align: right;
+}
+
+#typed-text {
+  text-decoration: underline;
+}
+
+span {
+  border-right: 0.05em solid;
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    border-color: transparent;
+  }
+}
