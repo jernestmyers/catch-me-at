@@ -182,7 +182,7 @@ function App() {
             element={
               <Home
                 userAuth={userAuth}
-                // setUserAuth={setUserAuth}
+                setUserAuth={setUserAuth}
                 // setUserData={setUserData}
                 mapsSaved={mapsSaved}
                 publicMaps={publicMaps}
