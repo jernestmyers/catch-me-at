@@ -13,14 +13,19 @@ function ViewMapItinerary(props) {
     .map((object) => {
       return object.mapObject;
     });
-  const mapsArray = [...props.userData.mapsOwned, ...publicMapsArray];
 
-  // Passing in mapToDisplay[0] prevents duplicate rendering
-  const mapToDisplay = mapsArray.filter((map) => {
-    if (mapID === map.mapID) {
-      return map;
-    }
-  });
+  let mapToDisplay;
+  if (props.userAuth && !props.userAuth.isAnonymous) {
+    const mapsCombinedArray = [...props.userData.mapsOwned, ...publicMapsArray];
+    // Passing in mapToDisplay[0] prevents duplicate rendering
+    mapToDisplay = mapsCombinedArray.filter((map) => {
+      if (mapID === map.mapID) {
+        return map;
+      }
+    });
+  } else {
+    mapToDisplay = [...publicMapsArray];
+  }
 
   return (
     <div id="detailed-view-container">

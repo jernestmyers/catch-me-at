@@ -225,7 +225,12 @@ function App() {
           ></Route>
           <Route
             path="/connect"
-            element={<Connections userData={userData}></Connections>}
+            element={
+              <Connections
+                userData={userData}
+                userAuth={userAuth}
+              ></Connections>
+            }
           ></Route>
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}

@@ -16,7 +16,6 @@ function ViewMaps(props) {
                   <RenderMaps
                     userAuth={props.userAuth}
                     mapObject={mapObject}
-                    // publicMaps={publicMaps}
                   ></RenderMaps>
                 </div>
               );
