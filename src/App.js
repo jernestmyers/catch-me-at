@@ -174,7 +174,8 @@ function App() {
             userAuth={userAuth}
             setUserAuth={setUserAuth}
           ></AuthenticateUser>
-          <NavBar></NavBar>
+          {userAuth ? <NavBar></NavBar> : null}
+          {/* <NavBar></NavBar> */}
         </header>
         <Routes>
           <Route
@@ -183,7 +184,6 @@ function App() {
               <Home
                 userAuth={userAuth}
                 setUserAuth={setUserAuth}
-                // setUserData={setUserData}
                 mapsSaved={mapsSaved}
                 publicMaps={publicMaps}
               ></Home>
@@ -206,7 +206,11 @@ function App() {
           <Route
             path="/view"
             element={
-              <ViewMaps userAuth={userAuth} userData={userData}></ViewMaps>
+              <ViewMaps
+                userAuth={userAuth}
+                userData={userData}
+                publicMaps={publicMaps}
+              ></ViewMaps>
             }
           ></Route>
           <Route
@@ -225,9 +229,9 @@ function App() {
           ></Route>
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
-        <button onClick={() => console.log({ userData, publicMaps })}>
+        {/* <button onClick={() => console.log({ userData, publicMaps })}>
           see data fetch
-        </button>
+        </button> */}
       </div>
     </Router>
   );

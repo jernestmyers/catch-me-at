@@ -8,6 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFirebaseConfig } from "../firebase-config";
+import { Link } from "react-router-dom";
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
@@ -58,7 +59,9 @@ export default function AuthenticateUser(props) {
           ) : (
             <p id="user-greeting">Welcome, Guest!</p>
           )}
-          <button onClick={logUserOut}>sign out</button>
+          <Link to={`/`}>
+            <button onClick={logUserOut}>sign out</button>
+          </Link>
         </div>
       ) : (
         <div>

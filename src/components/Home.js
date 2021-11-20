@@ -3,7 +3,7 @@ import RenderMaps from "./RenderMaps";
 import TypewriterEffect from "./TypewriterEffect";
 
 function Home(props) {
-  console.log(props);
+  // console.log(props);
 
   return (
     <div id="home-container">
