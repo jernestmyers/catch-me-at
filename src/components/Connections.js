@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 // import { Link } from "react-router-dom";
 
 function Connections(props) {
   // console.log(props.userData);
-  const [connectionsObject, setConnectionsObject] = useState(null);
 
+  let connectionsObject;
   if (props.userAuth && !props.userAuth.isAnonymous) {
-    setConnectionsObject(props.userData.connections);
+    connectionsObject = props.userData.connections;
   }
 
   return (
