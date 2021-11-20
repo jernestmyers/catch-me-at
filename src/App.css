@@ -420,43 +420,50 @@ a:hover {
   margin-left: 0.5rem;
 }
 
-/* SWITCH FROM WEATHER APP */
-#toggle-units-container {
-  margin-right: 2rem;
-  justify-self: end;
+/* TOGGLE SWITCHES */
+.toggle-container {
   display: flex;
-  grid-column: 3 / 4;
-  align-self: center;
 }
 
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 32.5px;
-  background-color: #e9ecef;
-  border-radius: 20px;
+  width: 3rem;
+  height: 1.75rem;
+  background-color: #ff9999;
+  border-radius: 0.75rem;
   transition: all 0.3s;
 }
 
 .switch::after {
   content: "";
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  background-color: #6c757d;
-  top: 1px;
-  left: 1px;
+  background-color: #d00000;
+  top: 2px;
+  left: 0.1rem;
   transition: all 0.3s;
 }
 
+input:checked + label {
+  background-color: #bdd5ae;
+}
+
 .checkbox:checked + .switch::after {
-  left: 28.5px;
+  left: 1.35rem;
+  background-color: #6a994e;
 }
 
 .checkbox {
   display: none;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  padding-right: 0.25rem;
 }
 
 /* CREATE MAP */

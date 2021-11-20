@@ -464,23 +464,28 @@ const CreateOrEditMap = (props) => {
         <label for="toggle-units" class="switch"></label>
       </div> */}
       <div id="status-container">
-        <div>
+        {/* <div>
           <label htmlFor="publish-checkbox">Ready to publish?</label>
           <input
             type="checkbox"
             id="publish-checkbox"
             name="publish-checkbox"
           />
+        </div> */}
+        <div className="toggle-container">
+          <div className="switch-label">
+            <p>Publish?</p>
+          </div>
+          <input type="checkbox" id="publish-checkbox" className="checkbox" />
+          <label htmlFor="publish-checkbox" className="switch"></label>
         </div>
-        <div>
-          <label htmlFor="private-checkbox">Set as private?</label>
-
-          <input
-            type="checkbox"
-            id="private-checkbox"
-            name="private-checkbox"
-          />
-        </div>{" "}
+        <div className="toggle-container">
+          <div class="switch-label">
+            <p>Set as Private?</p>
+          </div>
+          <input className="checkbox" type="checkbox" id="private-checkbox" />
+          <label htmlFor="private-checkbox" className="switch"></label>
+        </div>
         <button id="save-map-btn" onClick={handleSaveMap}>
           Save Map
         </button>
