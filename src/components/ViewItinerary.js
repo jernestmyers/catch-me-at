@@ -47,12 +47,10 @@ const ViewItinerary = (props) => {
             </svg>
             <h2>Where</h2>
             <div id="view-where">
-              {whereElements[0].innerHTML}
-              <br></br>
-              {whereElements[1].innerHTML}
-              <br></br>
+              <p>{whereElements[0].innerText}</p>
+              <p>{whereElements[1].innerText}</p>
               <a href={whereElements[2].href} target="_blank" rel="noreferrer">
-                {whereElements[2].innerHTML}
+                {whereElements[2].innerText}
               </a>
             </div>
             <h2>When</h2>
