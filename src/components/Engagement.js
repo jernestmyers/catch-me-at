@@ -11,15 +11,21 @@ function Engagement(props) {
   //   });
 
   const handleAddComment = (e) => {
-    console.log(e.target.closest(`div`));
+    // console.log(e.target.closest(`div`));
     const mapID = e.target.closest(`div`).dataset.mapid;
     // console.log(mapID);
-    if (!props.comments.length) {
-      console.log(`open a comment form`);
-    } else {
-      console.log(`expand comments div`);
-      document.querySelector(`#comment-box-${mapID}`).style.display = `block`;
-    }
+    document.querySelector(`#comment-box-${mapID}`).style.display === "block"
+      ? (document.querySelector(`#comment-box-${mapID}`).style.display = `none`)
+      : (document.querySelector(
+          `#comment-box-${mapID}`
+        ).style.display = `block`);
+    // if (!props.comments.length) {
+    //   console.log(`open a comment form`);
+    //   document.querySelector(`#comment-box-${mapID}`).style.display = `block`;
+    // } else {
+    //   console.log(`expand comments div`);
+    //   document.querySelector(`#comment-box-${mapID}`).style.display = `block`;
+    // }
   };
 
   const handleUserComment = (e) => {
@@ -34,6 +40,15 @@ function Engagement(props) {
       matchedBtn[0].style.display = `block`;
     } else {
       matchedBtn[0].style.display = ``;
+    }
+  };
+
+  const submitComment = (e) => {
+    const commentTextarea = document.querySelector(
+      `#user-comment-${e.target.dataset.mapid}`
+    );
+    if (commentTextarea.value) {
+      console.log(`submit: ${commentTextarea.value}`);
     }
   };
 
@@ -81,7 +96,11 @@ function Engagement(props) {
           </svg>
           <p>Like</p>
         </div>
-        <div className="engage-icon-container">
+        <div
+          className="engage-icon-container comment-btn"
+          data-mapid={props.mapID}
+          onClick={handleAddComment}
+        >
           <svg
             className="engage-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +232,11 @@ function Engagement(props) {
               placeholder="Add a comment..."
               onChange={handleUserComment}
             ></textarea>
-            <button className="post-comment-btn" data-mapid={props.mapID}>
+            <button
+              className="post-comment-btn"
+              data-mapid={props.mapID}
+              onClick={submitComment}
+            >
               Post
             </button>
           </div>
