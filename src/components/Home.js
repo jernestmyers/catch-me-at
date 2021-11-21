@@ -13,6 +13,7 @@ function Home(props) {
             return (
               <div>
                 <RenderMaps
+                  db={props.db}
                   userAuth={props.userAuth}
                   mapObject={mapArray[1].mapObject}
                 ></RenderMaps>

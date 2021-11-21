@@ -182,6 +182,7 @@ function App() {
             path="/"
             element={
               <Home
+                db={db}
                 userAuth={userAuth}
                 setUserAuth={setUserAuth}
                 mapsSaved={mapsSaved}
@@ -207,6 +208,7 @@ function App() {
             path="/view"
             element={
               <ViewMaps
+                db={db}
                 userAuth={userAuth}
                 userData={userData}
                 publicMaps={publicMaps}
@@ -217,6 +219,7 @@ function App() {
             path="/view/*"
             element={
               <ViewMapItinerary
+                db={db}
                 userAuth={userAuth}
                 userData={userData}
                 publicMaps={publicMaps}

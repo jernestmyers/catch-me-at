@@ -14,6 +14,7 @@ function ViewMaps(props) {
               return (
                 <div>
                   <RenderMaps
+                    db={props.db}
                     userAuth={props.userAuth}
                     mapObject={mapObject}
                   ></RenderMaps>

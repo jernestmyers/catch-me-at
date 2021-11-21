@@ -224,6 +224,8 @@ const RenderMaps = (props) => {
             </div>
           </div>
           <Engagement
+            db={props.db}
+            mapObject={props.mapObject}
             likes={props.mapObject.likes}
             comments={props.mapObject.comments}
             mapID={props.mapObject.mapID}

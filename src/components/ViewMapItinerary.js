@@ -30,6 +30,7 @@ function ViewMapItinerary(props) {
   return (
     <div id="detailed-view-container">
       <RenderMaps
+        db={props.db}
         userAuth={props.userAuth}
         mapObject={mapToDisplay[0]}
       ></RenderMaps>

@@ -1,31 +1,24 @@
-import { format } from "date-fns";
-import React, { useEffect } from "react";
+import { format, parseJSON } from "date-fns";
+import React from "react";
+import {
+  // collection,
+  // getDocs,
+  // getDoc,
+  // setDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
-function Engagement(props) {
-  //   console.log(props);
-  //   useEffect(() => {
-  //       const comment = document.querySelector(`#numberOfComments`);
-  //       if (props.comments.length) {
-
-  //       }
-  //   });
+function Engagement({ db, mapObject, userAuth }) {
+  console.log({ mapObject, userAuth });
 
   const handleAddComment = (e) => {
-    // console.log(e.target.closest(`div`));
     const mapID = e.target.closest(`div`).dataset.mapid;
-    // console.log(mapID);
     document.querySelector(`#comment-box-${mapID}`).style.display === "block"
       ? (document.querySelector(`#comment-box-${mapID}`).style.display = `none`)
       : (document.querySelector(
           `#comment-box-${mapID}`
         ).style.display = `block`);
-    // if (!props.comments.length) {
-    //   console.log(`open a comment form`);
-    //   document.querySelector(`#comment-box-${mapID}`).style.display = `block`;
-    // } else {
-    //   console.log(`expand comments div`);
-    //   document.querySelector(`#comment-box-${mapID}`).style.display = `block`;
-    // }
   };
 
   const handleUserComment = (e) => {
@@ -48,27 +41,54 @@ function Engagement(props) {
       `#user-comment-${e.target.dataset.mapid}`
     );
     if (commentTextarea.value) {
-      console.log(`submit: ${commentTextarea.value}`);
+      const comment = {
+        userId: userAuth.uid,
+        name: userAuth.displayName,
+        date: JSON.stringify(new Date()),
+        comment: commentTextarea.value,
+      };
+      const updatedCommentObject = {
+        comments: [...mapObject.comments, comment],
+      };
+      Object.assign(mapObject, updatedCommentObject);
+      updateFirestore(e.target.dataset.mapid);
+      commentTextarea.value = ``;
     }
   };
 
-  const showDate = () => {
-    return format(new Date(), "MMM d, yyyy, h:mmaaa");
+  const showDate = (dateObject) => {
+    return format(dateObject, "MMM d, yyyy, h:mmaaa");
+  };
+
+  const updateFirestore = async (id) => {
+    if (!mapObject.isPrivate) {
+      console.log(`update publicMap`);
+      const docRef = doc(db, "publicMaps", id);
+      await updateDoc(docRef, { mapObject });
+    }
+    if (userAuth.uid === mapObject.owner.ownerId) {
+      console.log(`user owns map, update it.`);
+    }
+    if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
+      console.log(
+        `map isPrivate AND not the user's, so map is shared with user`
+      );
+    }
   };
 
   return (
     <div id="engagement-container">
       <div className="display-engagement-data">
-        <div className="numberOfLikes">{props.likes}</div>
+        <div className="numberOfLikes">{mapObject.likes}</div>
         <div
           className="numberOfComments"
-          data-mapid={props.mapID}
+          data-mapid={mapObject.mapID}
           onClick={handleAddComment}
         >
-          {props.comments.length ? (
+          {mapObject.comments.length ? (
             <p>
-              {props.comments.length}
-              {props.comments.length === 1 ? ` comment` : ` comments`}
+              {mapObject.comments.length}
+              {mapObject.comments.length === 1 ? ` comment` : ` comments`}
             </p>
           ) : (
             <p>Be the first to comment!</p>
@@ -98,7 +118,7 @@ function Engagement(props) {
         </div>
         <div
           className="engage-icon-container comment-btn"
-          data-mapid={props.mapID}
+          data-mapid={mapObject.mapID}
           onClick={handleAddComment}
         >
           <svg
@@ -212,29 +232,31 @@ function Engagement(props) {
           <p>Save</p>
         </div>
       </div>
-      <div className="comments-container" id={`comment-box-${props.mapID}`}>
-        {props.comments.map((commentObject) => {
+      <div className="comments-container" id={`comment-box-${mapObject.mapID}`}>
+        {mapObject.comments.map((commentObject) => {
           return (
             <div className="comment">
               <p className="comment-name">{commentObject.name}</p>
-              <p className="comment-date">{commentObject.date}</p>
+              <p className="comment-date">
+                {showDate(parseJSON(commentObject.date))}
+              </p>
               <p className="comment-text">{commentObject.comment}</p>
             </div>
           );
         })}
         <div className="comment userComment">
-          <p className="comment-name">{props.userAuth.displayName}</p>
-          <p className="comment-date">{showDate()}</p>
+          <p className="comment-name">{userAuth.displayName}</p>
+          <p className="comment-date">{showDate(new Date())}</p>
           <div className="comment-text userComment-text">
             <textarea
               className="userComment-textarea"
-              id={`user-comment-${props.mapID}`}
+              id={`user-comment-${mapObject.mapID}`}
               placeholder="Add a comment..."
               onChange={handleUserComment}
             ></textarea>
             <button
               className="post-comment-btn"
-              data-mapid={props.mapID}
+              data-mapid={mapObject.mapID}
               onClick={submitComment}
             >
               Post
