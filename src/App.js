@@ -239,8 +239,8 @@ function App() {
             }
           ></Route>
         </Routes>
-        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
-        {/* <button onClick={() => console.log({ userData, publicMaps })}>
+        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
+        <button onClick={() => console.log({ userData, publicMaps })}>
           see data fetch
         </button> */}
       </div>

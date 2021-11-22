@@ -232,6 +232,7 @@ const CreateOrEditMap = (props) => {
         return { ...prevState, mapsOwned: props.mapsSaved };
       });
       updateMapsOwnedInFirestore();
+      document.querySelector(`#confirm-add-modal`).style.display = `flex`;
     }
   }, [props.mapsSaved, props.setMapsSaved]);
 
@@ -472,11 +473,9 @@ const CreateOrEditMap = (props) => {
           <input className="checkbox" type="checkbox" id="private-checkbox" />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
-        <Link id="save-map-router" to="/view">
-          <button id="save-map-btn" onClick={handleSaveMap}>
-            Save Map
-          </button>
-        </Link>
+        <button id="save-map-btn" onClick={handleSaveMap}>
+          Save Map
+        </button>
       </div>
       {/* <button
         onClick={() =>
@@ -492,6 +491,53 @@ const CreateOrEditMap = (props) => {
       >
         states checker
       </button> */}
+      <div id="confirm-add-modal">
+        <p id="confirm-text">Success!</p>
+        <svg
+          id="checkmark-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 64"
+          role="img"
+        >
+          <circle
+            data-name="layer2"
+            cx="32"
+            cy="32"
+            r="30"
+            transform="rotate(-45 32 32)"
+            fill="#bdd5ae"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></circle>
+          <path
+            data-name="layer1"
+            fill="none"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="5"
+            d="M20.998 32.015l8.992 8.992 16.011-16.011"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+        </svg>
+        <Link
+          to={`../view/${props.mapsSaved[props.mapsSaved.length - 1].mapID}`}
+        >
+          Check out your map here!
+        </Link>
+        <button
+          onClick={() =>
+            (document.querySelector(
+              `#confirm-add-modal`
+            ).style.display = `none`)
+          }
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 };

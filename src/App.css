@@ -651,11 +651,8 @@ textarea.input-field {
 }
 
 #save-map-btn {
-  font-size: 1.25rem;
-}
-
-#save-map-router {
   grid-column: 1 / 3;
+  font-size: 1.25rem;
 }
 
 .toggle-container {
@@ -759,4 +756,28 @@ textarea.input-field {
   100% {
     opacity: 1;
   }
+}
+
+/* CONFIRM ADD MODAL */
+#confirm-add-modal {
+  display: none;
+  position: absolute;
+  background-color: #dfdee3;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  width: 250px;
+  height: 175px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  opacity: 0.95;
+}
+
+#checkmark-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+#confirm-text {
+  font-weight: bold;
 }
