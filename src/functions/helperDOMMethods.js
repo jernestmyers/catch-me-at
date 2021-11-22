@@ -13,6 +13,7 @@ function clearFormInputs(parent) {
 function createWhereElements(placeObject) {
   const placeName = document.createElement(`p`);
   placeName.textContent = placeObject.name;
+  placeName.classList.add(`itin-where-text`);
   const placeAddress = document.createElement(`p`);
   placeAddress.textContent = placeObject.formatted_address;
   const placeGoogleUrl = document.createElement(`a`);

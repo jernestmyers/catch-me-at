@@ -136,6 +136,7 @@ body {
 
 body {
   font: 18px sans-serif, Helvetica, Arial;
+  color: #5e5c6c;
 }
 
 html,
@@ -150,13 +151,21 @@ h1 {
   font-size: 1.25rem;
 }
 
+input:active,
+input:focus,
+textarea:active,
+textarea:focus {
+  outline: 2px solid #bdd5ae;
+  outline-offset: -3px;
+}
+
 /* BEGIN HEADER CSS */
 header {
-  height: 4rem;
+  /* height: 4rem; */
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1.25fr;
+  grid-template-rows: 1fr 1.5fr;
   align-items: center;
   margin-top: 0.25rem;
 }
@@ -202,14 +211,22 @@ nav > ul {
 }
 
 a {
-  color: black;
+  color: #2f97c1;
   text-decoration: none;
 }
 a:visited {
-  color: black;
+  color: #5e5c6c;
+  color: #2f97c1;
 }
 a:hover {
   text-decoration: underline;
+}
+
+.nav-link,
+.nav-link:visited,
+a.view-map-link,
+a.view-map-link:visited {
+  color: #5e5c6c;
 }
 
 .App,
@@ -306,7 +323,7 @@ a:hover {
 }
 
 .link-icon {
-  stroke: blue;
+  stroke: #2f97c1;
 }
 
 #app-logo {
@@ -329,7 +346,6 @@ a:hover {
 
 .engage-icon-container {
   height: 2.75rem;
-  /* font-size: 1rem; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -487,6 +503,14 @@ input:checked + label {
   margin-bottom: 0.5rem;
 }
 
+#map-title-input {
+  height: 1.25rem;
+  flex-grow: 2;
+  padding-left: 0.25rem;
+  margin-left: 0.25rem;
+  /* border: 1px solid transparent; */
+}
+
 #search-bar {
   margin: 0.5rem 0;
 }
@@ -598,6 +622,26 @@ textarea.input-field {
   font-size: 1rem;
   top: 1.5rem;
 }
+
+.itin-section-header {
+  color: #5e5c6c;
+  font-weight: bold;
+  margin: 0.3rem 0;
+  text-decoration: underline;
+}
+
+.itin-where-text {
+  color: #5e5c6c;
+  font-weight: bold;
+}
+
+/* .view-google-link, */
+/* .view-google-link:visited { */
+/* color: #20a4f3; */
+/* color: #05b2dc; */
+/* color: #35a7ff; */
+/* color: #2f97c1; */
+/* } */
 
 /* VIEW MAP ITINERARY */
 #detailed-view-container {

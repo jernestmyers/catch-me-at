@@ -124,7 +124,7 @@ const RenderMaps = (props) => {
                         }}
                       >
                         <div>
-                          <p>{object.place.name}</p>
+                          <p className="itin-where-text">{object.place.name}</p>
                           <p>{object.place.formatted_address}</p>
                           <a
                             href={object.place.url}

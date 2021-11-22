@@ -179,7 +179,7 @@ const CreateOrEditMap = (props) => {
           googleMarker.setVisible(true);
           infoWindow.setContent(
             `<div>
-          <p>${place.name}</p>
+          <p class="itin-where-text">${place.name}</p>
           <p>${place.formatted_address}</p>
           <a href=${place.url} target="_blank" rel="noreferrer">View on Google Maps</a>
           </div>`
@@ -418,7 +418,7 @@ const CreateOrEditMap = (props) => {
                         }}
                       >
                         <div>
-                          <p>{object.place.name}</p>
+                          <p className="itin-where-text">{object.place.name}</p>
                           <p>{object.place.formatted_address}</p>
                           <a
                             href={object.place.url}
@@ -456,22 +456,7 @@ const CreateOrEditMap = (props) => {
         deleteMarkerAndData={deleteMarkerAndData}
         markers={markers}
       ></ViewItinerary>
-      {/* <div id="toggle-units-container">
-        <div class="units-display">
-          <p>Publish</p>
-        </div>
-        <input type="checkbox" id="toggle-units" class="checkbox" />
-        <label for="toggle-units" class="switch"></label>
-      </div> */}
       <div id="status-container">
-        {/* <div>
-          <label htmlFor="publish-checkbox">Ready to publish?</label>
-          <input
-            type="checkbox"
-            id="publish-checkbox"
-            name="publish-checkbox"
-          />
-        </div> */}
         <div className="toggle-container">
           <div className="switch-label">
             <p>Publish?</p>

@@ -60,15 +60,20 @@ const ViewItinerary = (props) => {
                 strokeLinecap="round"
               ></path>
             </svg>
-            <h2>Where</h2>
+            <h2 className="itin-section-header">Where</h2>
             <div id="view-where">
-              <p>{whereElements[0].innerText}</p>
+              <p className="itin-where-text">{whereElements[0].innerText}</p>
               <p>{whereElements[1].innerText}</p>
-              <a href={whereElements[2].href} target="_blank" rel="noreferrer">
+              <a
+                className="view-google-link"
+                href={whereElements[2].href}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {whereElements[2].innerText}
               </a>
             </div>
-            <h2>When</h2>
+            <h2 className="itin-section-header">When</h2>
             <div>
               <p>
                 {
@@ -86,7 +91,7 @@ const ViewItinerary = (props) => {
                 }
               </p>
             </div>
-            <h2>What</h2>
+            <h2 className="itin-section-header">What</h2>
             <div>
               <p>{object.userInputData[2].value}</p>
             </div>
