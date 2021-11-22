@@ -147,6 +147,11 @@ body,
   width: 100%;
 }
 
+html {
+  margin: 0 auto;
+  max-width: 1920px;
+}
+
 h1 {
   font-size: 1.25rem;
 }
@@ -334,8 +339,8 @@ a.view-map-link:visited {
 
 /* ICONS */
 .inline-icons {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.65rem;
+  height: 0.65rem;
   padding-left: 0.25rem;
 }
 
@@ -461,6 +466,7 @@ a.view-map-link:visited {
 }
 
 .view-map-link {
+  font-size: 1rem;
   font-weight: bold;
   margin: 0.5rem 0;
   margin-left: 0.5rem;
@@ -665,14 +671,6 @@ textarea.input-field {
   font-weight: bold;
 }
 
-/* .view-google-link, */
-/* .view-google-link:visited { */
-/* color: #20a4f3; */
-/* color: #05b2dc; */
-/* color: #35a7ff; */
-/* color: #2f97c1; */
-/* } */
-
 /* VIEW MAP ITINERARY */
 #detailed-view-container {
   display: flex;
@@ -683,4 +681,35 @@ textarea.input-field {
 /* HOME !USERAUTH */
 #home-no-userAuth {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-no-userAuth-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* VIEW MAPS */
+#view-maps-container {
+  margin: 0 1rem;
+}
+
+#user-maps-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.view-maps-header {
+  margin-top: 0.5rem;
+  text-align: center;
+  flex-basis: 100%;
+  font-weight: bold;
+  position: relative;
+  letter-spacing: 0.5rem;
+  border-bottom: 2px solid #5e5c6c;
 }

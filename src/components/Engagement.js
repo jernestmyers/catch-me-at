@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 
 function Engagement({ db, mapObject, userAuth }) {
-  console.log({ mapObject, userAuth });
+  // console.log({ mapObject, userAuth });
 
   const handleAddComment = (e) => {
     const mapID = e.target.closest(`div`).dataset.mapid;

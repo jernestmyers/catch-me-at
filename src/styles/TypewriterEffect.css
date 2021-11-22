@@ -1,7 +1,5 @@
 #typewriter-container {
-  /* display: none; */
   width: 100%;
-  margin-top: 5rem;
   display: grid;
   grid-template-columns: 0.75fr 1fr;
   font-size: 2rem;

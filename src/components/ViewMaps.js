@@ -9,7 +9,7 @@ function ViewMaps(props) {
       {props.userAuth && !props.userAuth.isAnonymous ? (
         <div>
           <div id="user-maps-container">
-            <h2>Your maps:</h2>
+            <h2 className="view-maps-header">YOUR MAPS</h2>
             {props.userData.mapsOwned.map((mapObject) => {
               return (
                 <div>
