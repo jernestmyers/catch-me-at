@@ -27,6 +27,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 const containerStyle = {
   width: "300px",
@@ -471,9 +472,11 @@ const CreateOrEditMap = (props) => {
           <input className="checkbox" type="checkbox" id="private-checkbox" />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
-        <button id="save-map-btn" onClick={handleSaveMap}>
-          Save Map
-        </button>
+        <Link id="save-map-router" to="/view">
+          <button id="save-map-btn" onClick={handleSaveMap}>
+            Save Map
+          </button>
+        </Link>
       </div>
       {/* <button
         onClick={() =>

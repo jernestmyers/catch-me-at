@@ -97,13 +97,33 @@ const ViewItinerary = (props) => {
             </div>
             {currentPath === "/create" ? (
               <div>
-                <button onClick={props.prepareToEditMarkerAndData}>edit</button>
-                <button onClick={props.deleteMarkerAndData}>delete</button>
+                <button
+                  className="modify-btns"
+                  onClick={props.prepareToEditMarkerAndData}
+                >
+                  edit
+                </button>
+                <button
+                  className="modify-btns"
+                  onClick={props.deleteMarkerAndData}
+                >
+                  delete
+                </button>
               </div>
             ) : props.userAuth.uid === props.mapObject.owner.ownerId ? (
               <div>
-                <button onClick={props.prepareToEditMarkerAndData}>edit</button>
-                <button onClick={props.deleteMarkerAndData}>delete</button>
+                <button
+                  className="modify-btns"
+                  onClick={props.prepareToEditMarkerAndData}
+                >
+                  edit
+                </button>
+                <button
+                  className="modify-btns"
+                  onClick={props.deleteMarkerAndData}
+                >
+                  delete
+                </button>
               </div>
             ) : null}
             {/* <button onClick={props.prepareToEditMarkerAndData}>edit</button>

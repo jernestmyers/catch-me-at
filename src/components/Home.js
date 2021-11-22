@@ -209,6 +209,7 @@ function Home(props) {
     <div id="home-container">
       {props.userAuth ? (
         <div className="map-feed">
+          <h2 className="view-maps-header">ACTIVITY FEED</h2>
           {props.publicMaps.map((mapArray) => {
             return (
               <div>

@@ -174,8 +174,11 @@ function App() {
             userAuth={userAuth}
             setUserAuth={setUserAuth}
           ></AuthenticateUser>
-          {userAuth ? <NavBar></NavBar> : null}
-          {/* <NavBar></NavBar> */}
+          {userAuth ? (
+            <NavBar></NavBar>
+          ) : (
+            <p id="prompt-login">Log in to get started!</p>
+          )}
         </header>
         <Routes>
           <Route
