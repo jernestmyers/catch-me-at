@@ -3,7 +3,7 @@ import React from "react";
 import {
   // collection,
   // getDocs,
-  // getDoc,
+  getDoc,
   // setDoc,
   doc,
   updateDoc,
@@ -68,6 +68,18 @@ function Engagement({ db, mapObject, userAuth }) {
     }
     if (userAuth.uid === mapObject.owner.ownerId) {
       console.log(`user owns map, update it.`);
+      const userRef = doc(db, "users", userAuth.uid);
+      const userObject = await getDoc(userRef);
+      const maps = userObject.data().mapsOwned;
+      maps.filter((map) => {
+        if (id === map.mapID) {
+          Object.assign(map, mapObject);
+        }
+      });
+      console.log(maps);
+      await updateDoc(userRef, {
+        mapsOwned: JSON.parse(JSON.stringify(maps)),
+      });
     }
     if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
       console.log(
@@ -75,6 +87,13 @@ function Engagement({ db, mapObject, userAuth }) {
       );
     }
   };
+
+  // const updateMapsOwnedInFirestore = async () => {
+  //   const userRef = doc(props.db, "users", props.userAuth.uid);
+  //   await updateDoc(userRef, {
+  //     mapsOwned: JSON.parse(JSON.stringify(props.mapsSaved)),
+  //   });
+  // };
 
   return (
     <div id="engagement-container">
