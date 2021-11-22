@@ -151,6 +151,23 @@ h1 {
   font-size: 1.25rem;
 }
 
+button {
+  color: #fcfcfc;
+  font-weight: 500;
+  background-color: #a2bce0;
+  border: 2px solid transparent;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+button:hover {
+  background-color: #6c7d95;
+}
+
+button:active {
+  background-color: #363f4b;
+}
+
 input:active,
 input:focus,
 textarea:active,
@@ -346,10 +363,18 @@ a.view-map-link:visited {
 
 .engage-icon-container {
   height: 2.75rem;
+  height: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  border-right: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.engage-icon-container:hover {
+  background-color: #dfdee3;
 }
 
 .engage-icon {
@@ -370,6 +395,11 @@ a.view-map-link:visited {
 
 .numberOfComments {
   z-index: 10;
+}
+
+.numberOfComments:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .comments-container {

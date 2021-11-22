@@ -86,12 +86,12 @@ function Engagement({ db, mapObject, userAuth }) {
           onClick={handleAddComment}
         >
           {mapObject.comments.length ? (
-            <p>
+            <p className="comment-quantity-text">
               {mapObject.comments.length}
               {mapObject.comments.length === 1 ? ` comment` : ` comments`}
             </p>
           ) : (
-            <p>Be the first to comment!</p>
+            <p className="comment-quantity-text">Be the first to comment!</p>
           )}
         </div>
       </div>
