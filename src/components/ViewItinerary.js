@@ -1,6 +1,7 @@
 import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
 import { useLocation } from "react-router-dom";
+import { format, parseJSON } from "date-fns";
 
 const ViewItinerary = (props) => {
   // console.log(props);
@@ -10,6 +11,20 @@ const ViewItinerary = (props) => {
   sortedMarkers.sort((a, b) => {
     return a.order - b.order;
   });
+
+  const formatDateAndTime = (dateObjectArray) => {
+    const year = dateObjectArray[0].substring(0, 4);
+    const month = +dateObjectArray[0].substring(5, 7);
+    const day = dateObjectArray[0].substring(8, 10);
+    const hour = dateObjectArray[1].substring(0, 2);
+    const minute = dateObjectArray[1].substring(3, 5);
+    const formattedDate = format(new Date(year, month - 1, day), "MMM d, yyyy");
+    const formattedTime = format(
+      new Date(year, month - 1, day, hour, minute),
+      "h:mmaaa"
+    );
+    return [formattedDate, formattedTime];
+  };
 
   return (
     <div id="itinerary-container">
@@ -56,8 +71,19 @@ const ViewItinerary = (props) => {
             <h2>When</h2>
             <div>
               <p>
-                {object.userInputData[0].value} @{" "}
-                {object.userInputData[1].value}
+                {
+                  formatDateAndTime([
+                    object.userInputData[0].value,
+                    object.userInputData[1].value,
+                  ])[0]
+                }{" "}
+                @{" "}
+                {
+                  formatDateAndTime([
+                    object.userInputData[0].value,
+                    object.userInputData[1].value,
+                  ])[1]
+                }
               </p>
             </div>
             <h2>What</h2>
