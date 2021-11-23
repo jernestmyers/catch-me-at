@@ -30,6 +30,11 @@ function Engagement({
   const [comment, setComment] = useState({});
   const [targetMapId, setTargetMapId] = useState(null);
   const [likeStatus, setLikeStatus] = useState();
+  const [likesCounter, setLikesCounter] = useState();
+
+  useEffect(() => {
+    setLikesCounter(mapObject.likes);
+  }, []);
 
   useEffect(() => {
     if (comment && targetMapId) {
@@ -48,15 +53,24 @@ function Engagement({
   useEffect(() => {
     if (likeStatus && targetMapId) {
       console.log(`like useEffect`);
-      sendLikeToFirestore(likeStatus, targetMapId);
+      let updatedLikesByUser;
+      if (userData.likesByUser.includes(targetMapId)) {
+        updatedLikesByUser = userData.likesByUser.filter((item) => {
+          if (item !== targetMapId) {
+            return item;
+          }
+        });
+      } else {
+        updatedLikesByUser = userData.likesByUser.concat(targetMapId);
+      }
+      setUserData((prevState) =>
+        Object.assign(prevState, { likesByUser: updatedLikesByUser })
+      );
+      sendLikeToFirestore(likeStatus, targetMapId, updatedLikesByUser);
       setLikeStatus(null);
       setTargetMapId(null);
     }
   }, [likeStatus, setLikeStatus]);
-
-  useEffect(() => {
-    console.log(`re-render when userData changes?`);
-  }, [userData, setUserData]);
 
   const handleAddComment = (e) => {
     const mapID = e.target.closest(`div`).dataset.mapid;
@@ -149,35 +163,23 @@ function Engagement({
     setTargetMapId(iconId);
   };
 
-  const sendLikeToFirestore = async (status, id) => {
+  const sendLikeToFirestore = async (status, id, userLikes) => {
     const userRef = doc(db, "users", userAuth.uid);
-    const userObject = await getDoc(userRef);
-    const likesByUser = userObject.data().likesByUser;
-    let updatedLikesByUser;
-    if (likesByUser.includes(id)) {
-      updatedLikesByUser = likesByUser.filter((item) => {
-        if (item !== id) {
-          return item;
-        }
-      });
-    } else {
-      updatedLikesByUser = likesByUser.concat(id);
-    }
+
     await updateDoc(userRef, {
-      likesByUser: updatedLikesByUser,
+      likesByUser: userLikes,
     });
-    setUserData((prevState) =>
-      Object.assign(prevState, { likesByUser: updatedLikesByUser })
-    );
 
     if (status === `liked`) {
       Object.assign(mapObject, {
         likes: mapObject.likes + 1,
       });
+      setLikesCounter((prevState) => prevState + 1);
     } else {
       Object.assign(mapObject, {
         likes: mapObject.likes - 1,
       });
+      setLikesCounter((prevState) => prevState - 1);
     }
 
     if (!mapObject.isPrivate) {
@@ -213,7 +215,7 @@ function Engagement({
     <div id="engagement-container">
       <div className="display-engagement-data">
         <div id={`likes-number-${mapObject.mapID}`} className="numberOfLikes">
-          {mapObject.likes ? mapObject.likes : null}
+          {likesCounter ? likesCounter : null}
         </div>
         <div
           className="numberOfComments"
@@ -415,9 +417,9 @@ function Engagement({
           </div>
         </div>
       </div>
-      <button onClick={() => console.log({ userData, publicMaps })}>
+      {/* <button onClick={() => console.log({ userData, publicMaps })}>
         Check State
-      </button>
+      </button> */}
     </div>
   );
 }
