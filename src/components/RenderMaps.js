@@ -226,10 +226,14 @@ const RenderMaps = (props) => {
           <Engagement
             db={props.db}
             mapObject={props.mapObject}
-            likes={props.mapObject.likes}
-            comments={props.mapObject.comments}
-            mapID={props.mapObject.mapID}
+            // likes={props.mapObject.likes}
+            // comments={props.mapObject.comments}
+            // mapID={props.mapObject.mapID}
             userAuth={props.userAuth}
+            publicMaps={props.publicMaps}
+            setPublicMaps={props.setPublicMaps}
+            userData={props.userData}
+            setUserData={props.setUserData}
           ></Engagement>
         </div>
       ) : (

@@ -17,6 +17,10 @@ function ViewMaps(props) {
                     db={props.db}
                     userAuth={props.userAuth}
                     mapObject={mapObject}
+                    publicMaps={props.publicMaps}
+                    setPublicMaps={props.setPublicMaps}
+                    userData={props.userData}
+                    setUserData={props.setUserData}
                   ></RenderMaps>
                 </div>
               );

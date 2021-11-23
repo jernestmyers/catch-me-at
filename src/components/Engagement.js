@@ -9,8 +9,24 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-function Engagement({ db, mapObject, userAuth }) {
-  // console.log({ mapObject, userAuth });
+function Engagement({
+  db,
+  mapObject,
+  userAuth,
+  publicMaps,
+  userData,
+  setPublicMaps,
+  setUserData,
+}) {
+  console.log({
+    // db,
+    mapObject,
+    // userAuth,
+    publicMaps,
+    userData,
+    // setPublicMaps,
+    // setUserData,
+  });
   const [comment, setComment] = useState({});
   const [targetMapId, setTargetMapId] = useState(null);
 
@@ -77,6 +93,15 @@ function Engagement({ db, mapObject, userAuth }) {
       console.log(`update publicMap`);
       const docRef = doc(db, "publicMaps", id);
       await updateDoc(docRef, { mapObject });
+      setPublicMaps((prevState) =>
+        prevState.map((map) => {
+          if (id === map[0]) {
+            return [map[0], { mapObject }];
+          } else {
+            return map;
+          }
+        })
+      );
     }
     if (userAuth.uid === mapObject.owner.ownerId) {
       console.log(`user owns map, update it.`);
@@ -88,10 +113,10 @@ function Engagement({ db, mapObject, userAuth }) {
           Object.assign(map, mapObject);
         }
       });
-      console.log(maps);
       await updateDoc(userRef, {
         mapsOwned: JSON.parse(JSON.stringify(maps)),
       });
+      setUserData((prevState) => Object.assign(prevState, { mapsOwned: maps }));
     }
     if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
       console.log(
@@ -99,13 +124,6 @@ function Engagement({ db, mapObject, userAuth }) {
       );
     }
   };
-
-  // const updateMapsOwnedInFirestore = async () => {
-  //   const userRef = doc(props.db, "users", props.userAuth.uid);
-  //   await updateDoc(userRef, {
-  //     mapsOwned: JSON.parse(JSON.stringify(props.mapsSaved)),
-  //   });
-  // };
 
   return (
     <div id="engagement-container">
@@ -295,7 +313,7 @@ function Engagement({ db, mapObject, userAuth }) {
           </div>
         </div>
       </div>
-      <button onClick={() => console.log({ targetMapId, comment })}>
+      <button onClick={() => console.log({ userData, publicMaps })}>
         Check State
       </button>
     </div>

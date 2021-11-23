@@ -217,6 +217,10 @@ function Home(props) {
                   db={props.db}
                   userAuth={props.userAuth}
                   mapObject={mapArray[1].mapObject}
+                  publicMaps={props.publicMaps}
+                  setPublicMaps={props.setPublicMaps}
+                  userData={props.userData}
+                  setUserData={props.setUserData}
                 ></RenderMaps>
               </div>
             );

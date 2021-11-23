@@ -33,6 +33,10 @@ function ViewMapItinerary(props) {
         db={props.db}
         userAuth={props.userAuth}
         mapObject={mapToDisplay[0]}
+        publicMaps={props.publicMaps}
+        setPublicMaps={props.setPublicMaps}
+        userData={props.userData}
+        setUserData={props.setUserData}
       ></RenderMaps>
       <ViewItinerary
         mapObject={mapToDisplay[0]}
