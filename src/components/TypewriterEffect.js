@@ -4,9 +4,9 @@ import "../styles/TypewriterEffect.css";
 function TypewriterEffect(props) {
   const placeString = [
     `The Wissahickon.`,
-    `The Fillmore.`,
-    `Penn Treaty Park.`,
     `The Barnes Foundation.`,
+    `Penn Treaty Park.`,
+    `The Fillmore.`,
   ];
 
   useEffect(() => {
