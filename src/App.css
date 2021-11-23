@@ -395,8 +395,8 @@ a.view-map-link:visited {
 
 .numberOfLikes {
   position: relative;
-  top: 1rem;
-  left: 2.75rem;
+  top: 1.5rem;
+  left: 3rem;
 }
 
 .numberOfComments {

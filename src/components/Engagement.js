@@ -29,6 +29,7 @@ function Engagement({
   // });
   const [comment, setComment] = useState({});
   const [targetMapId, setTargetMapId] = useState(null);
+  const [likeStatus, setLikeStatus] = useState();
 
   useEffect(() => {
     if (comment && targetMapId) {
@@ -37,12 +38,25 @@ function Engagement({
         comments: [...mapObject.comments, comment],
       };
       Object.assign(mapObject, updatedCommentObject);
-      updateFirestore(targetMapId);
+      sendCommentToFirestore(targetMapId);
       document.querySelector(`#user-comment-${targetMapId}`).value = ``;
       setComment(null);
       setTargetMapId(null);
     }
   }, [comment, setComment]);
+
+  useEffect(() => {
+    if (likeStatus && targetMapId) {
+      console.log(`like useEffect`);
+      sendLikeToFirestore(likeStatus, targetMapId);
+      setLikeStatus(null);
+      setTargetMapId(null);
+    }
+  }, [likeStatus, setLikeStatus]);
+
+  useEffect(() => {
+    console.log(`re-render when userData changes?`);
+  }, [userData, setUserData]);
 
   const handleAddComment = (e) => {
     const mapID = e.target.closest(`div`).dataset.mapid;
@@ -88,7 +102,7 @@ function Engagement({
     return format(dateObject, "MMM d, yyyy, h:mmaaa");
   };
 
-  const updateFirestore = async (id) => {
+  const sendCommentToFirestore = async (id) => {
     if (!mapObject.isPrivate) {
       console.log(`update publicMap`);
       const docRef = doc(db, "publicMaps", id);
@@ -127,23 +141,80 @@ function Engagement({
 
   const handleLike = (e) => {
     const iconId = e.target.closest(`div`).dataset.mapid;
-    const targetIcon = document.querySelector(`#like-icon-${iconId}`);
-    const likedText = e.target.closest(`div`).lastChild;
-    targetIcon.classList.toggle(`liked`);
-    likedText.textContent = `Like`;
-    likedText.classList.remove(`liked-text`);
-    targetIcon.classList.forEach((item) => {
-      if (item === `liked`) {
-        likedText.textContent = `Liked`;
-        likedText.classList.add(`liked-text`);
-      }
+    if (userData.likesByUser.includes(iconId)) {
+      setLikeStatus(`unliked`);
+    } else {
+      setLikeStatus(`liked`);
+    }
+    setTargetMapId(iconId);
+  };
+
+  const sendLikeToFirestore = async (status, id) => {
+    const userRef = doc(db, "users", userAuth.uid);
+    const userObject = await getDoc(userRef);
+    const likesByUser = userObject.data().likesByUser;
+    let updatedLikesByUser;
+    if (likesByUser.includes(id)) {
+      updatedLikesByUser = likesByUser.filter((item) => {
+        if (item !== id) {
+          return item;
+        }
+      });
+    } else {
+      updatedLikesByUser = likesByUser.concat(id);
+    }
+    await updateDoc(userRef, {
+      likesByUser: updatedLikesByUser,
     });
+    setUserData((prevState) =>
+      Object.assign(prevState, { likesByUser: updatedLikesByUser })
+    );
+
+    if (status === `liked`) {
+      Object.assign(mapObject, {
+        likes: mapObject.likes + 1,
+      });
+    } else {
+      Object.assign(mapObject, {
+        likes: mapObject.likes - 1,
+      });
+    }
+
+    if (!mapObject.isPrivate) {
+      console.log(`update publicMap`);
+      const docRef = doc(db, "publicMaps", id);
+      await updateDoc(docRef, { mapObject });
+    }
+
+    if (userAuth.uid === mapObject.owner.ownerId) {
+      console.log(`user owns map, update it.`);
+      const userRef = doc(db, "users", userAuth.uid);
+      const userObject = await getDoc(userRef);
+      const maps = userObject.data().mapsOwned;
+      maps.filter((map) => {
+        if (id === map.mapID) {
+          Object.assign(map, mapObject);
+        }
+      });
+      await updateDoc(userRef, {
+        mapsOwned: JSON.parse(JSON.stringify(maps)),
+      });
+      setUserData((prevState) => Object.assign(prevState, { mapsOwned: maps }));
+    }
+
+    if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
+      console.log(
+        `map isPrivate AND not the user's, so map is shared with user`
+      );
+    }
   };
 
   return (
     <div id="engagement-container">
       <div className="display-engagement-data">
-        <div className="numberOfLikes">{mapObject.likes}</div>
+        <div id={`likes-number-${mapObject.mapID}`} className="numberOfLikes">
+          {mapObject.likes ? mapObject.likes : null}
+        </div>
         <div
           className="numberOfComments"
           data-mapid={mapObject.mapID}
@@ -172,6 +243,11 @@ function Engagement({
             role="img"
           >
             <path
+              className={
+                userData && !userData.likesByUser.includes(mapObject.mapID)
+                  ? null
+                  : `liked`
+              }
               data-name="layer1"
               id={`like-icon-${mapObject.mapID}`}
               d="M54 35h2a4 4 0 1 0 0-8H34a81 81 0 0 0 2-18 4 4 0 0 0-8 0s-4 22-18 22H4v24h10c4 0 12 4 16 4h20a4 4 0 0 0 0-8h2a4 4 0 0 0 0-8h2a4 4 0 0 0 0-8"
@@ -183,7 +259,13 @@ function Engagement({
               strokeLinecap="round"
             ></path>
           </svg>
-          <p id={`like-text-${mapObject.mapID}`}>Like</p>
+          {userData && !userData.likesByUser.includes(mapObject.mapID) ? (
+            <p id={`like-text-${mapObject.mapID}`}>Like</p>
+          ) : (
+            <p className="liked-text" id={`like-text-${mapObject.mapID}`}>
+              Liked
+            </p>
+          )}
         </div>
         <div
           className="engage-icon-container comment-btn"
