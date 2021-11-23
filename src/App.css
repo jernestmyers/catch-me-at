@@ -452,6 +452,14 @@ a.view-map-link:visited {
   display: none;
 }
 
+.liked {
+  fill: #a2bce0;
+}
+
+.liked-text {
+  font-weight: bold;
+}
+
 /* RENDERMAPS */
 .view-map-link-container {
   width: 100%;
