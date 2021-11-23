@@ -1,5 +1,5 @@
 import { format, parseJSON } from "date-fns";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   // collection,
   // getDocs,
@@ -11,6 +11,22 @@ import {
 
 function Engagement({ db, mapObject, userAuth }) {
   // console.log({ mapObject, userAuth });
+  const [comment, setComment] = useState({});
+  const [targetMapId, setTargetMapId] = useState(null);
+
+  useEffect(() => {
+    if (comment && targetMapId) {
+      console.log(`useEffect`);
+      const updatedCommentObject = {
+        comments: [...mapObject.comments, comment],
+      };
+      Object.assign(mapObject, updatedCommentObject);
+      updateFirestore(targetMapId);
+      document.querySelector(`#user-comment-${targetMapId}`).value = ``;
+      setComment(null);
+      setTargetMapId(null);
+    }
+  }, [comment, setComment]);
 
   const handleAddComment = (e) => {
     const mapID = e.target.closest(`div`).dataset.mapid;
@@ -40,19 +56,15 @@ function Engagement({ db, mapObject, userAuth }) {
     const commentTextarea = document.querySelector(
       `#user-comment-${e.target.dataset.mapid}`
     );
+    setTargetMapId(e.target.dataset.mapid);
+
     if (commentTextarea.value) {
-      const comment = {
+      setComment({
         userId: userAuth.uid,
         name: userAuth.displayName,
         date: JSON.stringify(new Date()),
         comment: commentTextarea.value,
-      };
-      const updatedCommentObject = {
-        comments: [...mapObject.comments, comment],
-      };
-      Object.assign(mapObject, updatedCommentObject);
-      updateFirestore(e.target.dataset.mapid);
-      commentTextarea.value = ``;
+      });
     }
   };
 
@@ -283,6 +295,9 @@ function Engagement({ db, mapObject, userAuth }) {
           </div>
         </div>
       </div>
+      <button onClick={() => console.log({ targetMapId, comment })}>
+        Check State
+      </button>
     </div>
   );
 }

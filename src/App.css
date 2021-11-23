@@ -716,7 +716,6 @@ textarea.input-field {
 #user-maps-container {
   display: flex;
   justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
 }
 
