@@ -214,6 +214,20 @@ function Engagement({
     }
   };
 
+  const handleSaveMap = (e) => {
+    if (userAuth.uid !== mapObject.owner.ownerId) {
+      const mapSavedData = {
+        ownerId: mapObject.owner.ownerId,
+        mapID: mapObject.mapID,
+      };
+      console.log(mapSavedData);
+    }
+  };
+
+  const isMapSaved = () => {
+    return userData.publicMapsSaved.map((data) => data.mapID);
+  };
+
   return (
     <div id="engagement-container">
       <div className="display-engagement-data">
@@ -267,7 +281,7 @@ function Engagement({
           {userData && !userData.likesByUser.includes(mapObject.mapID) ? (
             <p id={`like-text-${mapObject.mapID}`}>Like</p>
           ) : (
-            <p className="liked-text" id={`like-text-${mapObject.mapID}`}>
+            <p className="engaged-text" id={`like-text-${mapObject.mapID}`}>
               Liked
             </p>
           )}
@@ -337,7 +351,12 @@ function Engagement({
         </div>
         <div
           data-hover="You own this map."
-          className="engage-icon-container disable-save"
+          className={
+            userData && mapObject.owner.ownerId === userAuth.uid
+              ? `engage-icon-container disable-save`
+              : `engage-icon-container`
+          }
+          onClick={handleSaveMap}
         >
           <svg
             className="engage-icon"
@@ -347,7 +366,13 @@ function Engagement({
           >
             <path
               data-name="layer2"
-              fill="none"
+              fill={
+                userData &&
+                (isMapSaved().includes(mapObject.mapID) ||
+                  userAuth.uid === mapObject.owner.ownerId)
+                  ? "#a2bce0"
+                  : "none"
+              }
               stroke="#202020"
               strokeMiterlimit="10"
               strokeWidth="2"
@@ -370,7 +395,13 @@ function Engagement({
               cx="46"
               cy="46"
               r="16"
-              fill="none"
+              fill={
+                userData &&
+                (isMapSaved().includes(mapObject.mapID) ||
+                  userAuth.uid === mapObject.owner.ownerId)
+                  ? "#bdd5ae"
+                  : "none"
+              }
               stroke="#202020"
               strokeMiterlimit="10"
               strokeWidth="2"
@@ -388,7 +419,13 @@ function Engagement({
               strokeLinecap="round"
             ></path>
           </svg>
-          <p>Save</p>
+          {userData &&
+          (isMapSaved().includes(mapObject.mapID) ||
+            userAuth.uid === mapObject.owner.ownerId) ? (
+            <p className="engaged-text">Saved</p>
+          ) : (
+            <p className="save-text">Save</p>
+          )}
         </div>
       </div>
       <div className="comments-container" id={`comment-box-${mapObject.mapID}`}>
@@ -423,9 +460,9 @@ function Engagement({
           </div>
         </div>
       </div>
-      {/* <button onClick={() => console.log({ userData, publicMaps })}>
+      <button onClick={() => console.log({ userData, userAuth, mapObject })}>
         Check State
-      </button> */}
+      </button>
     </div>
   );
 }

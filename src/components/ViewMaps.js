@@ -8,7 +8,7 @@ function ViewMaps(props) {
     <div id="view-maps-container">
       {props.userAuth && !props.userAuth.isAnonymous ? (
         <div>
-          <div id="user-maps-container">
+          <div className="user-maps-container" id="user-maps">
             <h2 className="view-maps-header">YOUR MAPS</h2>
             {props.userData.mapsOwned.map((mapObject) => {
               return (
@@ -26,7 +26,24 @@ function ViewMaps(props) {
               );
             })}
           </div>
-          <div id="user-savedMaps-container"></div>
+          <div className="user-maps-container" id="user-savedMaps">
+            <h2 className="view-maps-header">MAPS YOU SAVED</h2>
+            {props.mapsSavedByUser.map((mapObject) => {
+              return (
+                <div>
+                  <RenderMaps
+                    db={props.db}
+                    userAuth={props.userAuth}
+                    mapObject={mapObject[1].mapObject}
+                    publicMaps={props.publicMaps}
+                    setPublicMaps={props.setPublicMaps}
+                    userData={props.userData}
+                    setUserData={props.setUserData}
+                  ></RenderMaps>
+                </div>
+              );
+            })}
+          </div>
         </div>
       ) : (
         <div>

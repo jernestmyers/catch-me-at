@@ -43,6 +43,7 @@ function App() {
   const [mapsSaved, setMapsSaved] = useState([]);
   const [publicMaps, setPublicMaps] = useState([]);
   const [isUserDataSet, setIsUserDataSet] = useState();
+  const [mapsSavedByUser, setMapsSavedByUser] = useState([]);
 
   useEffect(() => {
     getPublicMaps();
@@ -72,6 +73,7 @@ function App() {
       // console.log(`userData - let's go!`);
       setIsUserDataSet(true);
       setMapsSaved(userData.mapsOwned);
+      fetchPublicMapsSaved();
     }
   }, [userData, setUserData]);
 
@@ -121,6 +123,20 @@ function App() {
       });
     }
     return dataHelper;
+  };
+
+  const fetchPublicMapsSaved = async () => {
+    const dataHelper = [];
+    await userData.publicMapsSaved.forEach(async (mapData) => {
+      const user = await getDoc(doc(db, "users", mapData.ownerId));
+      const data = user.data();
+      data.mapsOwned.forEach((maps) => {
+        if (maps.mapID === mapData.mapID) {
+          dataHelper.push([maps.mapID, { mapObject: maps }]);
+        }
+      });
+      setMapsSavedByUser(dataHelper);
+    });
   };
 
   return (
@@ -221,6 +237,7 @@ function App() {
                 setUserData={setUserData}
                 publicMaps={publicMaps}
                 setPublicMaps={setPublicMaps}
+                mapsSavedByUser={mapsSavedByUser}
               ></ViewMaps>
             }
           ></Route>
@@ -248,7 +265,9 @@ function App() {
           ></Route>
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
-        <button onClick={() => console.log({ userData, publicMaps })}>
+        <button
+          onClick={() => console.log({ userData, publicMaps, mapsSavedByUser })}
+        >
           see data fetch
         </button>
       </div>
