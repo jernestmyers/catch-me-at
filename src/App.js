@@ -24,30 +24,45 @@ const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
 const db = getFirestore();
 
-const newUserObject = {
-  mapsOwned: [],
-  connections: {
-    active: [],
-    pendingReceived: [],
-    pendingSent: [],
-  },
-  mapsSharedWithUser: [],
-  publicMapsSaved: [],
-  likesByUser: [],
-  commentsByUser: [],
-};
-
 function App() {
   const [userAuth, setUserAuth] = useState();
+  const [usersCollection, setUsersCollection] = useState();
+  const [users, setUsers] = useState();
   const [userData, setUserData] = useState(null);
   const [mapsSaved, setMapsSaved] = useState([]);
   const [publicMaps, setPublicMaps] = useState([]);
   const [isUserDataSet, setIsUserDataSet] = useState();
   const [mapsSavedByUser, setMapsSavedByUser] = useState([]);
 
+  const getNewUserObject = () => {
+    return {
+      userName: userAuth.displayName,
+      mapsOwned: [],
+      connections: {
+        active: [],
+        pendingReceived: [],
+        pendingSent: [],
+      },
+      mapsSharedWithUser: [],
+      publicMapsSaved: [],
+      likesByUser: [],
+      commentsByUser: [],
+    };
+  };
+
   useEffect(() => {
     getPublicMaps();
   }, []);
+
+  useEffect(() => {
+    if (usersCollection) {
+      const dataHelper = [];
+      usersCollection.forEach((user) => {
+        dataHelper.push([user.id, user.data().userName]);
+      });
+      setUsers(dataHelper);
+    }
+  }, [usersCollection, setUsersCollection]);
 
   const getPublicMaps = async () => {
     try {
@@ -70,7 +85,6 @@ function App() {
 
   useEffect(() => {
     if (userData && !isUserDataSet) {
-      // console.log(`userData - let's go!`);
       setIsUserDataSet(true);
       setMapsSaved(userData.mapsOwned);
       fetchPublicMapsSaved();
@@ -81,6 +95,7 @@ function App() {
     try {
       let doesUserExist = null;
       const fetchUserIds = await getDocs(collection(db, "users"));
+      setUsersCollection(fetchUserIds);
       const fetchedUserIds = storeFetchAsArray("users", fetchUserIds);
       fetchedUserIds.filter((id) => {
         if (id === userAuth.uid) {
@@ -102,7 +117,7 @@ function App() {
         const fetchUserData = await getDoc(doc(db, "users", userAuth.uid));
         setUserData(fetchUserData.data());
       } else {
-        setDoc(doc(db, "users", userAuth.uid), newUserObject);
+        setDoc(doc(db, "users", userAuth.uid), getNewUserObject());
       }
     } catch (error) {
       alert(
@@ -271,7 +286,13 @@ function App() {
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
         <button
-          onClick={() => console.log({ userData, publicMaps, mapsSavedByUser })}
+          onClick={() =>
+            console.log({
+              userData,
+              publicMaps,
+              mapsSavedByUser,
+            })
+          }
         >
           see data fetch
         </button>
