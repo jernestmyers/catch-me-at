@@ -231,6 +231,7 @@ const CreateOrEditMap = (props) => {
       props.setUserData((prevState) => {
         return { ...prevState, mapsOwned: props.mapsSaved };
       });
+      // props.setPublicMaps(props.publicMaps.concat([map.mapID, map]));
       updateMapsOwnedInFirestore();
       document.querySelector(`#confirm-add-modal`).style.display = `flex`;
     }
@@ -338,6 +339,14 @@ const CreateOrEditMap = (props) => {
           likes: null,
           comments: [],
         };
+        // DOES NOT ACCOUNT FOR CHANGES IN MAP STATUS
+        if (!getMapStatusValues().isPrivate) {
+          props.setPublicMaps(
+            props.publicMaps.concat([
+              [mapToUpdate.mapID, { mapObject: mapToUpdate }],
+            ])
+          );
+        }
         props.setMapsSaved([...props.mapsSaved, mapToUpdate]);
         clearTitleAndStatus();
         updatePublicMapsInFirestore(mapToUpdate);
@@ -356,6 +365,7 @@ const CreateOrEditMap = (props) => {
       await setDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(map)),
       });
+      // props.setPublicMaps(props.publicMaps.concat([map.mapID, map]));
     } else if (isMapStoredAsPublic && map.isPublished) {
       map.isPrivate
         ? await deleteDoc(docRef)
@@ -523,11 +533,13 @@ const CreateOrEditMap = (props) => {
             strokeLinecap="round"
           ></path>
         </svg>
-        <Link
-          to={`../view/${props.mapsSaved[props.mapsSaved.length - 1].mapID}`}
-        >
-          Check out your map here!
-        </Link>
+        {props.mapsSaved.length ? (
+          <Link
+            to={`../view/${props.mapsSaved[props.mapsSaved.length - 1].mapID}`}
+          >
+            View your map here!
+          </Link>
+        ) : null}
         <button
           onClick={() =>
             (document.querySelector(

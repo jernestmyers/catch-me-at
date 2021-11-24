@@ -207,6 +207,7 @@ function App() {
                 mapsSaved={mapsSaved}
                 setMapsSaved={setMapsSaved}
                 publicMaps={publicMaps}
+                setPublicMaps={setPublicMaps}
               ></CreateOrEditMap>
             }
           ></Route>
@@ -246,10 +247,10 @@ function App() {
             }
           ></Route>
         </Routes>
-        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button>
+        {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
         <button onClick={() => console.log({ userData, publicMaps })}>
           see data fetch
-        </button> */}
+        </button>
       </div>
     </Router>
   );

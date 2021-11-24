@@ -185,7 +185,10 @@ function Engagement({
     if (!mapObject.isPrivate) {
       console.log(`update publicMap`);
       const docRef = doc(db, "publicMaps", id);
-      await updateDoc(docRef, { mapObject });
+      // await updateDoc(docRef, { mapObject });
+      await updateDoc(docRef, {
+        mapObject: JSON.parse(JSON.stringify(mapObject)),
+      });
     }
 
     if (userAuth.uid === mapObject.owner.ownerId) {
@@ -332,7 +335,10 @@ function Engagement({
           </svg>
           <p>Share</p>
         </div>
-        <div className="engage-icon-container">
+        <div
+          data-hover="You own this map."
+          className="engage-icon-container disable-save"
+        >
           <svg
             className="engage-icon"
             xmlns="http://www.w3.org/2000/svg"

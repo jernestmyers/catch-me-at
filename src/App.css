@@ -460,6 +460,44 @@ a.view-map-link:visited {
   font-weight: bold;
 }
 
+/* .disable-save { */
+/* opacity: 0.7; */
+/* } */
+
+.disable-save:hover {
+  cursor: not-allowed;
+  background-color: #ffd7d7;
+}
+
+.disable-save {
+  position: relative;
+  font-size: 0.75rem;
+}
+
+.disable-save:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 120px;
+  background-color: #363f4b;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px 0 0px 0;
+  transition: opacity 1s ease-in-out;
+
+  position: absolute;
+  z-index: 1;
+  left: -37px;
+  top: -0.7rem;
+}
+
+.disable-save:hover:before {
+  opacity: 0.9;
+  visibility: visible;
+}
+
 /* RENDERMAPS */
 .view-map-link-container {
   width: 100%;
