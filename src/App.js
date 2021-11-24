@@ -280,6 +280,7 @@ function App() {
               <Connections
                 userData={userData}
                 userAuth={userAuth}
+                users={users}
               ></Connections>
             }
           ></Route>
