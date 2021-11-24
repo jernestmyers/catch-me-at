@@ -221,6 +221,8 @@ function Home(props) {
                   setPublicMaps={props.setPublicMaps}
                   userData={props.userData}
                   setUserData={props.setUserData}
+                  mapsSavedByUser={props.mapsSavedByUser}
+                  setMapsSavedByUser={props.setMapsSavedByUser}
                 ></RenderMaps>
               </div>
             );

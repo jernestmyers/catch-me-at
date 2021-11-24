@@ -37,6 +37,8 @@ function ViewMapItinerary(props) {
         setPublicMaps={props.setPublicMaps}
         userData={props.userData}
         setUserData={props.setUserData}
+        mapsSavedByUser={props.mapsSavedByUser}
+        setMapsSavedByUser={props.setMapsSavedByUser}
       ></RenderMaps>
       <ViewItinerary
         mapObject={mapToDisplay[0]}

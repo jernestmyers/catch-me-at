@@ -209,6 +209,8 @@ function App() {
                 setPublicMaps={setPublicMaps}
                 userData={userData}
                 setUserData={setUserData}
+                mapsSavedByUser={mapsSavedByUser}
+                setMapsSavedByUser={setMapsSavedByUser}
               ></Home>
             }
           ></Route>
@@ -238,6 +240,7 @@ function App() {
                 publicMaps={publicMaps}
                 setPublicMaps={setPublicMaps}
                 mapsSavedByUser={mapsSavedByUser}
+                setMapsSavedByUser={setMapsSavedByUser}
               ></ViewMaps>
             }
           ></Route>
@@ -251,6 +254,8 @@ function App() {
                 setUserData={setUserData}
                 publicMaps={publicMaps}
                 setPublicMaps={setPublicMaps}
+                mapsSavedByUser={mapsSavedByUser}
+                setMapsSavedByUser={setMapsSavedByUser}
               ></ViewMapItinerary>
             }
           ></Route>

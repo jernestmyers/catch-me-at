@@ -17,16 +17,9 @@ function Engagement({
   userData,
   setPublicMaps,
   setUserData,
+  mapsSavedByUser,
+  setMapsSavedByUser,
 }) {
-  // console.log({
-  //   // db,
-  //   mapObject,
-  //   // userAuth,
-  //   publicMaps,
-  //   userData,
-  //   // setPublicMaps,
-  //   // setUserData,
-  // });
   const [comment, setComment] = useState({});
   const [targetMapId, setTargetMapId] = useState(null);
   const [likeStatus, setLikeStatus] = useState();
@@ -185,7 +178,6 @@ function Engagement({
     if (!mapObject.isPrivate) {
       console.log(`update publicMap`);
       const docRef = doc(db, "publicMaps", id);
-      // await updateDoc(docRef, { mapObject });
       await updateDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(mapObject)),
       });
@@ -214,13 +206,52 @@ function Engagement({
     }
   };
 
-  const handleSaveMap = (e) => {
+  const handleSavePublicMap = async (e) => {
     if (userAuth.uid !== mapObject.owner.ownerId) {
       const mapSavedData = {
         ownerId: mapObject.owner.ownerId,
         mapID: mapObject.mapID,
       };
-      console.log(mapSavedData);
+      const userRef = doc(db, "users", userAuth.uid);
+
+      if (isMapSaved().includes(mapObject.mapID)) {
+        console.log(`unsave`);
+        const savedMapsUpdater = userData.publicMapsSaved.filter((data) => {
+          if (data.mapID !== mapObject.mapID) {
+            return data;
+          }
+        });
+        setMapsSavedByUser(
+          mapsSavedByUser.filter((data) => {
+            if (data[0] !== mapObject.mapID) {
+              return data;
+            }
+          })
+        );
+        setUserData((prevState) =>
+          Object.assign(prevState, {
+            publicMapsSaved: savedMapsUpdater,
+          })
+        );
+        await updateDoc(userRef, {
+          publicMapsSaved: savedMapsUpdater,
+        });
+      } else {
+        console.log(`save`);
+        setMapsSavedByUser([
+          ...mapsSavedByUser,
+          [mapObject.mapID, { mapObject: mapObject }],
+        ]);
+        const savedMapsUpdater = [...userData.publicMapsSaved, mapSavedData];
+        setUserData((prevState) =>
+          Object.assign(prevState, {
+            publicMapsSaved: savedMapsUpdater,
+          })
+        );
+        await updateDoc(userRef, {
+          publicMapsSaved: savedMapsUpdater,
+        });
+      }
     }
   };
 
@@ -356,7 +387,7 @@ function Engagement({
               ? `engage-icon-container disable-save`
               : `engage-icon-container`
           }
-          onClick={handleSaveMap}
+          onClick={handleSavePublicMap}
         >
           <svg
             className="engage-icon"
@@ -460,7 +491,11 @@ function Engagement({
           </div>
         </div>
       </div>
-      <button onClick={() => console.log({ userData, userAuth, mapObject })}>
+      <button
+        onClick={() =>
+          console.log({ userData, userAuth, mapObject, mapsSavedByUser })
+        }
+      >
         Check State
       </button>
     </div>
