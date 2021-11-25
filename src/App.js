@@ -278,7 +278,9 @@ function App() {
             path="/connect"
             element={
               <Connections
+                db={db}
                 userData={userData}
+                setUserData={setUserData}
                 userAuth={userAuth}
                 users={users}
               ></Connections>

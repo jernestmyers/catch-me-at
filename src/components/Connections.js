@@ -2,12 +2,12 @@ import React from "react";
 // import { useResolvedPath } from "react-router";
 // import { Link } from "react-router-dom";
 
-function Connections(props) {
-  console.log(props);
+function Connections({ db, userData, userAuth, users, setUserData }) {
+  console.log({ userData });
 
   let connectionsObject;
-  if (props.userAuth && !props.userAuth.isAnonymous) {
-    connectionsObject = props.userData.connections;
+  if (userAuth && !userAuth.isAnonymous) {
+    connectionsObject = userData.connections;
   }
 
   const searchUsers = (e) => {
@@ -16,7 +16,7 @@ function Connections(props) {
     nameContainer.style.display = `block`;
     nameContainer.innerHTML = ``;
     const string = e.target.value;
-    props.users.forEach((user) => {
+    users.forEach((user) => {
       if (
         string.length &&
         user[1][0].toLowerCase() === string[0].toLowerCase() &&
@@ -32,16 +32,42 @@ function Connections(props) {
   };
 
   const selectUser = (e) => {
-    console.log(e.target.dataset.userId);
-    console.log(e.target.textContent);
+    // console.log(e.target.dataset.userId);
+    const userRequestedId = e.target.dataset.userId;
+    const userRequestedName = e.target.textContent;
     document.querySelector(`#search-connections`).value = e.target.textContent;
     document.querySelector(`#matched-users-container`).style.display = `none`;
-    document.querySelector(`#send-request-btn`).style.display = `block`;
+    const sendRequestBtn = document.querySelector(`#send-request-btn`);
+    sendRequestBtn.style.display = `block`;
+    sendRequestBtn.setAttribute(`data-userid`, userRequestedId);
+    sendRequestBtn.setAttribute(`data-username`, userRequestedName);
   };
+
+  const handleConnectionRequest = (e) => {
+    const userRequestedId = e.target.dataset.userid;
+    const userRequestedName = e.target.dataset.username;
+    console.log(e.target.dataset.userid);
+    console.log(e.target.dataset.username);
+    const updatedPendingConnections = userData.connections.pendingSent.concat({
+      userId: userRequestedId,
+      userName: userRequestedName,
+    });
+    Object.assign(userData.connections, {
+      pendingSent: updatedPendingConnections,
+    });
+    // console.log(updatedUserConnections);
+    setUserData((prevState) => Object.assign(prevState, userData));
+  };
+
+  // setUserData((prevState) =>
+  //         Object.assign(prevState, {
+  //           publicMapsSaved: savedMapsUpdater,
+  //         })
+  //       );
 
   return (
     <div>
-      {props.userAuth && !props.userAuth.isAnonymous ? (
+      {userAuth && !userAuth.isAnonymous ? (
         <div id="connections-container">
           <div id="active-connects-container">
             <h2 id="active-connects-header">Your Connections</h2>
@@ -60,7 +86,9 @@ function Connections(props) {
                   onChange={searchUsers}
                 />
                 <ul id="matched-users-container" onClick={selectUser}></ul>
-                <button id="send-request-btn">Send Request</button>
+                <button id="send-request-btn" onClick={handleConnectionRequest}>
+                  Send Request
+                </button>
               </div>
             )}
           </div>
