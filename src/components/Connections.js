@@ -19,6 +19,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     users.forEach((user) => {
       if (
         string.length &&
+        user[0] !== userAuth.uid &&
         user[1][0].toLowerCase() === string[0].toLowerCase() &&
         user[1].toLowerCase().includes(string.toLowerCase())
       ) {
@@ -32,7 +33,6 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   };
 
   const selectUser = (e) => {
-    // console.log(e.target.dataset.userId);
     const userRequestedId = e.target.dataset.userId;
     const userRequestedName = e.target.textContent;
     document.querySelector(`#search-connections`).value = e.target.textContent;
@@ -46,24 +46,32 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   const handleConnectionRequest = (e) => {
     const userRequestedId = e.target.dataset.userid;
     const userRequestedName = e.target.dataset.username;
-    console.log(e.target.dataset.userid);
-    console.log(e.target.dataset.username);
-    const updatedPendingConnections = userData.connections.pendingSent.concat({
-      userId: userRequestedId,
-      userName: userRequestedName,
+    // console.log(userData.connections.pendingSent);
+    const connectionsCombined = userData.connections.active.concat(
+      userData.connections.pendingSent
+    );
+    const connectionsIds = connectionsCombined.map((connects) => {
+      return connects.userId;
     });
-    Object.assign(userData.connections, {
-      pendingSent: updatedPendingConnections,
-    });
-    // console.log(updatedUserConnections);
-    setUserData((prevState) => Object.assign(prevState, userData));
+    // console.log(connectionsIds);
+    if (!connectionsIds.includes(userRequestedId)) {
+      const updatedPendingConnections = userData.connections.pendingSent.concat(
+        {
+          userId: userRequestedId,
+          userName: userRequestedName,
+        }
+      );
+      Object.assign(userData.connections, {
+        pendingSent: updatedPendingConnections,
+      });
+      setUserData((prevState) => Object.assign(prevState, userData));
+    } else {
+      console.log(
+        `${userRequestedName} is already a pending or active connection!`
+      );
+    }
+    // console.log(userData);
   };
-
-  // setUserData((prevState) =>
-  //         Object.assign(prevState, {
-  //           publicMapsSaved: savedMapsUpdater,
-  //         })
-  //       );
 
   return (
     <div>
@@ -71,26 +79,25 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
         <div id="connections-container">
           <div id="active-connects-container">
             <h2 id="active-connects-header">Your Connections</h2>
-            {connectionsObject.active.length ? (
-              connectionsObject.active.map((connect) => {
-                return <p>{connect.name}</p>;
-              })
-            ) : (
-              <div id="search-connections-container">
-                <p>New around here? Connect with other adventurers!</p>
-                <label htmlFor="search-connections"></label>
-                <input
-                  type="text"
-                  id="search-connections"
-                  placeholder="search for connections..."
-                  onChange={searchUsers}
-                />
-                <ul id="matched-users-container" onClick={selectUser}></ul>
-                <button id="send-request-btn" onClick={handleConnectionRequest}>
-                  Send Request
-                </button>
-              </div>
-            )}
+            {connectionsObject.active.length
+              ? connectionsObject.active.map((connect) => {
+                  return <p>{connect.userName}</p>;
+                })
+              : null}
+            <div id="search-connections-container">
+              <p>New around here? Connect with other adventurers!</p>
+              <label htmlFor="search-connections"></label>
+              <input
+                type="text"
+                id="search-connections"
+                placeholder="search for connections..."
+                onChange={searchUsers}
+              />
+              <ul id="matched-users-container" onClick={selectUser}></ul>
+              <button id="send-request-btn" onClick={handleConnectionRequest}>
+                Send Request
+              </button>
+            </div>
           </div>
           <div id="manage-connects-container">
             <h2 id="manage-header">Manage Invitations</h2>
