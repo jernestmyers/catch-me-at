@@ -14,7 +14,8 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   // console.log({ userData });
 
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
-  const [userRequestedId, setUserRequestedId] = useState();
+  const [userRequestedData, setUserRequestedData] = useState();
+  const [updateTypeRequested, setUpdateTypeRequested] = useState();
 
   let connectionsObject;
   if (userAuth && !userAuth.isAnonymous) {
@@ -22,11 +23,18 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   }
 
   useEffect(() => {
-    if (isUpdateNeeded && userRequestedId) {
-      updateFirestoreConnections(userRequestedId);
+    if (isUpdateNeeded && userRequestedData) {
+      updateFirestoreConnections(userRequestedData);
       setIsUpdateNeeded(false);
+      setUpdateTypeRequested(null);
+      setUserRequestedData(null);
     }
-  }, [userRequestedId, setUserRequestedId, isUpdateNeeded, setIsUpdateNeeded]);
+  }, [
+    userRequestedData,
+    setUserRequestedData,
+    isUpdateNeeded,
+    setIsUpdateNeeded,
+  ]);
 
   const searchUsers = (e) => {
     document.querySelector(`#send-request-btn`).style.display = `none`;
@@ -63,8 +71,9 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
 
   const handleConnectionRequest = (e) => {
     const requestedId = e.target.dataset.userid;
-    setUserRequestedId(e.target.dataset.userid);
     const requestedName = e.target.dataset.username;
+    setUpdateTypeRequested(`send`);
+    setUserRequestedData({ id: requestedId, name: requestedName });
     const connectionsCombined = userData.connections.active.concat(
       userData.connections.pendingSent
     );
@@ -91,7 +100,6 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
         pendingSent: updatedPendingConnections,
       });
       setUserData((prevState) => Object.assign(prevState, userData));
-      // updateFirestoreConnections(userRequestedId);
       document.querySelector(`#search-connections`).value = ``;
       setIsUpdateNeeded(true);
     } else {
@@ -101,22 +109,69 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
   };
 
-  const updateFirestoreConnections = async (connectId) => {
+  const handleAccept = (e) => {
+    const idOfSender = e.target.closest(`div`).dataset.userid;
+    const nameOfSender = e.target.closest(`div`).dataset.username;
+    setUserRequestedData({ id: idOfSender, name: nameOfSender });
+    setUpdateTypeRequested(`accept`);
+    updatePendingSentAndReceived(idOfSender, nameOfSender);
+  };
+
+  const updatePendingSentAndReceived = (id, name) => {
+    const updatedReceivedData = userData.connections.pendingReceived.filter(
+      (connection) => {
+        if (connection.userId !== id) {
+          return connection;
+        }
+      }
+    );
+    const updatedActiveData = userData.connections.active.concat({
+      userId: id,
+      userName: name,
+    });
+    // console.log(updatedReceivedData, updatedActiveData);
+    Object.assign(userData.connections, {
+      pendingReceived: updatedReceivedData,
+      active: updatedActiveData,
+    });
+    setUserData((prevState) => Object.assign(prevState, userData));
+    setIsUpdateNeeded(true);
+  };
+
+  const updateFirestoreConnections = async (data) => {
     const userRef = doc(db, "users", userAuth.uid);
-    const connectionRef = doc(db, "users", connectId);
+    const connectionRef = doc(db, "users", data.id);
     await updateDoc(userRef, {
       connections: userData.connections,
     });
     const getConnectionData = await getDoc(connectionRef);
     const connectionData = getConnectionData.data();
-    const updatedPendingReceivedData =
-      connectionData.connections.pendingReceived.concat({
+    if (updateTypeRequested === `send`) {
+      const updatedPendingReceivedData =
+        connectionData.connections.pendingReceived.concat({
+          userId: userAuth.uid,
+          userName: userAuth.displayName,
+        });
+      Object.assign(connectionData.connections, {
+        pendingReceived: updatedPendingReceivedData,
+      });
+    } else if (updateTypeRequested === `accept`) {
+      const updatedSentData = connectionData.connections.pendingSent.filter(
+        (connection) => {
+          if (connection.userId !== userAuth.uid) {
+            return connection;
+          }
+        }
+      );
+      const updatedActiveData = connectionData.connections.active.concat({
         userId: userAuth.uid,
         userName: userAuth.displayName,
       });
-    Object.assign(connectionData.connections, {
-      pendingReceived: updatedPendingReceivedData,
-    });
+      Object.assign(connectionData.connections, {
+        pendingSent: updatedSentData,
+        active: updatedActiveData,
+      });
+    }
     await updateDoc(connectionRef, { connections: connectionData.connections });
   };
 
@@ -152,9 +207,13 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
               <h3>Received</h3>
               {connectionsObject.pendingReceived.map((connect) => {
                 return (
-                  <div className="manage-connects">
+                  <div
+                    className="manage-connects"
+                    data-userid={connect.userId}
+                    data-username={connect.userName}
+                  >
                     <p>{connect.userName}</p>
-                    <button>Approve</button>
+                    <button onClick={handleAccept}>Accept</button>
                     <button>Deny</button>
                   </div>
                 );
