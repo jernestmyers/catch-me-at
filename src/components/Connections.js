@@ -117,6 +117,14 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     updatePendingSentAndReceived(idOfSender, nameOfSender);
   };
 
+  const handleDeny = (e) => {
+    const idOfSender = e.target.closest(`div`).dataset.userid;
+    const nameOfSender = e.target.closest(`div`).dataset.username;
+    setUserRequestedData({ id: idOfSender, name: nameOfSender });
+    setUpdateTypeRequested(`deny`);
+    updatePendingSentAndReceived(idOfSender, nameOfSender);
+  };
+
   const updatePendingSentAndReceived = (id, name) => {
     const updatedReceivedData = userData.connections.pendingReceived.filter(
       (connection) => {
@@ -125,14 +133,18 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
         }
       }
     );
-    const updatedActiveData = userData.connections.active.concat({
-      userId: id,
-      userName: name,
-    });
+    if (updateTypeRequested === `accept`) {
+      const updatedActiveData = userData.connections.active.concat({
+        userId: id,
+        userName: name,
+      });
+      Object.assign(userData.connections, {
+        active: updatedActiveData,
+      });
+    }
     // console.log(updatedReceivedData, updatedActiveData);
     Object.assign(userData.connections, {
       pendingReceived: updatedReceivedData,
-      active: updatedActiveData,
     });
     setUserData((prevState) => Object.assign(prevState, userData));
     setIsUpdateNeeded(true);
@@ -155,7 +167,12 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       Object.assign(connectionData.connections, {
         pendingReceived: updatedPendingReceivedData,
       });
-    } else if (updateTypeRequested === `accept`) {
+    }
+    if (
+      updateTypeRequested === `accept` ||
+      updateTypeRequested === `deny` ||
+      updateTypeRequested === `withdraw`
+    ) {
       const updatedSentData = connectionData.connections.pendingSent.filter(
         (connection) => {
           if (connection.userId !== userAuth.uid) {
@@ -163,13 +180,17 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
           }
         }
       );
-      const updatedActiveData = connectionData.connections.active.concat({
-        userId: userAuth.uid,
-        userName: userAuth.displayName,
-      });
+      if (updateTypeRequested === `accept`) {
+        const updatedActiveData = connectionData.connections.active.concat({
+          userId: userAuth.uid,
+          userName: userAuth.displayName,
+        });
+        Object.assign(connectionData.connections, {
+          active: updatedActiveData,
+        });
+      }
       Object.assign(connectionData.connections, {
         pendingSent: updatedSentData,
-        active: updatedActiveData,
       });
     }
     await updateDoc(connectionRef, { connections: connectionData.connections });
@@ -214,7 +235,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                   >
                     <p>{connect.userName}</p>
                     <button onClick={handleAccept}>Accept</button>
-                    <button>Deny</button>
+                    <button onClick={handleDeny}>Deny</button>
                   </div>
                 );
               })}
