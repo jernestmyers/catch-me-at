@@ -46,7 +46,6 @@ function App() {
       mapsSharedWithUser: [],
       publicMapsSaved: [],
       likesByUser: [],
-      commentsByUser: [],
     };
   };
 

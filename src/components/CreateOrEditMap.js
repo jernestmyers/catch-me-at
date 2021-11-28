@@ -338,6 +338,7 @@ const CreateOrEditMap = (props) => {
           isPrivate: getMapStatusValues().isPrivate,
           likes: null,
           comments: [],
+          sharedWith: [],
         };
         // DOES NOT ACCOUNT FOR CHANGES IN MAP STATUS
         if (!getMapStatusValues().isPrivate) {

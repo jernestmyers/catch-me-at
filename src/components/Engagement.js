@@ -359,6 +359,9 @@ function Engagement({
         containerToClose.removeChild(containerToClose.firstChild);
       }
     }
+    if (e.target.dataset.userid) {
+      console.log(e.target.dataset.username);
+    }
   };
 
   const isMapSaved = () => {
