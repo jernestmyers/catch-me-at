@@ -491,17 +491,20 @@ a.view-map-link:visited {
   fill: #a2bce0;
 }
 
-.disable-save:hover {
+.disable-save:hover,
+.disabled:hover {
   cursor: not-allowed;
   background-color: #ffd7d7;
 }
 
-.disable-save {
+.disable-save,
+.disabled {
   position: relative;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 }
 
-.disable-save:before {
+.disable-save:before,
+.disabled:before {
   content: attr(data-hover);
   visibility: hidden;
   opacity: 0;
@@ -520,13 +523,21 @@ a.view-map-link:visited {
   top: -0.7rem;
 }
 
-.disable-save:hover:before {
+.disabled:before {
+  content: "Must log in with Google!";
+  width: 100px;
+  left: -12px;
+}
+
+.disable-save:hover:before,
+.disabled:hover:before {
   opacity: 0.9;
   visibility: visible;
 }
 
-.save-text,
-.engaged-text {
+.btn-text,
+.engaged-text,
+.comment-quantity-text {
   font-size: 0.9rem;
 }
 

@@ -141,7 +141,9 @@ const RenderMaps = (props) => {
               : null}
           </GoogleMap>
           <div className="view-map-link-container">
-            {currentPath === `/view` ? (
+            {!props.userAuth.uid ? (
+              <p className="view-map-link">{props.mapObject.mapTitle}</p>
+            ) : currentPath === `/view` ? (
               <Link className="view-map-link" to={`${props.mapObject.mapID}`}>
                 {props.mapObject.mapTitle}
                 <svg
@@ -212,16 +214,23 @@ const RenderMaps = (props) => {
               </Link>
             )}
             <div className="map-owner-name">
-              by{" "}
               {props.mapObject.owner.ownerId === props.userAuth.uid ? (
-                `you`
+                `by you`
               ) : (
-                <Link to={`/user/${props.mapObject.owner.ownerId}`}>
-                  {props.mapObject.owner.ownerName}
-                </Link>
+                <div>
+                  by&nbsp;
+                  {props.userAuth.uid ? (
+                    <Link to={`/user/${props.mapObject.owner.ownerId}`}>
+                      {props.mapObject.owner.ownerName}
+                    </Link>
+                  ) : (
+                    props.mapObject.owner.ownerName
+                  )}
+                </div>
               )}
             </div>
           </div>
+          {/* {props.userData ? ( */}
           <Engagement
             db={props.db}
             mapObject={props.mapObject}
@@ -233,6 +242,7 @@ const RenderMaps = (props) => {
             mapsSavedByUser={props.mapsSavedByUser}
             setMapsSavedByUser={props.setMapsSavedByUser}
           ></Engagement>
+          {/* // ) : null} */}
         </div>
       ) : (
         <></>

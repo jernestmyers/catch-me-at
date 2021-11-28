@@ -25,6 +25,13 @@ function Engagement({
   const [likeStatus, setLikeStatus] = useState();
   const [likesCounter, setLikesCounter] = useState();
 
+  if (userAuth && (!userAuth.uid || userAuth.isAnonymous)) {
+    const btns = document.querySelectorAll(`.engage-icon-container`);
+    btns.forEach((btn) => {
+      btn.classList.add(`disabled`);
+    });
+  }
+
   useEffect(() => {
     setLikesCounter(mapObject.likes);
   }, []);
@@ -66,12 +73,16 @@ function Engagement({
   }, [likeStatus, setLikeStatus]);
 
   const handleAddComment = (e) => {
-    const mapID = e.target.closest(`div`).dataset.mapid;
-    document.querySelector(`#comment-box-${mapID}`).style.display === "block"
-      ? (document.querySelector(`#comment-box-${mapID}`).style.display = `none`)
-      : (document.querySelector(
-          `#comment-box-${mapID}`
-        ).style.display = `block`);
+    if (userAuth.uid && !userAuth.isAnonymous) {
+      const mapID = e.target.closest(`div`).dataset.mapid;
+      document.querySelector(`#comment-box-${mapID}`).style.display === "block"
+        ? (document.querySelector(
+            `#comment-box-${mapID}`
+          ).style.display = `none`)
+        : (document.querySelector(
+            `#comment-box-${mapID}`
+          ).style.display = `block`);
+    }
   };
 
   const handleUserComment = (e) => {
@@ -147,13 +158,15 @@ function Engagement({
   };
 
   const handleLike = (e) => {
-    const iconId = e.target.closest(`div`).dataset.mapid;
-    if (userData.likesByUser.includes(iconId)) {
-      setLikeStatus(`unliked`);
-    } else {
-      setLikeStatus(`liked`);
+    if (userAuth.uid && !userAuth.isAnonymous) {
+      const iconId = e.target.closest(`div`).dataset.mapid;
+      if (userData.likesByUser.includes(iconId)) {
+        setLikeStatus(`unliked`);
+      } else {
+        setLikeStatus(`liked`);
+      }
+      setTargetMapId(iconId);
     }
-    setTargetMapId(iconId);
   };
 
   const sendLikeToFirestore = async (status, id, userLikes) => {
@@ -207,7 +220,11 @@ function Engagement({
   };
 
   const handleSavePublicMap = async (e) => {
-    if (userAuth.uid !== mapObject.owner.ownerId) {
+    if (
+      userAuth.uid &&
+      !userAuth.isAnonymous &&
+      userAuth.uid !== mapObject.owner.ownerId
+    ) {
       const mapSavedData = {
         ownerId: mapObject.owner.ownerId,
         mapID: mapObject.mapID,
@@ -266,7 +283,11 @@ function Engagement({
           {likesCounter ? likesCounter : null}
         </div>
         <div
-          className="numberOfComments"
+          className={
+            userAuth.uid && !userAuth.isAnonymous
+              ? "numberOfComments"
+              : "numberOfComments disabled"
+          }
           data-mapid={mapObject.mapID}
           onClick={handleAddComment}
         >
@@ -294,7 +315,9 @@ function Engagement({
           >
             <path
               className={
-                userData && !userData.likesByUser.includes(mapObject.mapID)
+                (userData && !userData.likesByUser.includes(mapObject.mapID)) ||
+                !userAuth.uid ||
+                userAuth.isAnonymous
                   ? null
                   : `liked`
               }
@@ -309,10 +332,17 @@ function Engagement({
               strokeLinecap="round"
             ></path>
           </svg>
-          {userData && !userData.likesByUser.includes(mapObject.mapID) ? (
-            <p id={`like-text-${mapObject.mapID}`}>Like</p>
+          {(userData && !userData.likesByUser.includes(mapObject.mapID)) ||
+          !userAuth.uid ||
+          userAuth.isAnonymous ? (
+            <p className="btn-text" id={`like-text-${mapObject.mapID}`}>
+              Like
+            </p>
           ) : (
-            <p className="engaged-text" id={`like-text-${mapObject.mapID}`}>
+            <p
+              className="engaged-text btn-text"
+              id={`like-text-${mapObject.mapID}`}
+            >
               Liked
             </p>
           )}
@@ -358,7 +388,7 @@ function Engagement({
               strokeWidth="2"
             ></circle>
           </svg>
-          <p>Comment</p>
+          <p className="btn-text">Comment</p>
         </div>
         <div className="engage-icon-container">
           <svg
@@ -378,7 +408,7 @@ function Engagement({
               strokeLinejoin="round"
             ></path>
           </svg>
-          <p>Share</p>
+          <p className="btn-text">Share</p>
         </div>
         <div
           data-hover="You own this map."
@@ -453,9 +483,9 @@ function Engagement({
           {userData &&
           (isMapSaved().includes(mapObject.mapID) ||
             userAuth.uid === mapObject.owner.ownerId) ? (
-            <p className="engaged-text">Saved</p>
+            <p className="engaged-text btn-text">Saved</p>
           ) : (
-            <p className="save-text">Save</p>
+            <p className="save-text btn-text">Save</p>
           )}
         </div>
       </div>

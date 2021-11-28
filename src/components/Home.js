@@ -210,7 +210,7 @@ function Home(props) {
       {props.userAuth ? (
         <div className="map-feed">
           <h2 className="view-maps-header">ACTIVITY FEED</h2>
-          {/* {props.publicMaps.map((mapArray) => {
+          {props.publicMaps.map((mapArray) => {
             return (
               <div>
                 <RenderMaps
@@ -226,7 +226,7 @@ function Home(props) {
                 ></RenderMaps>
               </div>
             );
-          })} */}
+          })}
         </div>
       ) : (
         <div id="home-no-userAuth">
