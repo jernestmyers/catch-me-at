@@ -9,6 +9,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+const checkmark = `
+<svg class="shared-with-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <path data-name="layer1"
+  d="M28 48L14.879 34.12a3 3 0 0 1 4.242-4.242L28 39l18.83-20.072a3 3 0 1 1 4.34 4.143z"
+  fill="#6a994e" stroke="#6a994e" stroke-miterlimit="10" stroke-width="5" stroke-linejoin="round"
+  stroke-linecap="round"></path>
+</svg>`;
+
 function Engagement({
   db,
   mapObject,
@@ -25,7 +33,7 @@ function Engagement({
   const [likeStatus, setLikeStatus] = useState();
   const [likesCounter, setLikesCounter] = useState();
   const [isShareContainerOpen, setIsShareContainerOpen] = useState(false);
-  const [shareContainerId, setShareContainerId] = useState(null);
+  const [connectionToShareWith, setConnectionToShareWith] = useState(null);
 
   if (userAuth && (!userAuth.uid || userAuth.isAnonymous)) {
     const btns = document.querySelectorAll(`.engage-icon-container`);
@@ -38,37 +46,13 @@ function Engagement({
     setLikesCounter(mapObject.likes);
   }, []);
 
-  // function closeShareContainer(e) {
-  //   console.log(e.target);
-  //   if (
-  //     isShareContainerOpen &&
-  //     e.target.closest(`div`).id !== `share-selector-${shareContainerId}`
-  //   ) {
-  //     document
-  //       .querySelectorAll(`.share-with-container`)
-  //       .forEach((container) => {
-  //         container.style.display = `none`;
-  //       });
-  //     setIsShareContainerOpen(false);
-  //     setShareContainerId(null);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (isShareContainerOpen && shareContainerId) {
-  //     // console.log(`addEventListener`);
-  //     // document.addEventListener(`click`, closeShareContainer);
-  //   }
-  //   if (!isShareContainerOpen && !shareContainerId) {
-  //     // console.log(`removeEventListener`);
-  //     // document.removeEventListener(`click`, closeShareContainer);
-  //   }
-  // }, [
-  //   isShareContainerOpen,
-  //   setIsShareContainerOpen,
-  //   shareContainerId,
-  //   setShareContainerId,
-  // ]);
+  useEffect(() => {
+    if (connectionToShareWith) {
+      // console.log(`persist share`);
+      // console.log(connectionToShareWith);
+      updateSharedWithData();
+    }
+  }, [connectionToShareWith, setConnectionToShareWith]);
 
   useEffect(() => {
     if (comment && targetMapId) {
@@ -315,12 +299,11 @@ function Engagement({
       if (!isShareContainerOpen) {
         const mapToShareId = e.target.closest(`div`).dataset.mapid;
         setIsShareContainerOpen(true);
-        setShareContainerId(mapToShareId);
         const shareWithContainer = document.querySelector(
           `#share-with-${mapToShareId}`
         );
         shareWithContainer.style.display = `block`;
-        shareWithContainer.style.left = `${e.pageX - 50}px`;
+        shareWithContainer.style.left = `${e.pageX - 75}px`;
         shareWithContainer.style.top = `${e.pageY}px`;
 
         const div = document.createElement(`div`);
@@ -338,13 +321,27 @@ function Engagement({
 
         shareWithContainer.appendChild(div);
 
+        const arrayOfIdsSharedWith = mapObject.sharedWith.map((user) => {
+          return user.userId;
+        });
+
         userData.connections.active.forEach((connect) => {
-          const option = document.createElement(`p`);
-          option.textContent = connect.userName;
-          option.setAttribute(`data-username`, connect.userName);
-          option.setAttribute(`data-userid`, connect.userId);
-          option.classList.add(`share-connection-name`);
-          shareWithContainer.appendChild(option);
+          if (!arrayOfIdsSharedWith.includes(connect.userId)) {
+            const option = document.createElement(`p`);
+            option.textContent = connect.userName;
+            option.setAttribute(`data-username`, connect.userName);
+            option.setAttribute(`data-userid`, connect.userId);
+            option.classList.add(`share-connection-name`);
+            shareWithContainer.appendChild(option);
+          } else {
+            const span = document.createElement(`p`);
+            span.innerHTML = checkmark;
+            const option = document.createElement(`span`);
+            option.textContent = connect.userName;
+            option.classList.add(`shared-with-connection-name`);
+            span.appendChild(option);
+            shareWithContainer.appendChild(span);
+          }
         });
       }
     }
@@ -360,8 +357,34 @@ function Engagement({
       }
     }
     if (e.target.dataset.userid) {
-      console.log(e.target.dataset.username);
+      setIsShareContainerOpen(false);
+      setConnectionToShareWith({
+        userId: e.target.dataset.userid,
+        userName: e.target.dataset.username,
+      });
+      const containerToClose = e.target.closest(`div`);
+      containerToClose.style.display = `none`;
+      while (containerToClose.firstChild) {
+        containerToClose.removeChild(containerToClose.firstChild);
+      }
     }
+  };
+
+  const updateSharedWithData = () => {
+    console.log(mapObject);
+    console.log(userData.mapsOwned);
+    mapObject.sharedWith.concat(connectionToShareWith);
+    Object.assign(mapObject, {
+      sharedWith: mapObject.sharedWith.concat(connectionToShareWith),
+    });
+    userData.mapsOwned.forEach((map) => {
+      if (map.mapID === mapObject.mapID) {
+        Object.assign(map, {
+          sharedWith: mapObject.sharedWith,
+        });
+      }
+    });
+    setConnectionToShareWith(null);
   };
 
   const isMapSaved = () => {

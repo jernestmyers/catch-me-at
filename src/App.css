@@ -556,7 +556,7 @@ a.view-map-link:visited {
   opacity: 0.9;
   color: #dfdee3;
   font-weight: 600;
-  width: 125px;
+  width: 150px;
   height: 5rem;
   position: absolute;
   z-index: 10;
@@ -565,17 +565,32 @@ a.view-map-link:visited {
   line-height: 1rem;
 }
 
-.share-connection-name {
-  cursor: pointer;
+.share-connection-name,
+.shared-with-connection-name {
   padding-left: 5px;
   padding-top: 2px;
   font-weight: 500;
   line-height: 1.25rem;
 }
 
+.share-connection-name {
+  cursor: pointer;
+}
+
+.shared-with-connection-name {
+  cursor: not-allowed;
+  color: #bdd5ae;
+  padding-left: 2px;
+}
+
 .share-connection-name:hover {
   background-color: #bdd5ae;
   color: #5e5c6c;
+}
+
+.shared-with-checkmark {
+  width: 1rem;
+  height: 1rem;
 }
 
 .close-share-container {
