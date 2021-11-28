@@ -24,6 +24,8 @@ function Engagement({
   const [targetMapId, setTargetMapId] = useState(null);
   const [likeStatus, setLikeStatus] = useState();
   const [likesCounter, setLikesCounter] = useState();
+  const [isShareContainerOpen, setIsShareContainerOpen] = useState(false);
+  const [shareContainerId, setShareContainerId] = useState(null);
 
   if (userAuth && (!userAuth.uid || userAuth.isAnonymous)) {
     const btns = document.querySelectorAll(`.engage-icon-container`);
@@ -35,6 +37,38 @@ function Engagement({
   useEffect(() => {
     setLikesCounter(mapObject.likes);
   }, []);
+
+  // function closeShareContainer(e) {
+  //   console.log(e.target);
+  //   if (
+  //     isShareContainerOpen &&
+  //     e.target.closest(`div`).id !== `share-selector-${shareContainerId}`
+  //   ) {
+  //     document
+  //       .querySelectorAll(`.share-with-container`)
+  //       .forEach((container) => {
+  //         container.style.display = `none`;
+  //       });
+  //     setIsShareContainerOpen(false);
+  //     setShareContainerId(null);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (isShareContainerOpen && shareContainerId) {
+  //     // console.log(`addEventListener`);
+  //     // document.addEventListener(`click`, closeShareContainer);
+  //   }
+  //   if (!isShareContainerOpen && !shareContainerId) {
+  //     // console.log(`removeEventListener`);
+  //     // document.removeEventListener(`click`, closeShareContainer);
+  //   }
+  // }, [
+  //   isShareContainerOpen,
+  //   setIsShareContainerOpen,
+  //   shareContainerId,
+  //   setShareContainerId,
+  // ]);
 
   useEffect(() => {
     if (comment && targetMapId) {
@@ -272,6 +306,61 @@ function Engagement({
     }
   };
 
+  const handleShareMap = (e) => {
+    if (
+      userAuth.uid &&
+      !userAuth.isAnonymous &&
+      mapObject.owner.ownerId === userAuth.uid
+    ) {
+      if (!isShareContainerOpen) {
+        const mapToShareId = e.target.closest(`div`).dataset.mapid;
+        setIsShareContainerOpen(true);
+        setShareContainerId(mapToShareId);
+        const shareWithContainer = document.querySelector(
+          `#share-with-${mapToShareId}`
+        );
+        shareWithContainer.style.display = `block`;
+        shareWithContainer.style.left = `${e.pageX - 50}px`;
+        shareWithContainer.style.top = `${e.pageY}px`;
+
+        const div = document.createElement(`div`);
+        div.classList.add(`close-share-container`);
+
+        const p = document.createElement(`p`);
+        p.textContent = `Share with...`;
+        const span = document.createElement(`span`);
+        span.textContent = `X`;
+        span.title = `close`;
+        span.classList.add(`close-share`);
+
+        div.appendChild(p);
+        div.appendChild(span);
+
+        shareWithContainer.appendChild(div);
+
+        userData.connections.active.forEach((connect) => {
+          const option = document.createElement(`p`);
+          option.textContent = connect.userName;
+          option.setAttribute(`data-username`, connect.userName);
+          option.setAttribute(`data-userid`, connect.userId);
+          option.classList.add(`share-connection-name`);
+          shareWithContainer.appendChild(option);
+        });
+      }
+    }
+  };
+
+  const handleShareSelection = (e) => {
+    if (e.target.title === `close`) {
+      setIsShareContainerOpen(false);
+      const containerToClose = e.target.closest(`div`).parentElement;
+      containerToClose.style.display = `none`;
+      while (containerToClose.firstChild) {
+        containerToClose.removeChild(containerToClose.firstChild);
+      }
+    }
+  };
+
   const isMapSaved = () => {
     return userData.publicMapsSaved.map((data) => data.mapID);
   };
@@ -390,7 +479,16 @@ function Engagement({
           </svg>
           <p className="btn-text">Comment</p>
         </div>
-        <div className="engage-icon-container">
+        <div
+          data-hover="Must be map owner to share."
+          data-mapid={mapObject.mapID}
+          className={
+            userData && mapObject.owner.ownerId !== userAuth.uid
+              ? `engage-icon-container disabled disable-share`
+              : `engage-icon-container`
+          }
+          onClick={handleShareMap}
+        >
           <svg
             className="engage-icon"
             viewBox="0 0 64 64"
@@ -409,6 +507,20 @@ function Engagement({
             ></path>
           </svg>
           <p className="btn-text">Share</p>
+        </div>
+        <div
+          className="share-with-container"
+          id={`share-with-${mapObject.mapID}`}
+          onClick={handleShareSelection}
+        >
+          {/* <span
+            className="close-share"
+            title="close"
+            onClick={closeShareSelector}
+          >
+            x
+          </span>
+          <p>Share with...</p> */}
         </div>
         <div
           data-hover="You own this map."
