@@ -111,28 +111,13 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
   };
 
-  const handleAccept = (e) => {
+  const handleConnectionClickEvent = (e) => {
     const idOfSender = e.target.closest(`div`).dataset.userid;
     const nameOfSender = e.target.closest(`div`).dataset.username;
+    const connectionType = e.target.dataset.connectiontype;
     setUserRequestedData({ id: idOfSender, name: nameOfSender });
-    setUpdateTypeRequested(`accept`);
-    updateUserConnectionData(`accept`, idOfSender, nameOfSender);
-  };
-
-  const handleDeny = (e) => {
-    const idOfSender = e.target.closest(`div`).dataset.userid;
-    const nameOfSender = e.target.closest(`div`).dataset.username;
-    setUserRequestedData({ id: idOfSender, name: nameOfSender });
-    setUpdateTypeRequested(`deny`);
-    updateUserConnectionData(`deny`, idOfSender, nameOfSender);
-  };
-
-  const handleWithdraw = (e) => {
-    const idOfReceiver = e.target.closest(`div`).dataset.userid;
-    const nameOfReceiver = e.target.closest(`div`).dataset.username;
-    setUserRequestedData({ id: idOfReceiver, name: nameOfReceiver });
-    setUpdateTypeRequested(`withdraw`);
-    updateUserConnectionData(`withdraw`, idOfReceiver, nameOfReceiver);
+    setUpdateTypeRequested(connectionType);
+    updateUserConnectionData(connectionType, idOfSender, nameOfSender);
   };
 
   const updateUserConnectionData = (type, id, name) => {
@@ -263,8 +248,18 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                     data-username={connect.userName}
                   >
                     <p>{connect.userName}</p>
-                    <button onClick={handleAccept}>Accept</button>
-                    <button onClick={handleDeny}>Deny</button>
+                    <button
+                      data-connectiontype={`accept`}
+                      onClick={handleConnectionClickEvent}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      data-connectiontype={`deny`}
+                      onClick={handleConnectionClickEvent}
+                    >
+                      Deny
+                    </button>
                   </div>
                 );
               })}
@@ -279,7 +274,12 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                     data-username={connect.userName}
                   >
                     <p>{connect.userName}</p>
-                    <button onClick={handleWithdraw}>Withdraw</button>
+                    <button
+                      data-connectiontype={`withdraw`}
+                      onClick={handleConnectionClickEvent}
+                    >
+                      Withdraw
+                    </button>
                   </div>
                 );
               })}
