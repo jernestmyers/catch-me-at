@@ -10,8 +10,6 @@ function TypewriterEffect(props) {
   ];
 
   useEffect(() => {
-    console.log(`typewriter mounted`);
-    // document.addEventListener("DOMContentLoaded", function (event) {
     const typedTextContainer = document.querySelector("#typed-text");
     document.querySelector("#typewriter-container").style.display = `grid`;
 
@@ -42,7 +40,6 @@ function TypewriterEffect(props) {
       }
     }
     StartTextAnimation(0);
-    // });
   }, [props.userAuth, props.setUserAuth]);
 
   return (
