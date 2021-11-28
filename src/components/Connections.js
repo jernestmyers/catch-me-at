@@ -34,6 +34,8 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     setUserRequestedData,
     isUpdateNeeded,
     setIsUpdateNeeded,
+    // updateTypeRequested,
+    // setUpdateTypeRequested,
   ]);
 
   const searchUsers = (e) => {
@@ -114,7 +116,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     const nameOfSender = e.target.closest(`div`).dataset.username;
     setUserRequestedData({ id: idOfSender, name: nameOfSender });
     setUpdateTypeRequested(`accept`);
-    updatePendingSentAndReceived(idOfSender, nameOfSender);
+    updateUserConnectionData(`accept`, idOfSender, nameOfSender);
   };
 
   const handleDeny = (e) => {
@@ -122,30 +124,50 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     const nameOfSender = e.target.closest(`div`).dataset.username;
     setUserRequestedData({ id: idOfSender, name: nameOfSender });
     setUpdateTypeRequested(`deny`);
-    updatePendingSentAndReceived(idOfSender, nameOfSender);
+    updateUserConnectionData(`deny`, idOfSender, nameOfSender);
   };
 
-  const updatePendingSentAndReceived = (id, name) => {
-    const updatedReceivedData = userData.connections.pendingReceived.filter(
-      (connection) => {
-        if (connection.userId !== id) {
-          return connection;
-        }
-      }
-    );
-    if (updateTypeRequested === `accept`) {
-      const updatedActiveData = userData.connections.active.concat({
+  const handleWithdraw = (e) => {
+    const idOfReceiver = e.target.closest(`div`).dataset.userid;
+    const nameOfReceiver = e.target.closest(`div`).dataset.username;
+    setUserRequestedData({ id: idOfReceiver, name: nameOfReceiver });
+    setUpdateTypeRequested(`withdraw`);
+    updateUserConnectionData(`withdraw`, idOfReceiver, nameOfReceiver);
+  };
+
+  const updateUserConnectionData = (type, id, name) => {
+    if (type === `accept`) {
+      const updatedActiveConnectionsData = userData.connections.active.concat({
         userId: id,
         userName: name,
       });
       Object.assign(userData.connections, {
-        active: updatedActiveData,
+        active: updatedActiveConnectionsData,
       });
     }
-    // console.log(updatedReceivedData, updatedActiveData);
-    Object.assign(userData.connections, {
-      pendingReceived: updatedReceivedData,
-    });
+    if (type === `deny` || type === `accept`) {
+      const updatedRequestsReceivedData =
+        userData.connections.pendingReceived.filter((connection) => {
+          if (connection.userId !== id) {
+            return connection;
+          }
+        });
+      Object.assign(userData.connections, {
+        pendingReceived: updatedRequestsReceivedData,
+      });
+    }
+    if (type === `withdraw`) {
+      const updatedRequestsSentData = userData.connections.pendingSent.filter(
+        (connection) => {
+          if (connection.userId !== id) {
+            return connection;
+          }
+        }
+      );
+      Object.assign(userData.connections, {
+        pendingSent: updatedRequestsSentData,
+      });
+    }
     setUserData((prevState) => Object.assign(prevState, userData));
     setIsUpdateNeeded(true);
   };
@@ -168,29 +190,36 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
         pendingReceived: updatedPendingReceivedData,
       });
     }
-    if (
-      updateTypeRequested === `accept` ||
-      updateTypeRequested === `deny` ||
-      updateTypeRequested === `withdraw`
-    ) {
-      const updatedSentData = connectionData.connections.pendingSent.filter(
-        (connection) => {
+    if (updateTypeRequested === `accept` || updateTypeRequested === `deny`) {
+      const updatedRequestsSentData =
+        connectionData.connections.pendingSent.filter((connection) => {
           if (connection.userId !== userAuth.uid) {
             return connection;
           }
-        }
-      );
-      if (updateTypeRequested === `accept`) {
-        const updatedActiveData = connectionData.connections.active.concat({
-          userId: userAuth.uid,
-          userName: userAuth.displayName,
         });
+      if (updateTypeRequested === `accept`) {
+        const updatedActiveConnectionsData =
+          connectionData.connections.active.concat({
+            userId: userAuth.uid,
+            userName: userAuth.displayName,
+          });
         Object.assign(connectionData.connections, {
-          active: updatedActiveData,
+          active: updatedActiveConnectionsData,
         });
       }
       Object.assign(connectionData.connections, {
-        pendingSent: updatedSentData,
+        pendingSent: updatedRequestsSentData,
+      });
+    }
+    if (updateTypeRequested === `withdraw`) {
+      const updatedRequestsReceivedData =
+        connectionData.connections.pendingReceived.filter((connection) => {
+          if (connection.userId !== userAuth.uid) {
+            return connection;
+          }
+        });
+      Object.assign(connectionData.connections, {
+        pendingReceived: updatedRequestsReceivedData,
       });
     }
     await updateDoc(connectionRef, { connections: connectionData.connections });
@@ -244,9 +273,13 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
               <h3>Sent</h3>
               {connectionsObject.pendingSent.map((connect) => {
                 return (
-                  <div className="manage-connects">
+                  <div
+                    className="manage-connects"
+                    data-userid={connect.userId}
+                    data-username={connect.userName}
+                  >
                     <p>{connect.userName}</p>
-                    <button>Withdraw</button>
+                    <button onClick={handleWithdraw}>Withdraw</button>
                   </div>
                 );
               })}
