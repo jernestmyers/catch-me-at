@@ -140,7 +140,9 @@ function Engagement({
     if (!mapObject.isPrivate) {
       console.log(`update publicMap`);
       const docRef = doc(db, "publicMaps", id);
-      await updateDoc(docRef, { mapObject });
+      await updateDoc(docRef, {
+        mapObject: JSON.parse(JSON.stringify(mapObject)),
+      });
       setPublicMaps((prevState) =>
         prevState.map((map) => {
           if (id === map[0]) {
@@ -382,12 +384,12 @@ function Engagement({
     });
     const userRef = doc(db, "users", userAuth.uid);
     await updateDoc(userRef, {
-      mapsOwned: userData.mapsOwned,
+      mapsOwned: JSON.parse(JSON.stringify(userData.mapsOwned)),
     });
     if (!mapObject.isPrivate) {
       const mapRef = doc(db, "publicMaps", mapObject.mapID);
       await updateDoc(mapRef, {
-        mapObject: mapObject,
+        mapObject: JSON.parse(JSON.stringify(mapObject)),
       });
     }
     const connectionRef = doc(db, "users", connectionToShareWith.userId);

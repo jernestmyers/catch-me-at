@@ -4,9 +4,17 @@ import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
 
 function ViewMapItinerary(props) {
-  // console.log(props);
+  console.log(props.publicMaps);
+  console.log(props.mapsSharedWithUser);
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps
+    .map((array) => {
+      return array[1];
+    })
+    .map((object) => {
+      return object.mapObject;
+    });
+  const mapsSharedArray = props.mapsSharedWithUser
     .map((array) => {
       return array[1];
     })
@@ -16,7 +24,11 @@ function ViewMapItinerary(props) {
 
   let mapToDisplay;
   if (props.userAuth && !props.userAuth.isAnonymous) {
-    const mapsCombinedArray = [...props.userData.mapsOwned, ...publicMapsArray];
+    const mapsCombinedArray = [
+      ...props.userData.mapsOwned,
+      ...publicMapsArray,
+      ...mapsSharedArray,
+    ];
     // Passing in mapToDisplay[0] prevents duplicate rendering
     mapToDisplay = mapsCombinedArray.filter((map) => {
       if (mapID === map.mapID) {
