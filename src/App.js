@@ -33,6 +33,7 @@ function App() {
   const [publicMaps, setPublicMaps] = useState([]);
   const [isUserDataSet, setIsUserDataSet] = useState();
   const [mapsSavedByUser, setMapsSavedByUser] = useState([]);
+  const [mapsSharedWithUser, setMapsSharedWithUser] = useState([]);
 
   const getNewUserObject = () => {
     return {
@@ -87,6 +88,7 @@ function App() {
       setIsUserDataSet(true);
       setMapsSaved(userData.mapsOwned);
       fetchPublicMapsSaved();
+      fetchMapsSharedWith();
     }
   }, [userData, setUserData]);
 
@@ -150,6 +152,20 @@ function App() {
         }
       });
       setMapsSavedByUser(dataHelper);
+    });
+  };
+
+  const fetchMapsSharedWith = async () => {
+    const dataHelper = [];
+    await userData.mapsSharedWithUser.forEach(async (mapData) => {
+      const user = await getDoc(doc(db, "users", mapData.ownerId));
+      const data = user.data();
+      data.mapsOwned.forEach((maps) => {
+        if (maps.mapID === mapData.mapID) {
+          dataHelper.push([maps.mapID, { mapObject: maps }]);
+        }
+      });
+      setMapsSharedWithUser(dataHelper);
     });
   };
 
@@ -225,6 +241,8 @@ function App() {
                 setUserData={setUserData}
                 mapsSavedByUser={mapsSavedByUser}
                 setMapsSavedByUser={setMapsSavedByUser}
+                mapsSharedWithUser={mapsSharedWithUser}
+                setMapsSharedWithUser={setMapsSharedWithUser}
               ></Home>
             }
           ></Route>
@@ -255,6 +273,8 @@ function App() {
                 setPublicMaps={setPublicMaps}
                 mapsSavedByUser={mapsSavedByUser}
                 setMapsSavedByUser={setMapsSavedByUser}
+                mapsSharedWithUser={mapsSharedWithUser}
+                setMapsSharedWithUser={setMapsSharedWithUser}
               ></ViewMaps>
             }
           ></Route>
@@ -270,6 +290,8 @@ function App() {
                 setPublicMaps={setPublicMaps}
                 mapsSavedByUser={mapsSavedByUser}
                 setMapsSavedByUser={setMapsSavedByUser}
+                mapsSharedWithUser={mapsSharedWithUser}
+                setMapsSharedWithUser={setMapsSharedWithUser}
               ></ViewMapItinerary>
             }
           ></Route>
@@ -293,6 +315,7 @@ function App() {
               userData,
               publicMaps,
               mapsSavedByUser,
+              mapsSharedWithUser,
             })
           }
         >

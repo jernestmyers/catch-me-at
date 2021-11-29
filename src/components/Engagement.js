@@ -48,8 +48,6 @@ function Engagement({
 
   useEffect(() => {
     if (connectionToShareWith) {
-      // console.log(`persist share`);
-      // console.log(connectionToShareWith);
       updateSharedWithData();
     }
   }, [connectionToShareWith, setConnectionToShareWith]);
@@ -700,16 +698,13 @@ function Engagement({
           </div>
         </div>
       </div>
-      <button
+      {/* <button
         onClick={() =>
           console.log({ userData, userAuth, mapObject, mapsSavedByUser })
         }
       >
         Check State
-      </button>
-      <button onClick={() => console.log(getSharedWithList())}>
-        Get Names
-      </button>
+      </button> */}
     </div>
   );
 }

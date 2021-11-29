@@ -907,6 +907,14 @@ textarea.input-field {
   animation: animate 4s linear 1;
 }
 
+.empty-map-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1.5rem 2rem;
+  line-height: 1.5rem;
+  align-items: center;
+}
+
 @keyframes animate {
   0% {
     opacity: 0;

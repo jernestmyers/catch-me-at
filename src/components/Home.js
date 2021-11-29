@@ -223,6 +223,8 @@ function Home(props) {
                   setUserData={props.setUserData}
                   mapsSavedByUser={props.mapsSavedByUser}
                   setMapsSavedByUser={props.setMapsSavedByUser}
+                  mapsSharedWithUser={props.mapsSharedWithUser}
+                  setMapsSharedWithUser={props.setMapsSharedWithUser}
                 ></RenderMaps>
               </div>
             );
