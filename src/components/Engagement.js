@@ -370,9 +370,7 @@ function Engagement({
     }
   };
 
-  const updateSharedWithData = () => {
-    console.log(mapObject);
-    console.log(userData.mapsOwned);
+  const updateSharedWithData = async () => {
     mapObject.sharedWith.concat(connectionToShareWith);
     Object.assign(mapObject, {
       sharedWith: mapObject.sharedWith.concat(connectionToShareWith),
@@ -384,11 +382,56 @@ function Engagement({
         });
       }
     });
+    const userRef = doc(db, "users", userAuth.uid);
+    await updateDoc(userRef, {
+      mapsOwned: userData.mapsOwned,
+    });
+    if (!mapObject.isPrivate) {
+      const mapRef = doc(db, "publicMaps", mapObject.mapID);
+      await updateDoc(mapRef, {
+        mapObject: mapObject,
+      });
+    }
+    const connectionRef = doc(db, "users", connectionToShareWith.userId);
+    const fetchConnectionData = await getDoc(connectionRef);
+    const fetchedSharedWithData = fetchConnectionData.data().mapsSharedWithUser;
+    const updatedSharedWithData = fetchedSharedWithData.concat({
+      mapID: mapObject.mapID,
+      ownerId: mapObject.owner.ownerId,
+    });
+    await updateDoc(connectionRef, {
+      mapsSharedWithUser: updatedSharedWithData,
+    });
     setConnectionToShareWith(null);
   };
 
   const isMapSaved = () => {
     return userData.publicMapsSaved.map((data) => data.mapID);
+  };
+
+  const getSharedWithList = () => {
+    const string = `Shared with `;
+    let newString;
+    const namesArray = mapObject.sharedWith.map((connection) => {
+      return connection.userName;
+    });
+    if (namesArray.length === 1) {
+      newString = `Shared with ${namesArray[0]}.`;
+    } else if (namesArray.length === 2) {
+      newString = `Shared with ${namesArray[0]} and ${namesArray[1]}.`;
+    } else {
+      for (let i = 0; i < namesArray.length; i++) {
+        if (i === 0) {
+          newString = string.concat(``, namesArray[i]);
+        } else if (i === namesArray.length - 1) {
+          newString = newString.concat(` and `, namesArray[i]);
+          newString = newString.concat(``, `.`);
+        } else {
+          newString = newString.concat(`, `, namesArray[i]);
+        }
+      }
+    }
+    return newString;
   };
 
   return (
@@ -538,16 +581,7 @@ function Engagement({
           className="share-with-container"
           id={`share-with-${mapObject.mapID}`}
           onClick={handleShareSelection}
-        >
-          {/* <span
-            className="close-share"
-            title="close"
-            onClick={closeShareSelector}
-          >
-            x
-          </span>
-          <p>Share with...</p> */}
-        </div>
+        ></div>
         <div
           data-hover="You own this map."
           className={
@@ -627,6 +661,13 @@ function Engagement({
           )}
         </div>
       </div>
+      <div className="display-shared-with-container">
+        {userData &&
+        mapObject.sharedWith.length &&
+        userAuth.uid === mapObject.owner.ownerId
+          ? getSharedWithList()
+          : null}
+      </div>
       <div className="comments-container" id={`comment-box-${mapObject.mapID}`}>
         {mapObject.comments.map((commentObject) => {
           return (
@@ -665,6 +706,9 @@ function Engagement({
         }
       >
         Check State
+      </button>
+      <button onClick={() => console.log(getSharedWithList())}>
+        Get Names
       </button>
     </div>
   );

@@ -545,6 +545,10 @@ a.view-map-link:visited {
   font-size: 0.9rem;
 }
 
+.comment-quantity-text {
+  padding-right: 0.5rem;
+}
+
 .engaged-text {
   font-weight: bold;
 }
@@ -609,6 +613,11 @@ a.view-map-link:visited {
 
 .close-share:hover {
   color: #d00000;
+}
+
+.display-shared-with-container {
+  font-size: 0.75rem;
+  padding: 0 0.5rem;
 }
 
 /* RENDERMAPS */
