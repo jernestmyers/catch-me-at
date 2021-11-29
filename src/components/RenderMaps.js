@@ -241,6 +241,8 @@ const RenderMaps = (props) => {
             setUserData={props.setUserData}
             mapsSavedByUser={props.mapsSavedByUser}
             setMapsSavedByUser={props.setMapsSavedByUser}
+            mapsSharedWithUser={props.mapsSharedWithUser}
+            setMapsSharedWithUser={props.setMapsSharedWithUser}
           ></Engagement>
           {/* // ) : null} */}
         </div>

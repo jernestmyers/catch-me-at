@@ -27,6 +27,8 @@ function Engagement({
   setUserData,
   mapsSavedByUser,
   setMapsSavedByUser,
+  mapsSharedWithUser,
+  setMapsSharedWithUser,
 }) {
   const [comment, setComment] = useState({});
   const [targetMapId, setTargetMapId] = useState(null);
@@ -138,7 +140,7 @@ function Engagement({
 
   const sendCommentToFirestore = async (id) => {
     if (!mapObject.isPrivate) {
-      console.log(`update publicMap`);
+      console.log(`update publicMap comments`);
       const docRef = doc(db, "publicMaps", id);
       await updateDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(mapObject)),
@@ -154,7 +156,7 @@ function Engagement({
       );
     }
     if (userAuth.uid === mapObject.owner.ownerId) {
-      console.log(`user owns map, update it.`);
+      console.log(`user owns map, update comments.`);
       const userRef = doc(db, "users", userAuth.uid);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -168,10 +170,33 @@ function Engagement({
       });
       setUserData((prevState) => Object.assign(prevState, { mapsOwned: maps }));
     }
-    if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
-      console.log(
-        `map isPrivate AND not the user's, so map is shared with user`
-      );
+    if (userAuth.uid !== mapObject.owner.ownerId) {
+      if (isMapSharedWith().includes(mapObject.mapID)) {
+        console.log(
+          `update mapsSharedWithUser comments state on the front end`
+        );
+        setMapsSharedWithUser((prevState) =>
+          prevState.map((map) => {
+            if (id === map[0]) {
+              return [map[0], { mapObject }];
+            } else {
+              return map;
+            }
+          })
+        );
+      }
+      console.log(`update owner's map comments data on Firestore`);
+      const userRef = doc(db, "users", mapObject.owner.ownerId);
+      const userObject = await getDoc(userRef);
+      const maps = userObject.data().mapsOwned;
+      maps.filter((map) => {
+        if (id === map.mapID) {
+          Object.assign(map, mapObject);
+        }
+      });
+      await updateDoc(userRef, {
+        mapsOwned: JSON.parse(JSON.stringify(maps)),
+      });
     }
   };
 
@@ -206,15 +231,24 @@ function Engagement({
     }
 
     if (!mapObject.isPrivate) {
-      console.log(`update publicMap`);
+      console.log(`update publicMap likes`);
       const docRef = doc(db, "publicMaps", id);
       await updateDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(mapObject)),
       });
+      setPublicMaps((prevState) =>
+        prevState.map((map) => {
+          if (id === map[0]) {
+            return [map[0], { mapObject }];
+          } else {
+            return map;
+          }
+        })
+      );
     }
 
     if (userAuth.uid === mapObject.owner.ownerId) {
-      console.log(`user owns map, update it.`);
+      console.log(`user owns map, update likes.`);
       const userRef = doc(db, "users", userAuth.uid);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -229,10 +263,31 @@ function Engagement({
       setUserData((prevState) => Object.assign(prevState, { mapsOwned: maps }));
     }
 
-    if (mapObject.isPrivate && userAuth.uid === mapObject.owner.ownerId) {
-      console.log(
-        `map isPrivate AND not the user's, so map is shared with user`
-      );
+    if (userAuth.uid !== mapObject.owner.ownerId) {
+      if (isMapSharedWith().includes(mapObject.mapID)) {
+        console.log(`update mapsSharedWithUser likes state on the front end`);
+        setMapsSharedWithUser((prevState) =>
+          prevState.map((map) => {
+            if (id === map[0]) {
+              return [map[0], { mapObject }];
+            } else {
+              return map;
+            }
+          })
+        );
+      }
+      console.log(`update owner's map likes data on Firestore`);
+      const userRef = doc(db, "users", mapObject.owner.ownerId);
+      const userObject = await getDoc(userRef);
+      const maps = userObject.data().mapsOwned;
+      maps.filter((map) => {
+        if (id === map.mapID) {
+          Object.assign(map, mapObject);
+        }
+      });
+      await updateDoc(userRef, {
+        mapsOwned: JSON.parse(JSON.stringify(maps)),
+      });
     }
   };
 
