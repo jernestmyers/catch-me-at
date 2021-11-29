@@ -189,7 +189,6 @@ function Engagement({
 
   const sendLikeToFirestore = async (status, id, userLikes) => {
     const userRef = doc(db, "users", userAuth.uid);
-
     await updateDoc(userRef, {
       likesByUser: userLikes,
     });
@@ -241,7 +240,8 @@ function Engagement({
     if (
       userAuth.uid &&
       !userAuth.isAnonymous &&
-      userAuth.uid !== mapObject.owner.ownerId
+      userAuth.uid !== mapObject.owner.ownerId &&
+      !isMapSharedWith().includes(mapObject.mapID)
     ) {
       const mapSavedData = {
         ownerId: mapObject.owner.ownerId,
@@ -407,6 +407,10 @@ function Engagement({
 
   const isMapSaved = () => {
     return userData.publicMapsSaved.map((data) => data.mapID);
+  };
+
+  const isMapSharedWith = () => {
+    return userData.mapsSharedWithUser.map((data) => data.mapID);
   };
 
   const getSharedWithList = () => {
@@ -583,9 +587,15 @@ function Engagement({
           onClick={handleShareSelection}
         ></div>
         <div
-          data-hover="You own this map."
+          data-hover={
+            mapObject.owner.ownerId === userAuth.uid
+              ? "You own this map."
+              : "Map is shared with you."
+          }
           className={
-            userData && mapObject.owner.ownerId === userAuth.uid
+            userData &&
+            (mapObject.owner.ownerId === userAuth.uid ||
+              isMapSharedWith().includes(mapObject.mapID))
               ? `engage-icon-container disable-save`
               : `engage-icon-container`
           }
