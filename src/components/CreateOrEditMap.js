@@ -484,7 +484,15 @@ const CreateOrEditMap = (props) => {
           <input className="checkbox" type="checkbox" id="private-checkbox" />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
-        <button id="save-map-btn" onClick={handleSaveMap}>
+        <button
+          className={
+            props.userAuth && props.userAuth.isAnonymous
+              ? `disabled disable-create-map`
+              : null
+          }
+          id="save-map-btn"
+          onClick={handleSaveMap}
+        >
           Save Map
         </button>
       </div>

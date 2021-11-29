@@ -818,9 +818,18 @@ textarea.input-field {
   margin-top: 1rem;
 }
 
-#save-map-btn {
+.disable-create-map {
   grid-column: 1 / 3;
-  font-size: 1.25rem;
+  font-size: 1rem;
+}
+
+.disable-create-map:before {
+  content: "Guests cannot save maps!";
+  width: 225px;
+  background: none;
+  color: #363f4b;
+  left: -60px;
+  top: -15px;
 }
 
 .toggle-container {
