@@ -230,7 +230,6 @@ const RenderMaps = (props) => {
               )}
             </div>
           </div>
-          {/* {props.userData ? ( */}
           <Engagement
             db={props.db}
             mapObject={props.mapObject}
@@ -244,7 +243,6 @@ const RenderMaps = (props) => {
             mapsSharedWithUser={props.mapsSharedWithUser}
             setMapsSharedWithUser={props.setMapsSharedWithUser}
           ></Engagement>
-          {/* // ) : null} */}
         </div>
       ) : (
         <></>

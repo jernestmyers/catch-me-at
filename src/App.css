@@ -267,7 +267,6 @@ a.view-map-link:visited {
 
 .map-container {
   width: calc(var(--map-width) + 1rem);
-  /* border: 1px solid black; */
   box-shadow: 5px 5px 10px #1c1c1c;
   margin: 1rem 0.5rem;
   padding-top: 0.5rem;
@@ -742,7 +741,8 @@ input:checked + label {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(var(--map-width) * 0.9);
+  width: calc(var(--map-width) * 0.85);
+  font-size: 0.9rem;
 }
 
 #add-marker-btn {
@@ -833,6 +833,12 @@ textarea.input-field {
   height: 2.5rem;
 }
 
+.marker-header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .marker-header-number {
   position: relative;
   font-size: 1rem;
@@ -851,6 +857,24 @@ textarea.input-field {
   font-weight: bold;
 }
 
+.itinerary-header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modify-btns-container {
+  margin-right: 2rem;
+}
+
+.modify-map-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 70%;
+  padding: 0;
+}
+
 /* VIEW MAP ITINERARY */
 #detailed-view-container {
   display: flex;
@@ -859,7 +883,42 @@ textarea.input-field {
 }
 
 .modify-btns {
-  margin: 0.25rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  margin: 0 0.25rem;
+  padding: 0;
+  background-color: white;
+  border-radius: 0.25rem;
+  position: relative;
+  font-size: 0.65rem;
+}
+
+.modify-map {
+  color: #363f4b;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.modify-btns:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 75px;
+  color: #363f4b;
+  font-weight: bold;
+  text-align: right;
+  border-radius: 5px;
+  transition: opacity 1s ease-in-out;
+
+  position: absolute;
+  z-index: 1;
+  right: -5px;
+  top: -15px;
+}
+
+.modify-btns:hover:before {
+  opacity: 0.9;
+  visibility: visible;
 }
 
 /* HOME !USERAUTH */
