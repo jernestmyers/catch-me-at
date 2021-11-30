@@ -1109,3 +1109,34 @@ textarea.input-field {
 #confirm-text {
   font-weight: bold;
 }
+
+/* USER COMPONENT */
+#user-profile-header-container {
+  margin-bottom: 1rem;
+  margin-left: 3rem;
+}
+#user-profile-header {
+  font-size: 1.5rem;
+  letter-spacing: 0.125rem;
+  font-weight: bold;
+}
+
+.user-profile-connection-status {
+  display: flex;
+  align-items: center;
+  color: #bdd5ae;
+  font-style: italic;
+  line-height: 1.25rem;
+}
+
+.profile-connect-msg {
+  padding-top: 2px;
+}
+
+#profile-not-connected {
+  color: #5e5c6c;
+}
+
+#not-connected-msg {
+  /* color: #d00000; */
+}

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  // collection,
-  // getDocs,
-  getDoc,
-  // setDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-// import { useResolvedPath } from "react-router";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
@@ -265,6 +257,10 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                     <div>
                       <Link
                         className="connect-link"
+                        state={{
+                          userId: connect.userId,
+                          userName: connect.userName,
+                        }}
                         to={`../user/${connect.userId}`}
                       >
                         {connect.userName}
