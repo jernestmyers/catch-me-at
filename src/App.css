@@ -932,12 +932,16 @@ textarea.input-field {
 .itinerary-header-container {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-end;
 }
 
+#itinerary-header-create {
+  justify-content: space-around;
+}
+
 .modify-btns-container {
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 
 .modify-map-container {
