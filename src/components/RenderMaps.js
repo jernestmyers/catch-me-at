@@ -220,7 +220,13 @@ const RenderMaps = (props) => {
                 <div>
                   by&nbsp;
                   {props.userAuth.uid ? (
-                    <Link to={`/user/${props.mapObject.owner.ownerId}`}>
+                    <Link
+                      state={{
+                        userId: props.mapObject.owner.ownerId,
+                        userName: props.mapObject.owner.ownerName,
+                      }}
+                      to={`/user/${props.mapObject.owner.ownerId}`}
+                    >
                       {props.mapObject.owner.ownerName}
                     </Link>
                   ) : (

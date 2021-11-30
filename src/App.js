@@ -3,6 +3,7 @@ import AuthenticateUser from "./components/AuthenticateUser.js";
 import NavBar from "./components/NavBar.js";
 import Home from "./components/Home.js";
 import ViewMaps from "./components/ViewMaps.js";
+import User from "./components/User.js";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
 import Connections from "./components/Connections.js";
 import { initializeApp } from "firebase/app";
@@ -305,6 +306,23 @@ function App() {
                 userAuth={userAuth}
                 users={users}
               ></Connections>
+            }
+          ></Route>
+          <Route
+            path="/user/*"
+            element={
+              <User
+                db={db}
+                userAuth={userAuth}
+                userData={userData}
+                // setUserData={setUserData}
+                // publicMaps={publicMaps}
+                // setPublicMaps={setPublicMaps}
+                // mapsSavedByUser={mapsSavedByUser}
+                // setMapsSavedByUser={setMapsSavedByUser}
+                mapsSharedWithUser={mapsSharedWithUser}
+                // setMapsSharedWithUser={setMapsSharedWithUser}
+              ></User>
             }
           ></Route>
         </Routes>
