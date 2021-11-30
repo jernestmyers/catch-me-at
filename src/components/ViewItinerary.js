@@ -1,11 +1,31 @@
 import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
 import { useLocation } from "react-router-dom";
-import { format } from "date-fns";
+import { format, compareAsc } from "date-fns";
 
 const ViewItinerary = (props) => {
-  // console.log(props);
+  console.log(props.markers);
   const currentPath = useLocation().pathname;
+
+  const getDateObject = (dateObjectArray) => {
+    const year = dateObjectArray[0].substring(0, 4);
+    const month = +dateObjectArray[0].substring(5, 7);
+    const day = dateObjectArray[0].substring(8, 10);
+    const hour = dateObjectArray[1].substring(0, 2);
+    const minute = dateObjectArray[1].substring(3, 5);
+    return new Date(year, month - 1, day, hour, minute);
+  };
+
+  const sortedMarkersByDate = [...props.markers]
+    .map((object) => {
+      return getDateObject([
+        object.userInputData[0].value,
+        object.userInputData[1].value,
+      ]);
+    })
+    .sort(compareAsc);
+
+  console.log(sortedMarkersByDate);
 
   const sortedMarkers = [...props.markers];
   sortedMarkers.sort((a, b) => {
