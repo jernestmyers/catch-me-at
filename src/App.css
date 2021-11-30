@@ -289,7 +289,8 @@ a.view-map-link:visited {
 }
 
 /* BEGIN CONNECT CSS */
-#connections-container {
+#connections-container,
+#connections-user-container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -297,25 +298,45 @@ a.view-map-link:visited {
   justify-content: space-around;
 }
 
+.connect-div {
+  width: 300px;
+  line-height: 1.75rem;
+}
+
 #active-connects-container {
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: center; */
-  /* margin-bottom: 2rem; */
+  margin: 1rem 0;
 }
 
 #active-connects-header {
   text-align: center;
+  font-weight: bold;
+}
+
+.connect-link,
+.connect-link:visited {
+  color: #363f4b;
+}
+
+.connect-link:hover {
+  color: #a2bce0;
+  color: #2f97c1;
 }
 
 #manage-connects-container {
+  margin-top: 1rem;
   display: grid;
   justify-items: center;
-  grid-template-rows: 1rem auto;
+  grid-template-rows: 1.5rem auto;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "title title"
-    "received sent";
+    "received sent"
+    "data data";
+}
+
+.pending-connects-container {
+  width: 100%;
+  grid-area: data;
 }
 
 .pending-connects-container,
@@ -327,17 +348,45 @@ a.view-map-link:visited {
 }
 
 .manage-connects {
+  width: 100%;
   flex-direction: row;
   justify-content: space-around;
   margin: 0.5rem 0;
 }
 
+.manage-connects-toggle {
+  cursor: pointer;
+  margin-right: 0.25rem;
+}
+
+.none-pending {
+  font-style: italic;
+  color: #363f4b;
+}
+
+.toggle-header {
+  display: flex;
+}
+
+.manage-connects-toggle:hover,
+.toggle-selected {
+  color: #bdd5ae;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
 #manage-header {
+  font-weight: bold;
   grid-area: title;
 }
 
+#sent-connections {
+  display: none;
+}
+
 #search-connections-container {
-  height: 200px;
+  height: 105px;
 }
 
 #search-connections {
@@ -348,12 +397,21 @@ a.view-map-link:visited {
   border: 2px solid #dfdee3;
 }
 
+#psuedo-relative {
+  position: relative;
+  left: -133px;
+  width: 0px;
+  height: 0px;
+}
+
 #matched-users-container {
+  position: absolute;
   width: 266px;
   max-height: 150px;
   font-size: 0.9rem;
   background-color: #dfdee3;
   overflow-y: scroll;
+  line-height: 1.125rem;
 }
 
 .matched-users {

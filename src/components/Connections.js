@@ -8,7 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 // import { useResolvedPath } from "react-router";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
   // console.log({ userData });
@@ -210,36 +210,126 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     await updateDoc(connectionRef, { connections: connectionData.connections });
   };
 
+  const toggleManageInvitations = (e) => {
+    console.log(e.target);
+    document.querySelectorAll(`.manage-connects-toggle`).forEach((toggle) => {
+      toggle.classList.remove(`toggle-selected`);
+    });
+    e.target.classList.add(`toggle-selected`);
+
+    document
+      .querySelectorAll(`.pending-connects-container`)
+      .forEach((container) => {
+        container.style.display = `none`;
+      });
+    if (e.target.textContent === `Received`) {
+      document.querySelector(`#received-connections`).style.display = `flex`;
+    } else if (e.target.textContent === `Sent`) {
+      document.querySelector(`#sent-connections`).style.display = `flex`;
+    }
+  };
+
   return (
-    <div>
+    <div id="connections-container">
       {userAuth && !userAuth.isAnonymous ? (
-        <div id="connections-container">
-          <div id="active-connects-container">
-            <h2 id="active-connects-header">Your Connections</h2>
+        <div id="connections-user-container">
+          <div className="connect-div" id="search-connections-container">
+            <p>Connect with other adventurers!</p>
+            <label htmlFor="search-connections"></label>
+            <input
+              type="text"
+              id="search-connections"
+              placeholder="search for connections..."
+              onChange={searchUsers}
+            />
+            <div id="psuedo-relative">
+              <ul id="matched-users-container" onClick={selectUser}></ul>
+            </div>
+            <button id="send-request-btn" onClick={handleConnectionRequest}>
+              Send Request
+            </button>
+          </div>
+          <div className="connect-div" id="active-connects-container">
+            {connectionsObject.active.length ? (
+              <h2 id="active-connects-header">
+                {connectionsObject.active.length}
+                {connectionsObject.active.length === 1
+                  ? ` Connection`
+                  : ` Connections`}
+              </h2>
+            ) : null}
+
             {connectionsObject.active.length
               ? connectionsObject.active.map((connect) => {
-                  return <p>{connect.userName}</p>;
+                  return (
+                    <div>
+                      <Link
+                        className="connect-link"
+                        to={`../user/${connect.userId}`}
+                      >
+                        {connect.userName}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 64 64"
+                          role="img"
+                          className="inline-icons"
+                        >
+                          <path
+                            className="link-icon"
+                            data-name="layer2"
+                            fill="none"
+                            stroke="#202020"
+                            strokeMiterlimit="10"
+                            strokeWidth="2"
+                            d="M30 62h32V2H2v32"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                          ></path>
+                          <path
+                            className="link-icon"
+                            data-name="layer1"
+                            fill="none"
+                            stroke="#202020"
+                            strokeMiterlimit="10"
+                            strokeWidth="2"
+                            d="M26 56V38H8m18 0L2 62"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                          ></path>
+                        </svg>
+                      </Link>
+                    </div>
+                  );
                 })
               : null}
-            <div id="search-connections-container">
-              <p>New around here? Connect with other adventurers!</p>
-              <label htmlFor="search-connections"></label>
-              <input
-                type="text"
-                id="search-connections"
-                placeholder="search for connections..."
-                onChange={searchUsers}
-              />
-              <ul id="matched-users-container" onClick={selectUser}></ul>
-              <button id="send-request-btn" onClick={handleConnectionRequest}>
-                Send Request
-              </button>
-            </div>
           </div>
-          <div id="manage-connects-container">
+          <div className="connect-div" id="manage-connects-container">
             <h2 id="manage-header">Manage Invitations</h2>
-            <div className="pending-connects-container">
-              <h3>Received</h3>
+            <div className="toggle-header">
+              <h3
+                onClick={toggleManageInvitations}
+                className="manage-connects-toggle toggle-selected"
+              >
+                Received
+              </h3>
+              ({connectionsObject.pendingReceived.length})
+            </div>
+            <div className="toggle-header">
+              <h3
+                onClick={toggleManageInvitations}
+                className="manage-connects-toggle"
+              >
+                Sent
+              </h3>
+              ({connectionsObject.pendingSent.length})
+            </div>
+            <div
+              className="pending-connects-container"
+              id="received-connections"
+            >
+              {!connectionsObject.pendingReceived.length ? (
+                <p className="none-pending">empty</p>
+              ) : null}
               {connectionsObject.pendingReceived.map((connect) => {
                 return (
                   <div
@@ -264,8 +354,11 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                 );
               })}
             </div>
-            <div className="pending-connects-container">
-              <h3>Sent</h3>
+            <div className="pending-connects-container" id="sent-connections">
+              {!connectionsObject.pendingSent.length ? (
+                <p className="none-pending">empty</p>
+              ) : null}
+
               {connectionsObject.pendingSent.map((connect) => {
                 return (
                   <div
