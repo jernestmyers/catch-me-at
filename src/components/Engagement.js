@@ -1,13 +1,6 @@
 import { format, parseJSON } from "date-fns";
 import React, { useState, useEffect } from "react";
-import {
-  // collection,
-  // getDocs,
-  getDoc,
-  // setDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 
 const checkmark = `
 <svg class="shared-with-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">

@@ -4,8 +4,6 @@ import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
 
 function ViewMapItinerary(props) {
-  // console.log(props.publicMaps);
-  // console.log(props.mapsSharedWithUser);
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps
     .map((array) => {

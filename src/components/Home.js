@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
 import TypewriterEffect from "./TypewriterEffect";

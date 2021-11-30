@@ -70,20 +70,8 @@ export default function AuthenticateUser(props) {
             <span>&nbsp;or&nbsp;</span>
             <button onClick={logInAsGuest}>sign in as guest</button>
           </div>
-          {/* <div>
-          </div> */}
         </div>
       )}
-      {/* <button
-        onClick={() =>
-          console.log({
-            auth: auth,
-            user: props.userAuth,
-          })
-        }
-      >
-        click for auth
-      </button> */}
     </div>
   );
 }

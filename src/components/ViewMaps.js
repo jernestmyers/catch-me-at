@@ -3,7 +3,6 @@ import RenderMaps from "./RenderMaps";
 import { Link } from "react-router-dom";
 
 function ViewMaps(props) {
-  // console.log(props.userData.mapsOwned);
   return (
     <div id="view-maps-container">
       {props.userAuth && !props.userAuth.isAnonymous ? (
