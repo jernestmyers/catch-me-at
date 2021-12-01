@@ -204,13 +204,6 @@ const ViewItinerary = (props) => {
           </div>
         );
       })}
-      <button
-        onClick={() =>
-          console.log({ markers: props.markers, sorted: sortedMarkersByDate })
-        }
-      >
-        get markers
-      </button>
     </div>
   );
 };

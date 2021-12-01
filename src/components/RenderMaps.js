@@ -8,6 +8,7 @@ import {
 import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
 import { format, compareAsc, compareDesc } from "date-fns";
+import { sortObjectByDate } from "../functions/sortObjectByDate";
 
 const containerStyle = {
   width: "300px",
@@ -47,10 +48,12 @@ const RenderMaps = (props) => {
   //   return a.order - b.order;
   // });
 
-  const sortedMarkersByDate = [...props.mapObject.markers];
-  sortedMarkersByDate.sort((a, b) => {
-    return compareAsc(a.formattedDate, b.formattedDate);
-  });
+  // const sortedMarkersByDate = [...props.mapObject.markers];
+  // sortedMarkersByDate.sort((a, b) => {
+  //   return compareAsc(a.formattedDate, b.formattedDate);
+  // });
+
+  const sortedMarkersByDate = sortObjectByDate(props.mapObject.markers);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -259,9 +262,6 @@ const RenderMaps = (props) => {
       ) : (
         <></>
       )}
-      <button onClick={() => console.log(props.mapObject.markers)}>
-        MARKERS
-      </button>
     </div>
   );
 };

@@ -27,6 +27,7 @@ import {
 } from "firebase/firestore";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
+import { sortObjectByDate } from "../functions/sortObjectByDate";
 
 const containerStyle = {
   width: "300px",
@@ -405,7 +406,7 @@ const CreateOrEditMap = (props) => {
             onUnmount={onUnmount}
             onClick={onMapClick}
           >
-            {markers.map((object, index) => {
+            {sortObjectByDate(markers).map((object, index) => {
               return (
                 <Marker
                   onClick={onMarkerClick}
@@ -416,7 +417,7 @@ const CreateOrEditMap = (props) => {
               );
             })}
             {isMarkerClicked
-              ? markers.map((object) => {
+              ? sortObjectByDate(markers).map((object) => {
                   if (object.id === markerClickedId) {
                     return (
                       <InfoWindow
