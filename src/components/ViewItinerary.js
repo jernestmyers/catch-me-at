@@ -1,7 +1,7 @@
 import React from "react";
 import { createWhereElements } from "../functions/helperDOMMethods";
 import { useLocation } from "react-router-dom";
-import { format, compareAsc } from "date-fns";
+import { format, compareAsc, compareDesc } from "date-fns";
 
 const ViewItinerary = (props) => {
   console.log(props.markers);
@@ -16,21 +16,32 @@ const ViewItinerary = (props) => {
     return new Date(year, month - 1, day, hour, minute);
   };
 
-  const sortedMarkersByDate = [...props.markers]
-    .map((object) => {
-      return getDateObject([
-        object.userInputData[0].value,
-        object.userInputData[1].value,
-      ]);
-    })
-    .sort(compareAsc);
+  // const sortedMarkersByDate = [...props.markers]
+  //   .map((object) => {
+  //     return getDateObject([
+  //       object.userInputData[0].value,
+  //       object.userInputData[1].value,
+  //     ]);
+  //   })
+  //   .sort(compareAsc);
 
-  console.log(sortedMarkersByDate);
+  // console.log(sortedMarkersByDate);
 
-  const sortedMarkers = [...props.markers];
-  sortedMarkers.sort((a, b) => {
-    return a.order - b.order;
+  const sortedMarkersByDate = [...props.markers];
+  sortedMarkersByDate.forEach((marker) => {
+    Object.assign(marker, {
+      formattedDate: getDateObject([
+        marker.userInputData[0].value,
+        marker.userInputData[1].value,
+      ]),
+    });
   });
+  sortedMarkersByDate.sort((a, b) => {
+    return compareAsc(a.formattedDate, b.formattedDate);
+  });
+  // sortedMarkers.sort((a, b) => {
+  //   return a.order - b.order;
+  // });
 
   const formatDateAndTime = (dateObjectArray) => {
     const year = dateObjectArray[0].substring(0, 4);
@@ -48,7 +59,7 @@ const ViewItinerary = (props) => {
 
   return (
     <div id="itinerary-container">
-      {sortedMarkers.map((object) => {
+      {sortedMarkersByDate.map((object, index) => {
         const whereElements = createWhereElements(object.place);
         return (
           <div className="itinerary-item" key={object.id} data-id={object.id}>
@@ -57,7 +68,7 @@ const ViewItinerary = (props) => {
               id={currentPath === "/create" ? "itinerary-header-create" : null}
             >
               <div className="marker-header-container">
-                <h1 className="marker-header-number">{object.order}</h1>
+                <h1 className="marker-header-number">{index + 1}</h1>
                 <svg
                   className="marker-details-header"
                   viewBox="0 0 64 64"
@@ -193,6 +204,13 @@ const ViewItinerary = (props) => {
           </div>
         );
       })}
+      <button
+        onClick={() =>
+          console.log({ markers: props.markers, sorted: sortedMarkersByDate })
+        }
+      >
+        get markers
+      </button>
     </div>
   );
 };

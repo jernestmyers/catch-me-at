@@ -50,7 +50,7 @@ const defaultMapObject = {
           value: "Morning hike in the crisp autumn air.",
         },
       ],
-      order: 1,
+      // order: 1,
       id: "kwayu6ep",
       coordinates: {
         lng: -75.21733100000002,
@@ -102,7 +102,7 @@ const defaultMapObject = {
         formatted_address:
           "2025 Benjamin Franklin Pkwy, Philadelphia, PA 19130, USA",
       },
-      order: 2,
+      // order: 2,
       id: "kwayvbw2",
     },
     {
@@ -151,14 +151,14 @@ const defaultMapObject = {
           "establishment",
         ],
       },
-      order: 3,
+      // order: 3,
     },
     {
       coordinates: {
         lng: -75.1350602,
         lat: 39.9655615,
       },
-      order: 4,
+      // order: 4,
       id: "kwaz7jf6",
       userInputData: [
         {

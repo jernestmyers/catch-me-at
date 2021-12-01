@@ -269,7 +269,7 @@ const CreateOrEditMap = (props) => {
       ...markers,
       {
         id: uniqid(),
-        order: markers.length + 1,
+        // order: markers.length + 1,
         coordinates: newMarkerPosition,
         place: place,
         userInputData: formData,

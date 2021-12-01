@@ -7,6 +7,7 @@ import {
 } from "@react-google-maps/api";
 import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
+import { format, compareAsc, compareDesc } from "date-fns";
 
 const containerStyle = {
   width: "300px",
@@ -41,9 +42,14 @@ const RenderMaps = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
 
-  const sortedMarkers = [...props.mapObject.markers];
-  sortedMarkers.sort((a, b) => {
-    return a.order - b.order;
+  // const sortedMarkers = [...props.mapObject.markers];
+  // sortedMarkers.sort((a, b) => {
+  //   return a.order - b.order;
+  // });
+
+  const sortedMarkersByDate = [...props.mapObject.markers];
+  sortedMarkersByDate.sort((a, b) => {
+    return compareAsc(a.formattedDate, b.formattedDate);
   });
 
   const { isLoaded } = useJsApiLoader({
@@ -99,18 +105,18 @@ const RenderMaps = (props) => {
             onUnmount={onUnmount}
             onClick={onMapClick}
           >
-            {sortedMarkers.map((object) => {
+            {sortedMarkersByDate.map((object, index) => {
               return (
                 <Marker
                   onClick={onMarkerClick}
-                  label={`${object.order}`}
+                  label={`${index + 1}`}
                   position={object.coordinates}
                   title={object.id}
                 ></Marker>
               );
             })}
             {isMarkerClickedInRender
-              ? sortedMarkers.map((object) => {
+              ? sortedMarkersByDate.map((object) => {
                   if (object.id === markerClickedIdInRender) {
                     return (
                       <InfoWindow
@@ -253,6 +259,9 @@ const RenderMaps = (props) => {
       ) : (
         <></>
       )}
+      <button onClick={() => console.log(props.mapObject.markers)}>
+        MARKERS
+      </button>
     </div>
   );
 };
