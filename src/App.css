@@ -997,6 +997,34 @@ textarea.input-field {
   visibility: visible;
 }
 
+#confirm-delete-psuedo-relative {
+  display: none;
+  position: relative;
+  width: 0;
+  height: 0;
+  left: -225px;
+  top: 1.5rem;
+  z-index: 10;
+}
+
+#confirm-delete-map-container {
+  padding: 0.5rem;
+  position: absolute;
+  background-color: rgba(223, 222, 227, 0.9);
+  text-align: center;
+  line-height: 1.25rem;
+  width: 200px;
+  border-radius: 0.5rem;
+  border-top-right-radius: 0;
+}
+
+#confirm-delete-btns-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+}
+
 /* HOME !USERAUTH */
 #home-no-userAuth {
   width: 100%;

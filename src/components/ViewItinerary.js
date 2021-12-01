@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { format, compareAsc, compareDesc } from "date-fns";
 
 const ViewItinerary = (props) => {
-  console.log(props.markers);
+  // console.log(props.markers);
   const currentPath = useLocation().pathname;
 
   const getDateObject = (dateObjectArray) => {

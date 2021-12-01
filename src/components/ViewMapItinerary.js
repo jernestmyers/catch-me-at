@@ -4,6 +4,7 @@ import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
 
 function ViewMapItinerary(props) {
+  // console.log(props);
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps
     .map((array) => {
@@ -36,6 +37,25 @@ function ViewMapItinerary(props) {
   } else {
     mapToDisplay = [...publicMapsArray];
   }
+
+  const openDeleteMapModal = () => {
+    const confirmDeleteModal = document.querySelector(
+      `#confirm-delete-psuedo-relative`
+    );
+    confirmDeleteModal.style.display = `block`;
+  };
+
+  const closeDeleteModal = () => {
+    const confirmDeleteModal = document.querySelector(
+      `#confirm-delete-psuedo-relative`
+    );
+    confirmDeleteModal.style.display = `none`;
+  };
+
+  const handleDeleteMap = (e) => {
+    console.log(mapToDisplay[0]);
+    closeDeleteModal();
+  };
 
   return (
     <div id="detailed-view-container">
@@ -78,7 +98,7 @@ function ViewMapItinerary(props) {
           <button
             data-hover="Delete map?"
             className="modify-btns modify-map"
-            onClick={props.deleteMarkerAndData}
+            onClick={openDeleteMapModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,6 +127,18 @@ function ViewMapItinerary(props) {
               ></path>
             </svg>
           </button>
+          <div id="confirm-delete-psuedo-relative">
+            <div id="confirm-delete-map-container">
+              <p>
+                Are you sure you wish to delete this itinerary and all of its
+                contents?
+              </p>
+              <div id="confirm-delete-btns-container">
+                <button onClick={handleDeleteMap}>Yes, Delete</button>
+                <button onClick={closeDeleteModal}>No, Cancel</button>
+              </div>
+            </div>
+          </div>
         </div>
       ) : null}
       <RenderMaps
