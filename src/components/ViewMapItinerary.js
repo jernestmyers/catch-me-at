@@ -1,10 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import RenderMaps from "./RenderMaps";
 import ViewItinerary from "./ViewItinerary";
+import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 function ViewMapItinerary(props) {
-  // console.log(props);
+  console.log(props.userData);
+  const navigate = useNavigate();
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps
     .map((array) => {
@@ -53,8 +55,36 @@ function ViewMapItinerary(props) {
   };
 
   const handleDeleteMap = (e) => {
-    console.log(mapToDisplay[0]);
     closeDeleteModal();
+    const updatedMapsOwned = props.userData.mapsOwned.filter((map) => {
+      if (map.mapID !== mapToDisplay[0].mapID) {
+        return map;
+      }
+    });
+    updateFirestore(mapToDisplay[0], updatedMapsOwned);
+    props.setUserData((prevState) => {
+      return { ...prevState, mapsOwned: updatedMapsOwned };
+    });
+    navigate(`../view`);
+  };
+
+  const updateFirestore = async (mapToDelete, userMapsUpdated) => {
+    const userRef = doc(props.db, "users", props.userAuth.uid);
+    await updateDoc(userRef, {
+      mapsOwned: JSON.parse(JSON.stringify(userMapsUpdated)),
+    });
+
+    if (!mapToDelete.isPrivate) {
+      const docRef = doc(props.db, "publicMaps", mapToDelete.mapID);
+      await deleteDoc(docRef);
+      props.setPublicMaps(
+        props.publicMaps.filter((map) => {
+          if (map[0] !== mapToDelete.mapID) {
+            return map;
+          }
+        })
+      );
+    }
   };
 
   return (
