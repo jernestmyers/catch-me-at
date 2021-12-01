@@ -478,7 +478,7 @@ const CreateOrEditMap = (props) => {
           <label htmlFor="publish-checkbox" className="switch"></label>
         </div>
         <div className="toggle-container">
-          <div class="switch-label">
+          <div className="switch-label">
             <p>Set as Private?</p>
           </div>
           <input className="checkbox" type="checkbox" id="private-checkbox" />

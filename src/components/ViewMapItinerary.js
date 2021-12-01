@@ -5,7 +5,6 @@ import ViewItinerary from "./ViewItinerary";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 function ViewMapItinerary(props) {
-  console.log(props.userData);
   const navigate = useNavigate();
   const mapID = useParams()["*"];
   const publicMapsArray = props.publicMaps

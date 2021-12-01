@@ -12,7 +12,7 @@ function ViewMaps(props) {
             {props.userData.mapsOwned.length ? (
               props.userData.mapsOwned.map((mapObject) => {
                 return (
-                  <div>
+                  <div key={`user-map-${mapObject.mapID}`}>
                     <RenderMaps
                       db={props.db}
                       userAuth={props.userAuth}
@@ -40,7 +40,7 @@ function ViewMaps(props) {
             {props.mapsSavedByUser.length ? (
               props.mapsSavedByUser.map((mapObject) => {
                 return (
-                  <div>
+                  <div key={`saved-map-${mapObject.mapID}`}>
                     <RenderMaps
                       db={props.db}
                       userAuth={props.userAuth}
@@ -69,7 +69,7 @@ function ViewMaps(props) {
             {props.mapsSharedWithUser.length ? (
               props.mapsSharedWithUser.map((mapObject) => {
                 return (
-                  <div>
+                  <div key={`shared-map-${mapObject.mapID}`}>
                     <RenderMaps
                       db={props.db}
                       userAuth={props.userAuth}

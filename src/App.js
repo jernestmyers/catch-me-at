@@ -19,7 +19,6 @@ import {
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import ViewMapItinerary from "./components/ViewMapItinerary.js";
-// import uniqid from "uniqid";
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);

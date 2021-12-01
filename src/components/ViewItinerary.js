@@ -16,17 +16,6 @@ const ViewItinerary = (props) => {
     return new Date(year, month - 1, day, hour, minute);
   };
 
-  // const sortedMarkersByDate = [...props.markers]
-  //   .map((object) => {
-  //     return getDateObject([
-  //       object.userInputData[0].value,
-  //       object.userInputData[1].value,
-  //     ]);
-  //   })
-  //   .sort(compareAsc);
-
-  // console.log(sortedMarkersByDate);
-
   const sortedMarkersByDate = [...props.markers];
   sortedMarkersByDate.forEach((marker) => {
     Object.assign(marker, {
@@ -39,9 +28,6 @@ const ViewItinerary = (props) => {
   sortedMarkersByDate.sort((a, b) => {
     return compareAsc(a.formattedDate, b.formattedDate);
   });
-  // sortedMarkers.sort((a, b) => {
-  //   return a.order - b.order;
-  // });
 
   const formatDateAndTime = (dateObjectArray) => {
     const year = dateObjectArray[0].substring(0, 4);

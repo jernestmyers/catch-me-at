@@ -50,7 +50,6 @@ const defaultMapObject = {
           value: "Morning hike in the crisp autumn air.",
         },
       ],
-      // order: 1,
       id: "kwayu6ep",
       coordinates: {
         lng: -75.21733100000002,
@@ -102,7 +101,6 @@ const defaultMapObject = {
         formatted_address:
           "2025 Benjamin Franklin Pkwy, Philadelphia, PA 19130, USA",
       },
-      // order: 2,
       id: "kwayvbw2",
     },
     {
@@ -151,14 +149,12 @@ const defaultMapObject = {
           "establishment",
         ],
       },
-      // order: 3,
     },
     {
       coordinates: {
         lng: -75.1350602,
         lat: 39.9655615,
       },
-      // order: 4,
       id: "kwaz7jf6",
       userInputData: [
         {
@@ -210,9 +206,9 @@ function Home(props) {
       {props.userAuth ? (
         <div className="map-feed">
           <h2 className="view-maps-header">ACTIVITY FEED</h2>
-          {props.publicMaps.map((mapArray) => {
+          {props.publicMaps.map((mapArray, index) => {
             return (
-              <div>
+              <div key={`home-map-${index}`}>
                 <RenderMaps
                   db={props.db}
                   userAuth={props.userAuth}

@@ -245,9 +245,9 @@ function User(props) {
 
         {mapDataToDisplay.length && mapDataToDisplay[0].length ? (
           mapDataToDisplay.length ? (
-            mapDataToDisplay[0].map((map) => {
+            mapDataToDisplay[0].map((map, index) => {
               return (
-                <div>
+                <div key={`profile-public-map-${index}`}>
                   <RenderMaps
                     mapObject={map}
                     userAuth={props.userAuth}
@@ -266,9 +266,9 @@ function User(props) {
         <h2 className="view-maps-header">MAPS SHARED WITH YOU</h2>
         {mapDataToDisplay.length && mapDataToDisplay[1].length ? (
           mapDataToDisplay.length ? (
-            mapDataToDisplay[1].map((map) => {
+            mapDataToDisplay[1].map((map, index) => {
               return (
-                <div>
+                <div key={`profile-shared-map-${index}`}>
                   <RenderMaps
                     mapObject={map}
                     userAuth={props.userAuth}

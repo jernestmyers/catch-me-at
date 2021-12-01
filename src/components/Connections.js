@@ -254,7 +254,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
             {connectionsObject.active.length
               ? connectionsObject.active.map((connect) => {
                   return (
-                    <div>
+                    <div key={`active-${connect.userId}`}>
                       <Link
                         className="connect-link"
                         state={{
@@ -332,6 +332,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                     className="manage-connects"
                     data-userid={connect.userId}
                     data-username={connect.userName}
+                    key={`received-${connect.userId}`}
                   >
                     <p>{connect.userName}</p>
                     <button
@@ -358,6 +359,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
               {connectionsObject.pendingSent.map((connect) => {
                 return (
                   <div
+                    key={`sent-${connect.userId}`}
                     className="manage-connects"
                     data-userid={connect.userId}
                     data-username={connect.userName}

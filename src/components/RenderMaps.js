@@ -7,7 +7,7 @@ import {
 } from "@react-google-maps/api";
 import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
-import { format, compareAsc, compareDesc } from "date-fns";
+// import { format, compareAsc, compareDesc } from "date-fns";
 import { sortObjectByDate } from "../functions/sortObjectByDate";
 
 const containerStyle = {
@@ -42,16 +42,6 @@ function sortBounds(array) {
 const RenderMaps = (props) => {
   // console.log(props);
   const currentPath = useLocation().pathname;
-
-  // const sortedMarkers = [...props.mapObject.markers];
-  // sortedMarkers.sort((a, b) => {
-  //   return a.order - b.order;
-  // });
-
-  // const sortedMarkersByDate = [...props.mapObject.markers];
-  // sortedMarkersByDate.sort((a, b) => {
-  //   return compareAsc(a.formattedDate, b.formattedDate);
-  // });
 
   const sortedMarkersByDate = sortObjectByDate(props.mapObject.markers);
 
@@ -111,6 +101,7 @@ const RenderMaps = (props) => {
             {sortedMarkersByDate.map((object, index) => {
               return (
                 <Marker
+                  key={`marker${index}`}
                   onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
@@ -119,10 +110,11 @@ const RenderMaps = (props) => {
               );
             })}
             {isMarkerClickedInRender
-              ? sortedMarkersByDate.map((object) => {
+              ? sortedMarkersByDate.map((object, index) => {
                   if (object.id === markerClickedIdInRender) {
                     return (
                       <InfoWindow
+                        key={`info-window-${index}`}
                         position={{
                           lat: object.coordinates.lat,
                           lng: object.coordinates.lng,
@@ -132,7 +124,7 @@ const RenderMaps = (props) => {
                           setMarkerClickedIdInRender(null);
                         }}
                       >
-                        <div>
+                        <div key={`info-window-text-${index}`}>
                           <p className="itin-where-text">{object.place.name}</p>
                           <p>{object.place.formatted_address}</p>
                           <a

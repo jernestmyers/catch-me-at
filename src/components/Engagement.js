@@ -727,9 +727,9 @@ function Engagement({
           : null}
       </div>
       <div className="comments-container" id={`comment-box-${mapObject.mapID}`}>
-        {mapObject.comments.map((commentObject) => {
+        {mapObject.comments.map((commentObject, index) => {
           return (
-            <div className="comment">
+            <div className="comment" key={`comment${index}`}>
               <p className="comment-name">{commentObject.name}</p>
               <p className="comment-date">
                 {showDate(parseJSON(commentObject.date))}
