@@ -121,6 +121,7 @@ const ViewItinerary = (props) => {
                     data-hover="Delete item?"
                     className="modify-btns"
                     onClick={props.deleteMarkerAndData}
+                    data-itemid={object.id}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

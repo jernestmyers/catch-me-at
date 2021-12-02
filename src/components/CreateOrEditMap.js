@@ -326,10 +326,12 @@ const CreateOrEditMap = (props) => {
   };
 
   const deleteMarkerAndData = (e) => {
-    const markerItineraryContainer = e.target.parentElement.dataset.id;
+    console.log(`delete marker`);
+    const itemId = e.target.closest(`button`).dataset.itemid;
+    console.log(itemId);
     setMarkers(
       markers.filter((marker) => {
-        return marker.id !== markerItineraryContainer ? marker : null;
+        return marker.id !== itemId ? marker : null;
       })
     );
   };
@@ -650,20 +652,21 @@ const CreateOrEditMap = (props) => {
           </div>
         )}
       </div>
-      {/* <button
+      <button
         onClick={() =>
           console.log({
-            map: map,
-            place: place,
-            searchBar: searchBar,
-            placesService: placesService,
-            newMarker: newMarkerPosition,
+            // map: map,
+            // place: place,
+            // searchBar: searchBar,
+            // placesService: placesService,
+            // newMarker: newMarkerPosition,
             marker: markers,
+            mapToEditData: mapToEditData,
           })
         }
       >
         states checker
-      </button> */}
+      </button>
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg
