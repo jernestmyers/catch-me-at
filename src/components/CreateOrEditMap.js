@@ -66,7 +66,7 @@ Date.prototype.toDateInputValue = function () {
 
 const CreateOrEditMap = (props) => {
   // console.log(props);
-  const mapToEditData = useLocation().state;
+  let mapToEditData = useLocation().state;
   console.log(mapToEditData);
 
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
@@ -79,9 +79,25 @@ const CreateOrEditMap = (props) => {
   useEffect(() => {
     if (props.isMapToBeEdited) {
       setMarkers(mapToEditData.markers);
-      props.setIsMapToBeEdited(false);
+      // props.setIsMapToBeEdited(false);
     }
   }, []);
+
+  const resetAndStartOver = () => {
+    setIsMarkerClicked(false);
+    setMarkers([]);
+    props.setIsMapToBeEdited(false);
+    setNewMarkerPosition({});
+    setMarkerClickedId();
+    setPlace(null);
+    setPlaceId(null);
+    infoWindow.close();
+    googleMarker.setVisible(false);
+    document.querySelector("#date").value = new Date().toDateInputValue();
+    document.querySelector("#time").value = "12:00";
+    document.querySelector(`#map-title-input`).value = ``;
+    setDefaultBounds();
+  };
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
@@ -138,15 +154,19 @@ const CreateOrEditMap = (props) => {
   }, [placeId, setPlaceId]);
   // END COMMENT -- this useEffect makes the getDetails request onMapClick
 
+  const setDefaultBounds = () => {
+    const bounds = new window.google.maps.LatLngBounds(
+      defaultBounds[0],
+      defaultBounds[1]
+    );
+    map.fitBounds(bounds);
+    map.getCenter(bounds);
+    setMap(map);
+  };
+
   const onLoad = useCallback(function callback(map) {
     if (!props.isMapToBeEdited) {
-      const bounds = new window.google.maps.LatLngBounds(
-        defaultBounds[0],
-        defaultBounds[1]
-      );
-      map.fitBounds(bounds);
-      map.getCenter(bounds);
-      setMap(map);
+      setDefaultBounds();
     } else if (props.isMapToBeEdited && mapToEditData.markers.length > 1) {
       const sortedBounds = sortBounds(mapToEditData.markers);
       const bounds = new window.google.maps.LatLngBounds(
@@ -416,6 +436,38 @@ const CreateOrEditMap = (props) => {
 
   return (
     <div className="map-container" id="create-map-container">
+      <div id="start-new-map-container">
+        <svg
+          id="new-map-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 64"
+          role="img"
+        >
+          <path
+            data-name="layer2"
+            d="M53.832 34.947a26.016 26.016 0 1 0-7.45 15.432"
+            fill="none"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+          <path
+            data-name="layer1"
+            fill="none"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="4"
+            d="M62 23l-8.168 11.947L43.014 25"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+        </svg>
+        <button onClick={resetAndStartOver} id="new-map-btn">
+          Start Over
+        </button>
+      </div>
       {isLoaded ? (
         <div id="map">
           <div id="map-title-input-container">
@@ -424,7 +476,11 @@ const CreateOrEditMap = (props) => {
               id="map-title-input"
               type="text"
               placeholder={`Untitled - ${format(new Date(), "MM/dd/yyyy")}`}
-              value={mapToEditData ? mapToEditData.mapTitle : null}
+              defaultValue={
+                mapToEditData && props.isMapToBeEdited
+                  ? mapToEditData.mapTitle
+                  : null
+              }
             />
           </div>
           <GoogleMap
@@ -498,7 +554,7 @@ const CreateOrEditMap = (props) => {
         markers={markers}
       ></ViewItinerary>
       <div id="status-container">
-        {mapToEditData && mapToEditData.isPublished ? (
+        {mapToEditData && props.isMapToBeEdited && mapToEditData.isPublished ? (
           <div className="toggle-container">
             <div className="switch-label">
               <svg
@@ -554,12 +610,14 @@ const CreateOrEditMap = (props) => {
             type="checkbox"
             id="private-checkbox"
             checked={
-              mapToEditData && mapToEditData.isPrivate ? `checked` : null
+              mapToEditData && props.isMapToBeEdited && mapToEditData.isPrivate
+                ? `checked`
+                : null
             }
           />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
-        {!mapToEditData ? (
+        {!mapToEditData || !props.isMapToBeEdited ? (
           <button
             className={
               props.userAuth && props.userAuth.isAnonymous
