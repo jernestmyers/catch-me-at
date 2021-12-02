@@ -822,7 +822,7 @@ input:checked + label {
 }
 
 #itinerary-container {
-  /* width: calc(var(--map-width) * 2); */
+  width: 100%;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
