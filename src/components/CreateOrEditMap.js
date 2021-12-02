@@ -79,8 +79,10 @@ const CreateOrEditMap = (props) => {
   useEffect(() => {
     if (props.isMapToBeEdited) {
       setMarkers(mapToEditData.markers);
-      // props.setIsMapToBeEdited(false);
     }
+    return () => {
+      props.setIsMapToBeEdited(false);
+    };
   }, []);
 
   const resetAndStartOver = () => {
@@ -96,7 +98,7 @@ const CreateOrEditMap = (props) => {
     document.querySelector("#date").value = new Date().toDateInputValue();
     document.querySelector("#time").value = "12:00";
     document.querySelector(`#map-title-input`).value = ``;
-    setDefaultBounds();
+    setDefaultBounds(map);
   };
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
@@ -154,7 +156,7 @@ const CreateOrEditMap = (props) => {
   }, [placeId, setPlaceId]);
   // END COMMENT -- this useEffect makes the getDetails request onMapClick
 
-  const setDefaultBounds = () => {
+  const setDefaultBounds = (map) => {
     const bounds = new window.google.maps.LatLngBounds(
       defaultBounds[0],
       defaultBounds[1]
@@ -166,7 +168,7 @@ const CreateOrEditMap = (props) => {
 
   const onLoad = useCallback(function callback(map) {
     if (!props.isMapToBeEdited) {
-      setDefaultBounds();
+      setDefaultBounds(map);
     } else if (props.isMapToBeEdited && mapToEditData.markers.length > 1) {
       const sortedBounds = sortBounds(mapToEditData.markers);
       const bounds = new window.google.maps.LatLngBounds(
