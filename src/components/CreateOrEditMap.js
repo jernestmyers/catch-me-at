@@ -424,6 +424,7 @@ const CreateOrEditMap = (props) => {
               id="map-title-input"
               type="text"
               placeholder={`Untitled - ${format(new Date(), "MM/dd/yyyy")}`}
+              value={mapToEditData ? mapToEditData.mapTitle : null}
             />
           </div>
           <GoogleMap
@@ -497,33 +498,99 @@ const CreateOrEditMap = (props) => {
         markers={markers}
       ></ViewItinerary>
       <div id="status-container">
-        <div className="toggle-container">
-          <div className="switch-label">
-            <p>Publish?</p>
+        {mapToEditData && mapToEditData.isPublished ? (
+          <div className="toggle-container">
+            <div className="switch-label">
+              <svg
+                id="checkmark-published"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 64 64"
+                role="img"
+              >
+                <circle
+                  data-name="layer2"
+                  cx="32"
+                  cy="32"
+                  r="30"
+                  transform="rotate(-45 32 32)"
+                  fill="#bdd5ae"
+                  stroke="#6a994e"
+                  strokeMiterlimit="10"
+                  strokeWidth="4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></circle>
+                <path
+                  data-name="layer1"
+                  fill="none"
+                  stroke="#6a994e"
+                  strokeMiterlimit="10"
+                  strokeWidth="5"
+                  d="M20.998 32.015l8.992 8.992 16.011-16.011"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                ></path>
+              </svg>
+              <p id="mapToEdit-published">Published!</p>
+            </div>
+            <input type="checkbox" id="publish-checkbox" className="checkbox" />
+            {/* <label htmlFor="publish-checkbox" className="switch"></label> */}
           </div>
-          <input type="checkbox" id="publish-checkbox" className="checkbox" />
-          <label htmlFor="publish-checkbox" className="switch"></label>
-        </div>
+        ) : (
+          <div className="toggle-container">
+            <div className="switch-label">
+              <p>Publish?</p>
+            </div>
+            <input type="checkbox" id="publish-checkbox" className="checkbox" />
+            <label htmlFor="publish-checkbox" className="switch"></label>
+          </div>
+        )}
         <div className="toggle-container">
           <div className="switch-label">
             <p>Set as Private?</p>
           </div>
-          <input className="checkbox" type="checkbox" id="private-checkbox" />
+          <input
+            className="checkbox"
+            type="checkbox"
+            id="private-checkbox"
+            checked={
+              mapToEditData && mapToEditData.isPrivate ? `checked` : null
+            }
+          />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
-        <button
-          className={
-            props.userAuth && props.userAuth.isAnonymous
-              ? `disabled disable-create-map`
-              : null
-          }
-          id="save-map-btn"
-          onClick={handleSaveMap}
-        >
-          Save Map
-        </button>
+        {!mapToEditData ? (
+          <button
+            className={
+              props.userAuth && props.userAuth.isAnonymous
+                ? `disabled disable-create-map`
+                : null
+            }
+            id="save-map-btn"
+            onClick={handleSaveMap}
+          >
+            Save Map
+          </button>
+        ) : (
+          <div id="confirm-edits-btn-container">
+            <button
+              className="confirm-edits-btn"
+              id="save-changes-btn"
+              // onClick={handleSaveMap}
+            >
+              Save Changes
+            </button>
+            <button
+              className="confirm-edits-btn"
+              id="cancel-changes-btn"
+              // onClick={handleSaveMap}
+            >
+              Cancel Changes
+            </button>
+          </div>
+        )}
       </div>
-      <button
+      {/* <button
         onClick={() =>
           console.log({
             map: map,
@@ -536,7 +603,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button>
+      </button> */}
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg
