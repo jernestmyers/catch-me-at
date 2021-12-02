@@ -34,6 +34,7 @@ function App() {
   const [isUserDataSet, setIsUserDataSet] = useState();
   const [mapsSavedByUser, setMapsSavedByUser] = useState([]);
   const [mapsSharedWithUser, setMapsSharedWithUser] = useState([]);
+  const [isMapToBeEdited, setIsMapToBeEdited] = useState(false);
 
   const getNewUserObject = () => {
     return {
@@ -258,6 +259,8 @@ function App() {
                 setMapsSaved={setMapsSaved}
                 publicMaps={publicMaps}
                 setPublicMaps={setPublicMaps}
+                isMapToBeEdited={isMapToBeEdited}
+                setIsMapToBeEdited={setIsMapToBeEdited}
               ></CreateOrEditMap>
             }
           ></Route>
@@ -292,6 +295,8 @@ function App() {
                 setMapsSavedByUser={setMapsSavedByUser}
                 mapsSharedWithUser={mapsSharedWithUser}
                 setMapsSharedWithUser={setMapsSharedWithUser}
+                isMapToBeEdited={isMapToBeEdited}
+                setIsMapToBeEdited={setIsMapToBeEdited}
               ></ViewMapItinerary>
             }
           ></Route>
