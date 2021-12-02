@@ -9,6 +9,7 @@ import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
 // import { format, compareAsc, compareDesc } from "date-fns";
 import { sortObjectByDate } from "../functions/sortObjectByDate";
+import sortBounds from "../functions/sortBoundsMethod";
 
 const containerStyle = {
   width: "300px",
@@ -20,24 +21,6 @@ const options = {
 };
 
 const libraries = [`places`];
-
-function sortBounds(array) {
-  const latArray = [...array];
-  const lngArray = [...array];
-  latArray.sort((a, b) => {
-    return a.coordinates.lat - b.coordinates.lat;
-  });
-  lngArray.sort((a, b) => {
-    return a.coordinates.lng - b.coordinates.lng;
-  });
-  return [
-    { lat: latArray[0].coordinates.lat, lng: lngArray[0].coordinates.lng },
-    {
-      lat: latArray[latArray.length - 1].coordinates.lat,
-      lng: lngArray[lngArray.length - 1].coordinates.lng,
-    },
-  ];
-}
 
 const RenderMaps = (props) => {
   // console.log(props);
