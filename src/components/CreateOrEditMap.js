@@ -18,16 +18,11 @@ import {
   getMapTitle,
   clearTitleAndStatus,
 } from "../functions/helperDOMMethods";
-import {
-  updateDoc,
-  doc,
-  // getDocs,
-  setDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { updateDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { sortObjectByDate } from "../functions/sortObjectByDate";
+import sortBounds from "../functions/sortBoundsMethod";
 
 const containerStyle = {
   width: "300px",
@@ -70,12 +65,23 @@ Date.prototype.toDateInputValue = function () {
 };
 
 const CreateOrEditMap = (props) => {
+  // console.log(props);
+  const mapToEditData = useLocation().state;
+  console.log(mapToEditData);
+
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
   // const [idOfEditClicked, setIdOfEditClicked] = useState();
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerClickedId, setMarkerClickedId] = useState();
+
+  useEffect(() => {
+    if (props.isMapToBeEdited) {
+      setMarkers(mapToEditData.markers);
+      props.setIsMapToBeEdited(false);
+    }
+  }, []);
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
   const { isLoaded } = useJsApiLoader({
@@ -133,10 +139,27 @@ const CreateOrEditMap = (props) => {
   // END COMMENT -- this useEffect makes the getDetails request onMapClick
 
   const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(
-      defaultBounds[0],
-      defaultBounds[1]
-    );
+    if (!props.isMapToBeEdited) {
+      const bounds = new window.google.maps.LatLngBounds(
+        defaultBounds[0],
+        defaultBounds[1]
+      );
+      map.fitBounds(bounds);
+      map.getCenter(bounds);
+      setMap(map);
+    } else if (props.isMapToBeEdited && mapToEditData.markers.length > 1) {
+      const sortedBounds = sortBounds(mapToEditData.markers);
+      const bounds = new window.google.maps.LatLngBounds(
+        sortedBounds[0],
+        sortedBounds[1]
+      );
+      map.fitBounds(bounds);
+      map.getCenter(bounds);
+      setMap(map);
+    } else if (props.isMapToBeEdited && mapToEditData.markers.length <= 1) {
+      map.fitBounds(mapToEditData.markers[0].place.geometry.viewport);
+      setMap(map);
+    }
 
     const service = new window.google.maps.places.PlacesService(map);
     setPlacesService(service);
@@ -154,10 +177,6 @@ const CreateOrEditMap = (props) => {
       fields: fields,
     });
     setSearchBar(searchBox);
-
-    map.fitBounds(bounds);
-    map.getCenter(bounds);
-    setMap(map);
   }, []);
 
   const onUnmount = useCallback(function callback(map) {
@@ -260,25 +279,28 @@ const CreateOrEditMap = (props) => {
   };
 
   const addMarkerAndInfo = (e) => {
-    const inputFields = document.querySelectorAll(`.input-field`);
-    const formData = getFormData(inputFields);
-    clearContainer(document.querySelector(`#where-data`));
-    clearFormInputs(inputFields);
     e.preventDefault();
-    // document.querySelector(`#add-marker-details`).style.display = `none`;
-    setMarkers([
-      ...markers,
-      {
-        id: uniqid(),
-        // order: markers.length + 1,
-        coordinates: newMarkerPosition,
-        place: place,
-        userInputData: formData,
-      },
-    ]);
-    setIsEditClicked(false);
-    infoWindow.close();
-    googleMarker.setVisible(false);
+    if (place) {
+      const inputFields = document.querySelectorAll(`.input-field`);
+      const formData = getFormData(inputFields);
+      clearContainer(document.querySelector(`#where-data`));
+      clearFormInputs(inputFields);
+      // document.querySelector(`#add-marker-details`).style.display = `none`;
+      setMarkers([
+        ...markers,
+        {
+          id: uniqid(),
+          // order: markers.length + 1,
+          coordinates: newMarkerPosition,
+          place: place,
+          userInputData: formData,
+        },
+      ]);
+      setIsEditClicked(false);
+      infoWindow.close();
+      googleMarker.setVisible(false);
+      setPlace(null);
+    }
   };
 
   const deleteMarkerAndData = (e) => {
@@ -319,6 +341,7 @@ const CreateOrEditMap = (props) => {
     googleMarker.setVisible(false);
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(document.querySelectorAll(`.input-field`));
+    setDefaultDate();
     // document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
@@ -377,6 +400,10 @@ const CreateOrEditMap = (props) => {
   };
 
   useEffect(() => {
+    setDefaultDate();
+  });
+
+  const setDefaultDate = () => {
     const dateInput = document.querySelector("#date");
     const timeInput = document.querySelector("#time");
     if (!timeInput.value) {
@@ -385,7 +412,7 @@ const CreateOrEditMap = (props) => {
     if (!dateInput.value) {
       dateInput.value = new Date().toDateInputValue();
     }
-  });
+  };
 
   return (
     <div className="map-container" id="create-map-container">
@@ -496,7 +523,7 @@ const CreateOrEditMap = (props) => {
           Save Map
         </button>
       </div>
-      {/* <button
+      <button
         onClick={() =>
           console.log({
             map: map,
@@ -509,7 +536,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button> */}
+      </button>
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg
