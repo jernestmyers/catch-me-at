@@ -86,6 +86,11 @@ function ViewMapItinerary(props) {
     }
   };
 
+  const setUpMapEditing = () => {
+    props.setIsMapToBeEdited(true);
+    navigate(`../create`, { state: mapToDisplay[0] });
+  };
+
   return (
     <div id="detailed-view-container">
       {mapToDisplay.length &&
@@ -95,7 +100,7 @@ function ViewMapItinerary(props) {
           <button
             data-hover="Edit map?"
             className="modify-btns modify-map"
-            onClick={props.prepareToEditMarkerAndData}
+            onClick={setUpMapEditing}
           >
             <svg
               viewBox="0 0 64 64"
