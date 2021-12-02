@@ -267,7 +267,7 @@ a.view-map-link:visited {
 .map-container {
   width: calc(var(--map-width) + 1rem);
   box-shadow: 5px 5px 10px #1c1c1c;
-  margin: 1rem 0.5rem;
+  margin: 0rem 0.5rem;
   padding-top: 0.5rem;
   display: flex;
   justify-content: center;
@@ -763,22 +763,42 @@ input:checked + label {
 #create-map-container {
   width: 100%;
   height: auto;
-  display: grid;
   border: none;
   box-shadow: none;
-  /* grid-template-columns: 1fr 1fr; */
-  grid-template-rows: auto;
-  align-items: start;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-#map {
-  /* margin-left: auto; */
-  justify-self: end;
+#start-new-map-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+#new-map-icon {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+}
+
+#new-map-btn {
+  height: 2rem;
+  font-size: 1rem;
+  background-color: #6a994e;
+}
+
+#new-map-btn:hover {
+  background-color: #476634;
+}
+
+#new-map-btn:active {
+  background-color: #354d27;
 }
 
 #add-marker-details {
-  margin-right: auto;
+  margin: 1rem 0;
 }
 
 #map-title-input-container {
@@ -975,6 +995,10 @@ textarea.input-field {
   align-items: center;
 }
 
+.modify-btns-container {
+  margin-bottom: 0.5rem;
+}
+
 .modify-btns {
   cursor: pointer;
   height: 1.25rem;
@@ -1061,6 +1085,10 @@ textarea.input-field {
   width: 100%;
 }
 
+.render-map-container {
+  margin-bottom: 1rem;
+}
+
 .user-maps-container {
   display: flex;
   justify-content: center;
@@ -1076,6 +1104,7 @@ textarea.input-field {
   position: relative;
   letter-spacing: 0.5rem;
   border-bottom: 2px solid #5e5c6c;
+  margin-bottom: 0.5rem;
 }
 
 #prompt-login {

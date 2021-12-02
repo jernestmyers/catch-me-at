@@ -71,7 +71,7 @@ const RenderMaps = (props) => {
   };
 
   return (
-    <div className="map-container" id="render-map-container">
+    <div className="map-container render-map-container">
       {isLoaded ? (
         <div id="map">
           <GoogleMap
