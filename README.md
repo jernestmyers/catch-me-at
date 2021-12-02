@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# catch me at
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+this is my [capstone javascript project](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/javascript-final-project#assignment) from the odin project's full stack javascript curriculum. but why replicate an existing web app when i can create my own?
 
-## Available Scripts
+## ---- PREVIEW: IN DEVELOPMENT ----
 
-In the project directory, you can run:
+![gif demonstrating the app's features](./catch-me-at-preview.gif)
 
-### `npm start`
+<!-- ## live version
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[click here](https://jernestmyers.github.io/photo-tag-game/) for a live version! -->
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## technologies used
 
-### `npm test`
+<p align="left"> 
+<a href="https://reactjs.org/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a>
+<a href="https://firebase.google.com/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/firebase/firebase-plain-wordmark.svg" alt="firebase" width="40" height="40"/> </a>
+<a href="https://www.w3.org/html/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> 
+<a href="https://www.w3schools.com/css/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a>
+</p>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## app features
 
-### `npm run build`
+1. uses [Google's Maps JavaScript API and Places API](https://developers.google.com/maps/documentation) and the [@react-google-maps/api](https://react-google-maps-api-docs.netlify.app/#section-introduction) library to allow users to create rich, dynamic map itineraries.
+2. integrates Firebase authentication wherein users can either access all the features via their Google account or users can explore the web app as a guest.
+3. data for Google account users is persisted to the back end via Google Firebase's Cloud Firestore NoSQL database.
+4. users can search for, and connect with, other users via a custom-built autocomplete search bar that scans the collection of user names.
+5. users can choose to set their map itineraries as private or public; further, users can select which, if any, of their private connections to share their map with.
+6. users can "like" maps, comment on maps, and save publicly-shared maps.
+7. imports the [date-fns](https://date-fns.org/) library to format dates and times and to dynamically sort the itinerary events in ascending order of date/time.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<!-- ## areas for improvement
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. improve responsiveness across browsers and devices. -->
