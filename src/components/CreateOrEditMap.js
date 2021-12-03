@@ -70,8 +70,8 @@ const CreateOrEditMap = (props) => {
   console.log(mapToEditData);
 
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
-  const [isEditClicked, setIsEditClicked] = useState(false);
-  // const [idOfEditClicked, setIdOfEditClicked] = useState();
+  const [isEditMarkerClicked, setIsEditMarkerClicked] = useState(false);
+  const [idOfMarkerToEdit, setIdOfMarkerToEdit] = useState();
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerClickedId, setMarkerClickedId] = useState();
@@ -98,6 +98,7 @@ const CreateOrEditMap = (props) => {
     document.querySelector("#date").value = new Date().toDateInputValue();
     document.querySelector("#time").value = "12:00";
     document.querySelector(`#map-title-input`).value = ``;
+    document.querySelector(`#private-checkbox`).checked = null;
     setDefaultBounds(map);
   };
 
@@ -256,7 +257,6 @@ const CreateOrEditMap = (props) => {
       const elements = createWhereElements(place);
       appendWhereElements(whereContainer, elements);
     }
-    // clearFormInputs(document.querySelectorAll(`.input-field`));
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
 
@@ -272,7 +272,6 @@ const CreateOrEditMap = (props) => {
       props.setUserData((prevState) => {
         return { ...prevState, mapsOwned: props.mapsSaved };
       });
-      // props.setPublicMaps(props.publicMaps.concat([map.mapID, map]));
       updateMapsOwnedInFirestore();
       document.querySelector(`#confirm-add-modal`).style.display = `flex`;
     }
@@ -291,7 +290,6 @@ const CreateOrEditMap = (props) => {
   };
 
   const onMapClick = (e) => {
-    // document.querySelector(`#add-marker-details`).style.display = `none`;
     if (e.placeId) {
       setPlaceId(e.placeId);
       setNewMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
@@ -307,18 +305,16 @@ const CreateOrEditMap = (props) => {
       const formData = getFormData(inputFields);
       clearContainer(document.querySelector(`#where-data`));
       clearFormInputs(inputFields);
-      // document.querySelector(`#add-marker-details`).style.display = `none`;
       setMarkers([
         ...markers,
         {
           id: uniqid(),
-          // order: markers.length + 1,
           coordinates: newMarkerPosition,
           place: place,
           userInputData: formData,
         },
       ]);
-      setIsEditClicked(false);
+      setIsEditMarkerClicked(false);
       infoWindow.close();
       googleMarker.setVisible(false);
       setPlace(null);
@@ -336,27 +332,47 @@ const CreateOrEditMap = (props) => {
     );
   };
 
-  // const prepareToEditMarkerAndData = (e) => {
-  //   setIsEditClicked(true);
-  //   setIdOfEditClicked(e.target.id);
-  //   const inputFields = document.querySelectorAll(`.input-field`);
-  //   document.querySelector(`#add-marker-details`).style.display = `block`;
-  //   document.querySelector(`#add-marker-details`).style.position = `relative`;
-  //   document.querySelector(`#add-marker-details`).style.left = `0px`;
-  //   document.querySelector(`#add-marker-details`).style.top = `0px`;
-  // };
+  const prepareToEditMarkerData = (e) => {
+    const itemId = e.target.closest(`button`).dataset.itemid;
+    console.log(itemId);
+    setIsEditMarkerClicked(true);
+    setIdOfMarkerToEdit(itemId);
+    if (mapToEditData && props.isMapToBeEdited) {
+      console.log(`edit existing marker`);
+      mapToEditData.markers.filter((marker) => {
+        if (marker.id === itemId) {
+          setPlace(marker.place);
+          document.querySelector("#date").value = marker.userInputData[0].value;
+          document.querySelector("#time").value = marker.userInputData[1].value;
+          document.querySelector("#what").defaultValue =
+            marker.userInputData[2].value;
+        }
+      });
+    }
+  };
 
-  // const confirmEditsToMarkerAndData = (e) => {
-  //   e.preventDefault();
-  //   const inputFields = document.querySelectorAll(`.input-field`);
-  //   const data = [];
-  //   inputFields.forEach((input) => {
-  //     data.push({ id: input.id, value: input.value });
-  //     input.value = ``;
-  //   });
-  //   setIsEditClicked(false);
-  //   document.querySelector(`#add-marker-details`).style.display = `none`;
-  // };
+  const submitEditsToMarker = (e) => {
+    e.preventDefault();
+    const inputFields = document.querySelectorAll(`.input-field`);
+    const formData = getFormData(inputFields);
+    clearContainer(document.querySelector(`#where-data`));
+    clearFormInputs(inputFields);
+    if (mapToEditData && props.isMapToBeEdited) {
+      setMarkers(
+        mapToEditData.markers.map((marker) => {
+          if (marker.id === idOfMarkerToEdit) {
+            marker.userInputData = formData;
+            return marker;
+          } else {
+            return marker;
+          }
+        })
+      );
+    }
+    setIsEditMarkerClicked(false);
+    setIdOfMarkerToEdit(null);
+    setPlace(null);
+  };
 
   const cancelAddMarker = (e) => {
     e.preventDefault();
@@ -366,7 +382,6 @@ const CreateOrEditMap = (props) => {
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(document.querySelectorAll(`.input-field`));
     setDefaultDate();
-    // document.querySelector(`#add-marker-details`).style.display = `none`;
   };
 
   const handleSaveMap = (e) => {
@@ -413,7 +428,6 @@ const CreateOrEditMap = (props) => {
       await setDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(map)),
       });
-      // props.setPublicMaps(props.publicMaps.concat([map.mapID, map]));
     } else if (isMapStoredAsPublic && map.isPublished) {
       map.isPrivate
         ? await deleteDoc(docRef)
@@ -546,13 +560,13 @@ const CreateOrEditMap = (props) => {
         <></>
       )}
       <ItineraryForm
-        isEditClicked={isEditClicked}
+        isEditMarkerClicked={isEditMarkerClicked}
         addMarkerAndInfo={addMarkerAndInfo}
-        // confirmEditsToMarkerAndData={confirmEditsToMarkerAndData}
+        submitEditsToMarker={submitEditsToMarker}
         cancelAddMarker={cancelAddMarker}
       ></ItineraryForm>
       <ViewItinerary
-        // prepareToEditMarkerAndData={prepareToEditMarkerAndData}
+        prepareToEditMarkerData={prepareToEditMarkerData}
         userAuth={props.userAuth}
         deleteMarkerAndData={deleteMarkerAndData}
         markers={markers}
@@ -645,7 +659,7 @@ const CreateOrEditMap = (props) => {
             <button
               className="confirm-edits-btn"
               id="cancel-changes-btn"
-              // onClick={handleSaveMap}
+              onClick={resetAndStartOver}
             >
               Cancel Changes
             </button>
@@ -655,11 +669,9 @@ const CreateOrEditMap = (props) => {
       <button
         onClick={() =>
           console.log({
-            // map: map,
-            // place: place,
-            // searchBar: searchBar,
-            // placesService: placesService,
             // newMarker: newMarkerPosition,
+            place: place,
+            placeId: placeId,
             marker: markers,
             mapToEditData: mapToEditData,
           })

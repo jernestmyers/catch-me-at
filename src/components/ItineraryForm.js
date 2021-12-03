@@ -1,8 +1,6 @@
 import React from "react";
 
 const ItineraryForm = (props) => {
-  //   console.log(props.isEditClicked);
-
   return (
     <form id="add-marker-details">
       <div id="where-container">
@@ -26,21 +24,32 @@ const ItineraryForm = (props) => {
         <textarea className="input-field" id="what" rows="5"></textarea>
       </div>
       <div id="form-btns">
-        {!props.isEditClicked ? (
+        {!props.isEditMarkerClicked ? (
           <button onClick={props.addMarkerAndInfo} className="add-details-btn">
             Add
           </button>
         ) : (
           <button
-            onClick={props.confirmEditsToMarkerAndData}
-            id="edit-details-btn"
+            className="add-details-btn"
+            onClick={props.submitEditsToMarker}
+            id="update-marker-btn"
           >
-            Update
+            Update Item
           </button>
         )}
-        <button className="add-details-btn" onClick={props.cancelAddMarker}>
-          Cancel
-        </button>
+        {!props.isEditMarkerClicked ? (
+          <button className="add-details-btn" onClick={props.cancelAddMarker}>
+            Cancel
+          </button>
+        ) : (
+          <button
+            className="add-details-btn"
+            onClick={props.cancelEditMarker}
+            id="cancel-marker-edit-btn"
+          >
+            Cancel Update
+          </button>
+        )}
       </div>
     </form>
   );

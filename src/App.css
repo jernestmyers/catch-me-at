@@ -1168,6 +1168,7 @@ textarea.input-field {
 #confirm-add-modal {
   display: none;
   position: absolute;
+  top: 100px;
   background-color: #dfdee3;
   border: 1px solid transparent;
   border-radius: 1rem;

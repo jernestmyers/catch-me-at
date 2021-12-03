@@ -88,7 +88,8 @@ const ViewItinerary = (props) => {
                   <button
                     data-hover="Edit item?"
                     className="modify-btns"
-                    onClick={props.prepareToEditMarkerAndData}
+                    onClick={props.prepareToEditMarkerData}
+                    data-itemid={object.id}
                   >
                     <svg
                       viewBox="0 0 64 64"
