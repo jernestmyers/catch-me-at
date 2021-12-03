@@ -235,7 +235,6 @@ function App() {
                 db={db}
                 userAuth={userAuth}
                 setUserAuth={setUserAuth}
-                mapsSaved={mapsSaved}
                 publicMaps={publicMaps}
                 setPublicMaps={setPublicMaps}
                 userData={userData}

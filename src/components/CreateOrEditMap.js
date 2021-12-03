@@ -406,6 +406,7 @@ const CreateOrEditMap = (props) => {
   const handleSaveMap = (e) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
+        const mapStatusValues = getMapStatusValues();
         const mapToUpdate = {
           owner: {
             ownerName: props.userAuth.displayName,
@@ -414,24 +415,76 @@ const CreateOrEditMap = (props) => {
           mapID: uniqid(),
           mapTitle: getMapTitle(document.querySelector(`#map-title-input`)),
           markers: markers,
-          datePublished: getMapStatusValues().datePublished,
-          isPublished: getMapStatusValues().isPublished,
-          isPrivate: getMapStatusValues().isPrivate,
+          datePublished: mapStatusValues.datePublished,
+          isPublished: mapStatusValues.isPublished,
+          isPrivate: mapStatusValues.isPrivate,
           likes: null,
           comments: [],
           sharedWith: [],
         };
         // DOES NOT ACCOUNT FOR CHANGES IN MAP STATUS
-        if (!getMapStatusValues().isPrivate) {
+        if (!mapStatusValues.isPrivate) {
           props.setPublicMaps(
             props.publicMaps.concat([
               [mapToUpdate.mapID, { mapObject: mapToUpdate }],
             ])
           );
+          updatePublicMapsInFirestore(mapToUpdate);
         }
         props.setMapsSaved([...props.mapsSaved, mapToUpdate]);
         clearTitleAndStatus();
-        updatePublicMapsInFirestore(mapToUpdate);
+      }
+    }
+  };
+
+  const handleSaveChanges = () => {
+    if (markers.length && props.userAuth) {
+      if (!props.userAuth.isAnonymous) {
+        const mapStatusValues = getMapStatusValues();
+
+        mapToEditData.mapTitle = getMapTitle(
+          document.querySelector(`#map-title-input`)
+        );
+        mapToEditData.markers = markers;
+
+        if (!mapStatusValues.isPublished) {
+          // map remains unpublished
+          console.log(`map remains unpublished`);
+          // update isPrivate state
+          mapToEditData.isPrivate = mapStatusValues.isPrivate;
+        } else if (!mapToEditData.isPublished && mapStatusValues.isPublished) {
+          // map changed from unpublished to published
+          console.log(`map changed from unpublished to published`);
+          // update datePublished, isPublished, and isPrivate state
+          mapToEditData.datePublished = mapStatusValues.datePublished;
+          mapToEditData.isPublished = mapStatusValues.isPublished;
+          mapToEditData.isPrivate = mapStatusValues.isPrivate;
+          if (!mapStatusValues.isPrivate) {
+            // add map to publicMaps on FE and firestore
+          }
+        } else if (!mapToEditData.isPrivate && mapStatusValues.isPrivate) {
+          // map changed from public to private --> remove map from publicMaps
+          // on FE and firestore
+          console.log(
+            `map changed from public to private, remove from publicMaps on FE and firestore`
+          );
+          // update isPrivate state
+          mapToEditData.isPrivate = mapStatusValues.isPrivate;
+        } else if (mapToEditData.isPrivate && !mapStatusValues.isPrivate) {
+          // map changed from private to public --> add map to publicMaps
+          // on FE and firestore
+          console.log(
+            `map changed from private to public, add to publicMaps on FE and firestore`
+          );
+          // update isPrivate state
+          mapToEditData.isPrivate = mapStatusValues.isPrivate;
+        } else if (!mapStatusValues.isPrivate) {
+          // map did NOT change privacy status AND is public
+          console.log(`privacy did NOT change and is public`);
+          // update publicMaps on FE and firestore
+        }
+        // update userData on FE and firestore
+        clearTitleAndStatus();
       }
     }
   };
@@ -671,7 +724,7 @@ const CreateOrEditMap = (props) => {
             <button
               className="confirm-edits-btn"
               id="save-changes-btn"
-              // onClick={handleSaveMap}
+              onClick={handleSaveChanges}
             >
               Save Changes
             </button>
