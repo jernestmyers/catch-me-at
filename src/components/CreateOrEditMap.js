@@ -79,6 +79,9 @@ const CreateOrEditMap = (props) => {
   useEffect(() => {
     if (props.isMapToBeEdited) {
       setMarkers(mapToEditData.markers);
+      if (mapToEditData.isPrivate) {
+        document.querySelector("#private-checkbox").checked = `checked`;
+      }
     }
     return () => {
       props.setIsMapToBeEdited(false);
@@ -441,13 +444,14 @@ const CreateOrEditMap = (props) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
         const mapStatusValues = getMapStatusValues();
+        const objectForComparison = Object.assign({}, mapToEditData);
 
         mapToEditData.mapTitle = getMapTitle(
           document.querySelector(`#map-title-input`)
         );
         mapToEditData.markers = markers;
 
-        if (!mapStatusValues.isPublished) {
+        if (!mapToEditData.isPublished && !mapStatusValues.isPublished) {
           // map remains unpublished
           console.log(`map remains unpublished`);
           // update isPrivate state
@@ -478,16 +482,49 @@ const CreateOrEditMap = (props) => {
           );
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
-        } else if (!mapStatusValues.isPrivate) {
-          // map did NOT change privacy status AND is public
+        } else if (
+          !mapStatusValues.isPrivate &&
+          !areObjectsEqual(objectForComparison, mapToEditData)
+        ) {
+          // map did NOT change privacy status AND is public AND was changed in some way
           console.log(`privacy did NOT change and is public`);
           // update publicMaps on FE and firestore
         }
-        // update userData on FE and firestore
+
+        if (!areObjectsEqual(objectForComparison, mapToEditData)) {
+          // object has changed
+          console.log(`object changes and thus userData needs updating`);
+          // update userData on FE and firestore
+        }
+
+        console.log(areObjectsEqual(objectForComparison, mapToEditData));
         clearTitleAndStatus();
       }
     }
   };
+
+  function areObjectsEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+    for (const key of keys1) {
+      const val1 = object1[key];
+      const val2 = object2[key];
+      const areObjects = isObject(val1) && isObject(val2);
+      if (
+        (areObjects && !areObjectsEqual(val1, val2)) ||
+        (!areObjects && val1 !== val2)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function isObject(object) {
+    return object != null && typeof object === "object";
+  }
 
   const updatePublicMapsInFirestore = async (map) => {
     const docRef = doc(props.db, "publicMaps", map.mapID);
@@ -699,11 +736,11 @@ const CreateOrEditMap = (props) => {
             className="checkbox"
             type="checkbox"
             id="private-checkbox"
-            checked={
-              mapToEditData && props.isMapToBeEdited && mapToEditData.isPrivate
-                ? `checked`
-                : null
-            }
+            // checked={
+            //   mapToEditData && props.isMapToBeEdited && mapToEditData.isPrivate
+            //     ? `checked`
+            //     : null
+            // }
           />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
