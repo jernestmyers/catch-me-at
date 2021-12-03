@@ -4,6 +4,7 @@
   grid-template-columns: 0.75fr 1fr;
   font-size: 2rem;
   color: #5e5c6c;
+  margin-bottom: 1rem;
 }
 
 #typewriter-prefix {
@@ -23,5 +24,26 @@ span {
 @keyframes caret {
   50% {
     border-color: transparent;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 450px) {
+  #typewriter-container {
+    grid-template-columns: 0.6fr 1fr;
+    font-size: 1.4rem;
+  }
+}
+
+@media screen and (min-width: 350px) and (max-width: 399px) {
+  #typewriter-container {
+    grid-template-columns: 0.55fr 1fr;
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 349px) {
+  #typewriter-container {
+    grid-template-columns: 0.55fr 1fr;
+    font-size: 1.12rem;
   }
 }
