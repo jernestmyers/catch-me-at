@@ -38,13 +38,16 @@ const ItineraryForm = (props) => {
           </button>
         )}
         {!props.isEditMarkerClicked ? (
-          <button className="add-details-btn" onClick={props.cancelAddMarker}>
+          <button
+            className="add-details-btn"
+            onClick={props.cancelAddOrEditMarker}
+          >
             Cancel
           </button>
         ) : (
           <button
             className="add-details-btn"
-            onClick={props.cancelEditMarker}
+            onClick={props.cancelAddOrEditMarker}
             id="cancel-marker-edit-btn"
           >
             Cancel Update

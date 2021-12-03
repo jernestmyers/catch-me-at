@@ -339,16 +339,23 @@ const CreateOrEditMap = (props) => {
     setIdOfMarkerToEdit(itemId);
     if (mapToEditData && props.isMapToBeEdited) {
       console.log(`edit existing marker`);
-      mapToEditData.markers.filter((marker) => {
-        if (marker.id === itemId) {
-          setPlace(marker.place);
-          document.querySelector("#date").value = marker.userInputData[0].value;
-          document.querySelector("#time").value = marker.userInputData[1].value;
-          document.querySelector("#what").defaultValue =
-            marker.userInputData[2].value;
-        }
-      });
+      prepopulateMarkerToEdit(mapToEditData.markers, itemId);
+    } else {
+      console.log(`edit during creation`);
+      prepopulateMarkerToEdit(markers, itemId);
     }
+  };
+
+  const prepopulateMarkerToEdit = (markersArray, markerToEditId) => {
+    markersArray.filter((marker) => {
+      if (marker.id === markerToEditId) {
+        setPlace(marker.place);
+        document.querySelector("#date").value = marker.userInputData[0].value;
+        document.querySelector("#time").value = marker.userInputData[1].value;
+        document.querySelector("#what").defaultValue =
+          marker.userInputData[2].value;
+      }
+    });
   };
 
   const submitEditsToMarker = (e) => {
@@ -358,23 +365,29 @@ const CreateOrEditMap = (props) => {
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(inputFields);
     if (mapToEditData && props.isMapToBeEdited) {
-      setMarkers(
-        mapToEditData.markers.map((marker) => {
-          if (marker.id === idOfMarkerToEdit) {
-            marker.userInputData = formData;
-            return marker;
-          } else {
-            return marker;
-          }
-        })
-      );
+      updateMarkersAfterEdit(mapToEditData.markers, idOfMarkerToEdit, formData);
+    } else {
+      updateMarkersAfterEdit(markers, idOfMarkerToEdit, formData);
     }
     setIsEditMarkerClicked(false);
     setIdOfMarkerToEdit(null);
     setPlace(null);
   };
 
-  const cancelAddMarker = (e) => {
+  const updateMarkersAfterEdit = (markersArray, markerToEditId, inputData) => {
+    setMarkers(
+      markersArray.map((marker) => {
+        if (marker.id === markerToEditId) {
+          marker.userInputData = inputData;
+          return marker;
+        } else {
+          return marker;
+        }
+      })
+    );
+  };
+
+  const cancelAddOrEditMarker = (e) => {
     e.preventDefault();
     infoWindow.close();
     infoWindow.setContent();
@@ -382,6 +395,12 @@ const CreateOrEditMap = (props) => {
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(document.querySelectorAll(`.input-field`));
     setDefaultDate();
+    setPlace(null);
+    if (e.target.id === `cancel-marker-edit-btn`) {
+      console.log(`cancel edits to existing marker`);
+      setIsEditMarkerClicked(false);
+      setIdOfMarkerToEdit(null);
+    }
   };
 
   const handleSaveMap = (e) => {
@@ -563,7 +582,7 @@ const CreateOrEditMap = (props) => {
         isEditMarkerClicked={isEditMarkerClicked}
         addMarkerAndInfo={addMarkerAndInfo}
         submitEditsToMarker={submitEditsToMarker}
-        cancelAddMarker={cancelAddMarker}
+        cancelAddOrEditMarker={cancelAddOrEditMarker}
       ></ItineraryForm>
       <ViewItinerary
         prepareToEditMarkerData={prepareToEditMarkerData}
