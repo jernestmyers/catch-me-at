@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { Link, useLocation } from "react-router-dom";
 import { sortObjectByDate } from "../functions/sortObjectByDate";
 import sortBounds from "../functions/sortBoundsMethod";
+import isEqual from "lodash/isEqual";
 
 const containerStyle = {
   width: "300px",
@@ -67,7 +68,7 @@ Date.prototype.toDateInputValue = function () {
 const CreateOrEditMap = (props) => {
   // console.log(props);
   let mapToEditData = useLocation().state;
-  console.log(mapToEditData);
+  // console.log(mapToEditData);
 
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditMarkerClicked, setIsEditMarkerClicked] = useState(false);
@@ -355,8 +356,7 @@ const CreateOrEditMap = (props) => {
         setPlace(marker.place);
         document.querySelector("#date").value = marker.userInputData[0].value;
         document.querySelector("#time").value = marker.userInputData[1].value;
-        document.querySelector("#what").defaultValue =
-          marker.userInputData[2].value;
+        document.querySelector("#what").value = marker.userInputData[2].value;
       }
     });
   };
@@ -368,6 +368,14 @@ const CreateOrEditMap = (props) => {
     clearContainer(document.querySelector(`#where-data`));
     clearFormInputs(inputFields);
     if (mapToEditData && props.isMapToBeEdited) {
+      mapToEditData.markers.map((marker) => {
+        if (marker.id === idOfMarkerToEdit) {
+          marker.userInputData = formData;
+          return marker;
+        } else {
+          return marker;
+        }
+      });
       updateMarkersAfterEdit(mapToEditData.markers, idOfMarkerToEdit, formData);
     } else {
       updateMarkersAfterEdit(markers, idOfMarkerToEdit, formData);
@@ -444,7 +452,6 @@ const CreateOrEditMap = (props) => {
     if (markers.length && props.userAuth) {
       if (!props.userAuth.isAnonymous) {
         const mapStatusValues = getMapStatusValues();
-        const objectForComparison = Object.assign({}, mapToEditData);
 
         mapToEditData.mapTitle = getMapTitle(
           document.querySelector(`#map-title-input`)
@@ -465,6 +472,11 @@ const CreateOrEditMap = (props) => {
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
           if (!mapStatusValues.isPrivate) {
             // add map to publicMaps on FE and firestore
+            props.setPublicMaps(
+              props.publicMaps.concat([
+                [mapToEditData.mapID, { mapObject: mapToEditData }],
+              ])
+            );
           }
         } else if (!mapToEditData.isPrivate && mapStatusValues.isPrivate) {
           // map changed from public to private --> remove map from publicMaps
@@ -474,6 +486,13 @@ const CreateOrEditMap = (props) => {
           );
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
+          props.setPublicMaps(
+            props.publicMaps.filter((map) => {
+              if (map[0] !== mapToEditData.mapID) {
+                return map;
+              }
+            })
+          );
         } else if (mapToEditData.isPrivate && !mapStatusValues.isPrivate) {
           // map changed from private to public --> add map to publicMaps
           // on FE and firestore
@@ -482,49 +501,41 @@ const CreateOrEditMap = (props) => {
           );
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
-        } else if (
-          !mapStatusValues.isPrivate &&
-          !areObjectsEqual(objectForComparison, mapToEditData)
-        ) {
-          // map did NOT change privacy status AND is public AND was changed in some way
+          props.setPublicMaps(
+            props.publicMaps.concat([
+              [mapToEditData.mapID, { mapObject: mapToEditData }],
+            ])
+          );
+        } else if (!mapStatusValues.isPrivate) {
+          // map did NOT change privacy status AND is public
           console.log(`privacy did NOT change and is public`);
           // update publicMaps on FE and firestore
+          props.setPublicMaps((map) => {
+            if (map[0] === mapToEditData.mapID) {
+              return [mapToEditData.mapID, { mapObject: mapToEditData }];
+            } else {
+              return map;
+            }
+          });
         }
 
-        if (!areObjectsEqual(objectForComparison, mapToEditData)) {
-          // object has changed
-          console.log(`object changes and thus userData needs updating`);
-          // update userData on FE and firestore
-        }
+        // update userData on FE and firestore
+        console.log(`update userData with map edits`);
+        const updatedUserMapsOwned = props.userData.mapsOwned.map((map) => {
+          if (map.mapID === mapToEditData.mapID) {
+            return mapToEditData;
+          } else {
+            return map;
+          }
+        });
+        props.setUserData((prevState) =>
+          Object.assign(prevState, { mapsOwned: updatedUserMapsOwned })
+        );
 
-        console.log(areObjectsEqual(objectForComparison, mapToEditData));
         clearTitleAndStatus();
       }
     }
   };
-
-  function areObjectsEqual(object1, object2) {
-    const keys1 = Object.keys(object1);
-    const keys2 = Object.keys(object2);
-    if (keys1.length !== keys2.length) {
-      return false;
-    }
-    for (const key of keys1) {
-      const val1 = object1[key];
-      const val2 = object2[key];
-      const areObjects = isObject(val1) && isObject(val2);
-      if (
-        (areObjects && !areObjectsEqual(val1, val2)) ||
-        (!areObjects && val1 !== val2)
-      ) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function isObject(object) {
-    return object != null && typeof object === "object";
-  }
 
   const updatePublicMapsInFirestore = async (map) => {
     const docRef = doc(props.db, "publicMaps", map.mapID);
