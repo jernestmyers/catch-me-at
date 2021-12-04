@@ -1167,7 +1167,8 @@ textarea.input-field {
 }
 
 /* CONFIRM ADD MODAL */
-#confirm-add-modal {
+#confirm-add-modal,
+#confirm-edit-modal {
   display: none;
   position: absolute;
   top: 100px;
