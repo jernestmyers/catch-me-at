@@ -17,6 +17,7 @@ import {
   getMapStatusValues,
   getMapTitle,
   clearTitleAndStatus,
+  handleScrollHeight,
 } from "../functions/helperDOMMethods";
 import { updateDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { format } from "date-fns";
@@ -107,6 +108,7 @@ const CreateOrEditMap = (props) => {
     document.querySelector(`#private-checkbox`).checked = null;
     document.querySelector(`#publish-checkbox`).checked = null;
     setDefaultBounds(map);
+    handleScrollHeight(document.querySelector(`#root`));
   };
 
   // !!!!!!---- BEGIN: Google Maps API and react-google-maps logic ----!!!!!! //
@@ -263,6 +265,8 @@ const CreateOrEditMap = (props) => {
       clearContainer(whereContainer);
       const elements = createWhereElements(place);
       appendWhereElements(whereContainer, elements);
+      // handleScrollHeight(document.querySelector(`#create-map-container`));
+      handleScrollHeight(document.querySelector(`#add-marker-details`));
     }
   }, [place, newMarkerPosition, setNewMarkerPosition]);
   // !!!!!!---- END: Google Maps API and react-google-maps logic ----!!!!!! //
@@ -325,6 +329,7 @@ const CreateOrEditMap = (props) => {
       infoWindow.close();
       googleMarker.setVisible(false);
       setPlace(null);
+      handleScrollHeight(document.querySelector(`#create-map-container`));
     }
   };
 
@@ -337,6 +342,7 @@ const CreateOrEditMap = (props) => {
         return marker.id !== itemId ? marker : null;
       })
     );
+    handleScrollHeight(document.querySelector(`#create-map-container`));
   };
 
   const prepareToEditMarkerData = (e) => {
@@ -351,6 +357,7 @@ const CreateOrEditMap = (props) => {
       console.log(`edit during creation`);
       prepopulateMarkerToEdit(markers, itemId);
     }
+    handleScrollHeight(document.querySelector(`#add-marker-details`));
   };
 
   const prepopulateMarkerToEdit = (markersArray, markerToEditId) => {
@@ -386,6 +393,7 @@ const CreateOrEditMap = (props) => {
     setIsEditMarkerClicked(false);
     setIdOfMarkerToEdit(null);
     setPlace(null);
+    handleScrollHeight(document.querySelector(`#create-map-container`));
   };
 
   const updateMarkersAfterEdit = (markersArray, markerToEditId, inputData) => {
@@ -415,6 +423,7 @@ const CreateOrEditMap = (props) => {
       setIsEditMarkerClicked(false);
       setIdOfMarkerToEdit(null);
     }
+    handleScrollHeight(document.querySelector(`#create-map-container`));
   };
 
   const handleSaveMap = (e) => {
@@ -447,6 +456,7 @@ const CreateOrEditMap = (props) => {
         updatePublicMapsInFirestore(mapToUpdate);
         props.setMapsSaved([...props.mapsSaved, mapToUpdate]);
         clearTitleAndStatus();
+        handleScrollHeight(document.querySelector(`#root`));
       }
     }
   };
@@ -562,6 +572,7 @@ const CreateOrEditMap = (props) => {
         // clearTitleAndStatus();
         resetAndStartOver();
         document.querySelector(`#confirm-edit-modal`).style.display = `flex`;
+        handleScrollHeight(document.querySelector(`#root`));
       }
     }
   };
@@ -757,7 +768,6 @@ const CreateOrEditMap = (props) => {
               <p id="mapToEdit-published">Published!</p>
             </div>
             <input type="checkbox" id="publish-checkbox" className="checkbox" />
-            {/* <label htmlFor="publish-checkbox" className="switch"></label> */}
           </div>
         ) : (
           <div className="toggle-container">
@@ -772,16 +782,7 @@ const CreateOrEditMap = (props) => {
           <div className="switch-label">
             <p>Set as Private?</p>
           </div>
-          <input
-            className="checkbox"
-            type="checkbox"
-            id="private-checkbox"
-            // checked={
-            //   mapToEditData && props.isMapToBeEdited && mapToEditData.isPrivate
-            //     ? `checked`
-            //     : null
-            // }
-          />
+          <input className="checkbox" type="checkbox" id="private-checkbox" />
           <label htmlFor="private-checkbox" className="switch"></label>
         </div>
         {!mapToEditData || !props.isMapToBeEdited ? (
@@ -815,12 +816,12 @@ const CreateOrEditMap = (props) => {
           </div>
         )}
       </div>
-      <button
+      {/* <button
         onClick={() =>
           console.log({
-            // newMarker: newMarkerPosition,
-            // place: place,
-            // placeId: placeId,
+            newMarker: newMarkerPosition,
+            place: place,
+            placeId: placeId,
             marker: markers,
             mapToEditData: mapToEditData,
             objectForComparison: objectForComparison,
@@ -828,7 +829,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button>
+      </button> */}
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg

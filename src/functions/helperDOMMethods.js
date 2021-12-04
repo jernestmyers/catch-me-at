@@ -67,6 +67,10 @@ function clearTitleAndStatus() {
   document.querySelector(`#map-title-input`).value = ``;
 }
 
+const handleScrollHeight = (container) => {
+  window.scrollTo(0, container.offsetTop);
+};
+
 export {
   clearContainer,
   clearFormInputs,
@@ -76,4 +80,5 @@ export {
   getFormData,
   getMapStatusValues,
   getMapTitle,
+  handleScrollHeight,
 };

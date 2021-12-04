@@ -19,6 +19,7 @@ import {
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import ViewMapItinerary from "./components/ViewMapItinerary.js";
+import ScrollToTop from "./components/ScrollToTop.js";
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
@@ -172,6 +173,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop></ScrollToTop>
       <div className="App">
         <header className="App-header">
           <div id="title-container">
@@ -324,7 +326,7 @@ function App() {
           ></Route>
         </Routes>
         {/* <button onClick={() => console.log(mapsSaved)}>see mapsSaved</button> */}
-        <button
+        {/* <button
           onClick={() =>
             console.log({
               userData,
@@ -335,7 +337,7 @@ function App() {
           }
         >
           see data fetch
-        </button>
+        </button> */}
       </div>
     </Router>
   );
