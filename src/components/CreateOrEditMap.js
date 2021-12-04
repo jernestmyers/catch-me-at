@@ -105,6 +105,7 @@ const CreateOrEditMap = (props) => {
     document.querySelector("#time").value = "12:00";
     document.querySelector(`#map-title-input`).value = ``;
     document.querySelector(`#private-checkbox`).checked = null;
+    document.querySelector(`#publish-checkbox`).checked = null;
     setDefaultBounds(map);
   };
 
@@ -278,15 +279,15 @@ const CreateOrEditMap = (props) => {
       props.setUserData((prevState) => {
         return { ...prevState, mapsOwned: props.mapsSaved };
       });
-      updateMapsOwnedInFirestore();
+      updateMapsOwnedInFirestore(props.mapsSaved);
       document.querySelector(`#confirm-add-modal`).style.display = `flex`;
     }
   }, [props.mapsSaved, props.setMapsSaved]);
 
-  const updateMapsOwnedInFirestore = async () => {
+  const updateMapsOwnedInFirestore = async (mapsToUpdate) => {
     const userRef = doc(props.db, "users", props.userAuth.uid);
     await updateDoc(userRef, {
-      mapsOwned: JSON.parse(JSON.stringify(props.mapsSaved)),
+      mapsOwned: JSON.parse(JSON.stringify(mapsToUpdate)),
     });
   };
 
@@ -442,8 +443,8 @@ const CreateOrEditMap = (props) => {
               [mapToUpdate.mapID, { mapObject: mapToUpdate }],
             ])
           );
-          updatePublicMapsInFirestore(mapToUpdate);
         }
+        updatePublicMapsInFirestore(mapToUpdate);
         props.setMapsSaved([...props.mapsSaved, mapToUpdate]);
         clearTitleAndStatus();
       }
@@ -508,9 +509,15 @@ const CreateOrEditMap = (props) => {
               [mapToEditData.mapID, { mapObject: mapToEditData }],
             ])
           );
-        } else if (!mapStatusValues.isPrivate) {
-          // map did NOT change privacy status AND is public
-          console.log(`privacy did NOT change and is public`);
+        } else if (
+          !mapStatusValues.isPrivate &&
+          !isEqual(
+            objectForComparison,
+            JSON.parse(JSON.stringify(mapToEditData))
+          )
+        ) {
+          // map did NOT change privacy status AND is public AND edits were made
+          console.log(`edits made AND privacy did not change AND is public`);
           // update publicMaps on FE and firestore
           props.setPublicMaps((map) => {
             if (map[0] === mapToEditData.mapID) {
@@ -521,18 +528,30 @@ const CreateOrEditMap = (props) => {
           });
         }
 
-        // update userData on FE and firestore
-        console.log(`update userData with map edits`);
-        const updatedUserMapsOwned = props.userData.mapsOwned.map((map) => {
-          if (map.mapID === mapToEditData.mapID) {
-            return mapToEditData;
-          } else {
-            return map;
-          }
-        });
-        props.setUserData((prevState) =>
-          Object.assign(prevState, { mapsOwned: updatedUserMapsOwned })
-        );
+        if (
+          !isEqual(
+            objectForComparison,
+            JSON.parse(JSON.stringify(mapToEditData))
+          )
+        ) {
+          // update userData on FE and firestore
+          // invoke updatePublicMapsInFirestore to handle privacy changes outline in above logic
+          console.log(`edits made: update userData with map edits`);
+          const updatedUserMapsOwned = props.userData.mapsOwned.map((map) => {
+            if (map.mapID === mapToEditData.mapID) {
+              return mapToEditData;
+            } else {
+              return map;
+            }
+          });
+          props.setUserData((prevState) =>
+            Object.assign(prevState, { mapsOwned: updatedUserMapsOwned })
+          );
+          updateMapsOwnedInFirestore(updatedUserMapsOwned);
+          updatePublicMapsInFirestore(mapToEditData);
+        } else {
+          // notify of no changes?
+        }
 
         console.log(
           isEqual(
@@ -540,7 +559,9 @@ const CreateOrEditMap = (props) => {
             JSON.parse(JSON.stringify(mapToEditData))
           )
         );
-        clearTitleAndStatus();
+        // clearTitleAndStatus();
+        resetAndStartOver();
+        document.querySelector(`#confirm-edit-modal`).style.display = `flex`;
       }
     }
   };
@@ -851,6 +872,53 @@ const CreateOrEditMap = (props) => {
           onClick={() =>
             (document.querySelector(
               `#confirm-add-modal`
+            ).style.display = `none`)
+          }
+        >
+          Close
+        </button>
+      </div>
+      <div id="confirm-edit-modal">
+        <p id="confirm-text">Success!</p>
+        <svg
+          id="checkmark-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 64"
+          role="img"
+        >
+          <circle
+            data-name="layer2"
+            cx="32"
+            cy="32"
+            r="30"
+            transform="rotate(-45 32 32)"
+            fill="#bdd5ae"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></circle>
+          <path
+            data-name="layer1"
+            fill="none"
+            stroke="#6a994e"
+            strokeMiterlimit="10"
+            strokeWidth="5"
+            d="M20.998 32.015l8.992 8.992 16.011-16.011"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+        </svg>
+        {mapToEditData ? (
+          <Link to={`../view/${mapToEditData.mapID}`}>
+            View your updated map here!
+          </Link>
+        ) : null}
+        <button
+          onClick={() =>
+            (document.querySelector(
+              `#confirm-edit-modal`
             ).style.display = `none`)
           }
         >
