@@ -320,7 +320,13 @@ function App() {
                 db={db}
                 userAuth={userAuth}
                 userData={userData}
+                setUserData={setUserData}
+                publicMaps={publicMaps}
+                setPublicMaps={setPublicMaps}
+                mapsSavedByUser={mapsSavedByUser}
+                setMapsSavedByUser={setMapsSavedByUser}
                 mapsSharedWithUser={mapsSharedWithUser}
+                setMapsSharedWithUser={setMapsSharedWithUser}
               ></User>
             }
           ></Route>

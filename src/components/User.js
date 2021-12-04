@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 
 function User(props) {
-  //   console.log(props);
+  console.log(props);
   const userToProfile = useLocation().state;
   const mapsSharedWithMapIds = props.mapsSharedWithUser.map((map) => {
     return map[0];
@@ -249,8 +249,17 @@ function User(props) {
               return (
                 <div key={`profile-public-map-${index}`}>
                   <RenderMaps
+                    db={props.db}
                     mapObject={map}
+                    userData={props.userData}
+                    setUserData={props.setUserData}
                     userAuth={props.userAuth}
+                    publicMaps={props.publicMaps}
+                    setPublicMaps={props.setPublicMaps}
+                    mapsSavedByUser={props.mapsSavedByUser}
+                    setMapsSavedByUser={props.setMapsSavedByUser}
+                    // mapsSharedWithUser={props.mapsSharedWithUser}
+                    // setMapsSharedWithUser={props.setMapsSharedWithUser}
                   ></RenderMaps>
                 </div>
               );
@@ -270,8 +279,17 @@ function User(props) {
               return (
                 <div key={`profile-shared-map-${index}`}>
                   <RenderMaps
+                    db={props.db}
                     mapObject={map}
+                    userData={props.userData}
+                    setUserData={props.setUserData}
                     userAuth={props.userAuth}
+                    publicMaps={props.publicMaps}
+                    setPublicMaps={props.setPublicMaps}
+                    mapsSavedByUser={props.mapsSavedByUser}
+                    setMapsSavedByUser={props.setMapsSavedByUser}
+                    // mapsSharedWithUser={props.mapsSharedWithUser}
+                    // setMapsSharedWithUser={props.setMapsSharedWithUser}
                   ></RenderMaps>
                 </div>
               );
