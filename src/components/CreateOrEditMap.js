@@ -76,10 +76,12 @@ const CreateOrEditMap = (props) => {
   const [markers, setMarkers] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState({});
   const [markerClickedId, setMarkerClickedId] = useState();
+  const [objectForComparison, setObjectForComparison] = useState(null);
 
   useEffect(() => {
     if (props.isMapToBeEdited) {
       setMarkers(mapToEditData.markers);
+      setObjectForComparison(JSON.parse(JSON.stringify(mapToEditData)));
       if (mapToEditData.isPrivate) {
         document.querySelector("#private-checkbox").checked = `checked`;
       }
@@ -532,6 +534,12 @@ const CreateOrEditMap = (props) => {
           Object.assign(prevState, { mapsOwned: updatedUserMapsOwned })
         );
 
+        console.log(
+          isEqual(
+            objectForComparison,
+            JSON.parse(JSON.stringify(mapToEditData))
+          )
+        );
         clearTitleAndStatus();
       }
     }
@@ -790,10 +798,11 @@ const CreateOrEditMap = (props) => {
         onClick={() =>
           console.log({
             // newMarker: newMarkerPosition,
-            place: place,
-            placeId: placeId,
+            // place: place,
+            // placeId: placeId,
             marker: markers,
             mapToEditData: mapToEditData,
+            objectForComparison: objectForComparison,
           })
         }
       >
