@@ -216,15 +216,46 @@ header {
   justify-self: end;
 }
 
+#prompt-sign-in-container,
 #sign-in-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
+}
+
+#drop-down-sign-in-container {
+  display: none;
+}
+
+#drop-down-sign-in {
+  display: none;
+  background-color: #5e5c6c;
+  height: 5.5rem;
+  width: 140px;
+  color: #dfdee3;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 2rem;
+  right: 0.5rem;
+  z-index: 10;
+  border-radius: 0.25rem;
+}
+
+#drop-down-header {
+  cursor: pointer;
+}
+
+#drop-down-header:hover {
+  text-decoration: underline;
 }
 
 #user-greeting {
   font-size: 0.9rem;
   margin-right: 0.5rem;
+  text-align: center;
 }
 
 nav {
@@ -1225,4 +1256,53 @@ textarea.input-field {
 
 #not-connected-msg {
   /* color: #d00000; */
+}
+
+@media screen and (max-width: 600px) {
+  /* turn on log in drop-down menu */
+  #drop-down-sign-in-container {
+    display: flex;
+  }
+  #prompt-sign-in-container {
+    display: none;
+  }
+  #prompt-login {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 450px) {
+  body {
+    font: 16px sans-serif, Helvetica, Arial;
+  }
+  #app-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media screen and (min-width: 350px) and (max-width: 399px) {
+  body {
+    font: 14px sans-serif, Helvetica, Arial;
+  }
+  #app-title {
+    font-size: 1.5rem;
+    top: 0.35rem;
+  }
+}
+
+@media screen and (max-width: 349px) {
+  body {
+    font: 13px sans-serif, Helvetica, Arial;
+  }
+  #app-title {
+    font-size: 1.25rem;
+    top: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  #user-greeting {
+    display: none;
+  }
 }

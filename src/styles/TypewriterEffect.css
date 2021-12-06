@@ -27,6 +27,26 @@ span {
   }
 }
 
+@media screen and (min-width: 600px) and (max-width: 625px) {
+  #typewriter-container {
+    grid-template-columns: 0.6fr 1fr;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 599px) {
+  #typewriter-container {
+    grid-template-columns: 0.6fr 1fr;
+    font-size: 1.75rem;
+  }
+}
+
+@media screen and (min-width: 451px) and (max-width: 499px) {
+  #typewriter-container {
+    grid-template-columns: 0.6fr 1fr;
+    font-size: 1.6rem;
+  }
+}
+
 @media screen and (min-width: 400px) and (max-width: 450px) {
   #typewriter-container {
     grid-template-columns: 0.6fr 1fr;

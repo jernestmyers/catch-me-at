@@ -65,10 +65,36 @@ export default function AuthenticateUser(props) {
         </div>
       ) : (
         <div>
-          <div id="sign-in-container">
+          <div id="prompt-sign-in-container">
             <button onClick={logUserIn}>sign in with google</button>
             <span>&nbsp;or&nbsp;</span>
             <button onClick={logInAsGuest}>sign in as guest</button>
+          </div>
+          <div id="drop-down-sign-in-container">
+            <h4
+              id="drop-down-header"
+              onClick={() => {
+                if (
+                  document.querySelector(`#drop-down-sign-in`).style.display !==
+                  `flex`
+                ) {
+                  document.querySelector(
+                    `#drop-down-sign-in`
+                  ).style.display = `flex`;
+                } else {
+                  document.querySelector(
+                    `#drop-down-sign-in`
+                  ).style.display = ``;
+                }
+              }}
+            >
+              log in / sign up
+            </h4>
+            <div id="drop-down-sign-in">
+              <button onClick={logUserIn}>sign in with google</button>
+              <span>&nbsp;or&nbsp;</span>
+              <button onClick={logInAsGuest}>sign in as guest</button>
+            </div>
           </div>
         </div>
       )}
