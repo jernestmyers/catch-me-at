@@ -10,25 +10,31 @@ function User(props) {
     return map[0];
   });
 
-  const loggedUserActiveConnections = props.userData.connections.active.map(
-    (connect) => {
-      return connect.userId;
-    }
-  );
-  const loggedUserPendingReceivedConnections =
-    props.userData.connections.pendingReceived.map((connect) => {
-      return connect.userId;
-    });
-  const loggedUserPendingSentConnections =
-    props.userData.connections.pendingSent.map((connect) => {
-      return connect.userId;
-    });
-  const loggedUserPendingConnections = [
-    ...loggedUserPendingReceivedConnections,
-    ...loggedUserPendingSentConnections,
-  ];
-  console.log(loggedUserActiveConnections);
-  console.log(loggedUserPendingConnections);
+  let loggedUserActiveConnections;
+  let loggedUserPendingReceivedConnections;
+  let loggedUserPendingSentConnections;
+  let loggedUserPendingConnections;
+  if (props.userData) {
+    loggedUserActiveConnections = props.userData.connections.active.map(
+      (connect) => {
+        return connect.userId;
+      }
+    );
+    loggedUserPendingReceivedConnections =
+      props.userData.connections.pendingReceived.map((connect) => {
+        return connect.userId;
+      });
+    loggedUserPendingSentConnections =
+      props.userData.connections.pendingSent.map((connect) => {
+        return connect.userId;
+      });
+    loggedUserPendingConnections = [
+      ...loggedUserPendingReceivedConnections,
+      ...loggedUserPendingSentConnections,
+    ];
+    console.log(loggedUserActiveConnections);
+    console.log(loggedUserPendingConnections);
+  }
 
   const [mapDataToDisplay, setMapDataToDisplay] = useState([]);
 
@@ -43,7 +49,11 @@ function User(props) {
     const fetchedUserMaps = fetchUserData.data().mapsOwned;
 
     const publicMapsForDisplay = fetchedUserMaps.filter((map) => {
-      if (!map.isPrivate && !mapsSharedWithMapIds.includes(map.mapID)) {
+      if (
+        map.isPublished &&
+        !map.isPrivate &&
+        !mapsSharedWithMapIds.includes(map.mapID)
+      ) {
         return map;
       }
     });
@@ -60,7 +70,8 @@ function User(props) {
     <div id="view-maps-container">
       <div id="user-profile-header-container">
         <h2 id="user-profile-header">{userToProfile.userName}</h2>
-        {loggedUserActiveConnections.includes(userToProfile.userId) ? (
+        {props.userData &&
+        loggedUserActiveConnections.includes(userToProfile.userId) ? (
           <div className="user-profile-connection-status">
             <svg className="guest-icon" viewBox="0 0 64 64" role="img">
               <circle
@@ -222,7 +233,8 @@ function User(props) {
                 strokeLinecap="round"
               ></path>
             </svg>
-            {loggedUserPendingConnections.includes(userToProfile.userId) ? (
+            {props.userData &&
+            loggedUserPendingConnections.includes(userToProfile.userId) ? (
               <div className="profile-connect-msg" id="profile-not-connected">
                 <p>pending connection request</p>
                 <Link to="../connect">
@@ -258,8 +270,6 @@ function User(props) {
                     setPublicMaps={props.setPublicMaps}
                     mapsSavedByUser={props.mapsSavedByUser}
                     setMapsSavedByUser={props.setMapsSavedByUser}
-                    // mapsSharedWithUser={props.mapsSharedWithUser}
-                    // setMapsSharedWithUser={props.setMapsSharedWithUser}
                   ></RenderMaps>
                 </div>
               );
@@ -288,8 +298,6 @@ function User(props) {
                     setPublicMaps={props.setPublicMaps}
                     mapsSavedByUser={props.mapsSavedByUser}
                     setMapsSavedByUser={props.setMapsSavedByUser}
-                    // mapsSharedWithUser={props.mapsSharedWithUser}
-                    // setMapsSharedWithUser={props.setMapsSharedWithUser}
                   ></RenderMaps>
                 </div>
               );
