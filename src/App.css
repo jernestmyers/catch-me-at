@@ -745,8 +745,8 @@ a.view-map-link:visited {
 .switch {
   position: relative;
   display: inline-block;
-  width: 3rem;
-  height: 1.75rem;
+  width: 2rem;
+  height: 1.25rem;
   background-color: #ff9999;
   border-radius: 0.75rem;
   transition: all 0.3s;
@@ -755,8 +755,8 @@ a.view-map-link:visited {
 .switch::after {
   content: "";
   position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
   background-color: #d00000;
   top: 2px;
@@ -769,7 +769,7 @@ input:checked + label {
 }
 
 .checkbox:checked + .switch::after {
-  left: 1.35rem;
+  left: 0.9rem;
   background-color: #6a994e;
 }
 
@@ -781,6 +781,7 @@ input:checked + label {
   display: flex;
   align-items: center;
   padding-right: 0.25rem;
+  font-size: 1rem;
 }
 
 #mapToEdit-published {
@@ -912,11 +913,10 @@ textarea.input-field {
 }
 
 .form-section-header {
-  /* height: 1.5rem; */
   padding-top: 0.25rem;
   width: 100%;
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: #fcfcfc;
   background-color: #5e5c6c;
   font-weight: bold;
