@@ -30,7 +30,7 @@ this is my [capstone front end javascript project](https://www.theodinproject.co
 4. users can search for, and connect with, other users via a custom-built autocomplete search bar that scans the collection of user names.
 5. users can choose to set their map itineraries as private or public; further, users can select which, if any, of their private connections to share their map with.
 6. users can "like" maps, comment on maps, and save publicly-shared maps.
-7. imports the [date-fns](https://date-fns.org/) library to format dates and times and to dynamically sort the itinerary events in ascending chronological order.
+7. imports the [date-fns](https://date-fns.org/) library to format dates and times and to dynamically sort the itinerary events in chronological order.
 
 <!-- ## areas for improvement
 
