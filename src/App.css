@@ -143,7 +143,6 @@ html,
 body,
 #root,
 .App {
-  /* height: 100%; */
   width: 100%;
 }
 
@@ -220,7 +219,6 @@ header {
 #sign-in-container {
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
 }
 
 #drop-down-sign-in-container {
@@ -938,7 +936,7 @@ textarea.input-field {
 }
 
 #status-container {
-  width: calc(var(--map-width)+ 1rem);
+  width: calc(var(--map-width) + 1rem);
   grid-column: 1 / 3;
   display: grid;
   grid-template-columns: 1fr 1fr;
