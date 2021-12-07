@@ -1,10 +1,11 @@
 # catch me at
 
-this is my [capstone javascript project](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/javascript-final-project#assignment) from the odin project's full stack javascript curriculum. but why replicate an existing web app when i can create my own?
+this is my [capstone front end javascript project](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/javascript-final-project#assignment) from the odin project's full stack javascript curriculum. but why replicate an existing web app when i can create my own?
 
 ## ---- PREVIEW: IN DEVELOPMENT ----
 
 ![gif demonstrating the app's features](./catch-me-at-preview.gif)
+![gif demonstrating the app's features](./catch-me-at-preview2.gif)
 
 <!-- ## live version
 
