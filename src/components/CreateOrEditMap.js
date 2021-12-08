@@ -350,6 +350,12 @@ const CreateOrEditMap = (props) => {
         return marker.id !== itemId ? marker : null;
       })
     );
+    if (mapToEditData && props.isMapToBeEdited) {
+      const updatedMarkersArray = mapToEditData.markers.filter((marker) => {
+        return marker.id !== itemId ? marker : null;
+      });
+      mapToEditData.markers = updatedMarkersArray;
+    }
     handleScrollHeight(document.querySelector(`#create-map-container`));
   };
 
@@ -824,12 +830,12 @@ const CreateOrEditMap = (props) => {
           </div>
         )}
       </div>
-      <button
+      {/* <button
         onClick={() =>
           console.log({
-            // newMarker: newMarkerPosition,
-            // place: place,
-            // placeId: placeId,
+            newMarker: newMarkerPosition,
+            place: place,
+            placeId: placeId,
             marker: markers,
             mapToEditData: mapToEditData,
             objectForComparison: objectForComparison,
@@ -837,7 +843,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button>
+      </button> */}
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg
