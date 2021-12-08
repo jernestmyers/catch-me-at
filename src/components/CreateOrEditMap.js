@@ -67,9 +67,7 @@ Date.prototype.toDateInputValue = function () {
 };
 
 const CreateOrEditMap = (props) => {
-  // console.log(props);
   let mapToEditData = useLocation().state;
-  // console.log(mapToEditData);
 
   const [isMarkerClicked, setIsMarkerClicked] = useState(false);
   const [isEditMarkerClicked, setIsEditMarkerClicked] = useState(false);
@@ -265,7 +263,6 @@ const CreateOrEditMap = (props) => {
       clearContainer(whereContainer);
       const elements = createWhereElements(place);
       appendWhereElements(whereContainer, elements);
-      // handleScrollHeight(document.querySelector(`#create-map-container`));
       handleScrollHeight(document.querySelector(`#add-marker-details`));
     }
   }, [place, newMarkerPosition, setNewMarkerPosition]);
@@ -273,7 +270,6 @@ const CreateOrEditMap = (props) => {
 
   useEffect(() => {
     if (markers.length) {
-      console.log(`invoke updateFirestore`);
       setMarkers([]);
       setNewMarkerPosition({});
       setPlace(null);

@@ -3,8 +3,6 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
-  // console.log({ userData });
-
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
   const [userRequestedData, setUserRequestedData] = useState();
   const [updateTypeRequested, setUpdateTypeRequested] = useState();
@@ -26,8 +24,6 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     setUserRequestedData,
     isUpdateNeeded,
     setIsUpdateNeeded,
-    // updateTypeRequested,
-    // setUpdateTypeRequested,
   ]);
 
   const searchUsers = (e) => {
@@ -80,7 +76,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       }
     );
     if (pendingReceivedIds.includes(requestedId)) {
-      console.log(
+      alert(
         `You have a pending request from ${requestedName}! Accept their request?`
       );
     } else if (!connectionsIds.includes(requestedId)) {
@@ -97,9 +93,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       document.querySelector(`#search-connections`).value = ``;
       setIsUpdateNeeded(true);
     } else {
-      console.log(
-        `${requestedName} is already a pending or active connection!`
-      );
+      alert(`${requestedName} is already a pending or active connection!`);
     }
   };
 

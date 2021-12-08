@@ -7,7 +7,6 @@ import {
 } from "@react-google-maps/api";
 import Engagement from "./Engagement";
 import { Link, useLocation } from "react-router-dom";
-// import { format, compareAsc, compareDesc } from "date-fns";
 import { sortObjectByDate } from "../functions/sortObjectByDate";
 import sortBounds from "../functions/sortBoundsMethod";
 
@@ -23,7 +22,6 @@ const options = {
 const libraries = [`places`];
 
 const RenderMaps = (props) => {
-  // console.log(props);
   const currentPath = useLocation().pathname;
 
   const sortedMarkersByDate = sortObjectByDate(props.mapObject.markers);

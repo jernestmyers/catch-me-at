@@ -1,4 +1,4 @@
-import { format, compareAsc, compareDesc } from "date-fns";
+import { compareAsc } from "date-fns";
 
 function sortObjectByDate(markersArray) {
   const getDateObject = (dateObjectArray) => {

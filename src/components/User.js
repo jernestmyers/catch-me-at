@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 
 function User(props) {
-  console.log(props);
   const userToProfile = useLocation().state;
   const mapsSharedWithMapIds = props.mapsSharedWithUser.map((map) => {
     return map[0];
@@ -32,8 +31,6 @@ function User(props) {
       ...loggedUserPendingReceivedConnections,
       ...loggedUserPendingSentConnections,
     ];
-    console.log(loggedUserActiveConnections);
-    console.log(loggedUserPendingConnections);
   }
 
   const [mapDataToDisplay, setMapDataToDisplay] = useState([]);
