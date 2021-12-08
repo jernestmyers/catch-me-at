@@ -312,15 +312,27 @@ const CreateOrEditMap = (props) => {
       const formData = getFormData(inputFields);
       clearContainer(document.querySelector(`#where-data`));
       clearFormInputs(inputFields);
+      const newMarkerObject = {
+        id: uniqid(),
+        coordinates: newMarkerPosition,
+        place: place,
+        userInputData: formData,
+      };
       setMarkers([
         ...markers,
-        {
-          id: uniqid(),
-          coordinates: newMarkerPosition,
-          place: place,
-          userInputData: formData,
-        },
+        newMarkerObject,
+        // {
+        //   id: uniqid(),
+        //   coordinates: newMarkerPosition,
+        //   place: place,
+        //   userInputData: formData,
+        // },
       ]);
+      if (mapToEditData && props.isMapToBeEdited) {
+        const updatedMarkersArray =
+          mapToEditData.markers.concat(newMarkerObject);
+        mapToEditData.markers = updatedMarkersArray;
+      }
       setIsEditMarkerClicked(false);
       infoWindow.close();
       googleMarker.setVisible(false);
@@ -812,12 +824,12 @@ const CreateOrEditMap = (props) => {
           </div>
         )}
       </div>
-      {/* <button
+      <button
         onClick={() =>
           console.log({
-            newMarker: newMarkerPosition,
-            place: place,
-            placeId: placeId,
+            // newMarker: newMarkerPosition,
+            // place: place,
+            // placeId: placeId,
             marker: markers,
             mapToEditData: mapToEditData,
             objectForComparison: objectForComparison,
@@ -825,7 +837,7 @@ const CreateOrEditMap = (props) => {
         }
       >
         states checker
-      </button> */}
+      </button>
       <div id="confirm-add-modal">
         <p id="confirm-text">Success!</p>
         <svg
