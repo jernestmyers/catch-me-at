@@ -49,7 +49,7 @@ function Engagement({
 
   useEffect(() => {
     if (comment && targetMapId) {
-      console.log(`useEffect`);
+      // console.log(`comment useEffect`);
       const updatedCommentObject = {
         comments: [...mapObject.comments, comment],
       };
@@ -63,7 +63,7 @@ function Engagement({
 
   useEffect(() => {
     if (likeStatus && targetMapId) {
-      console.log(`like useEffect`);
+      // console.log(`like useEffect`);
       let updatedLikesByUser;
       if (userData.likesByUser.includes(targetMapId)) {
         updatedLikesByUser = userData.likesByUser.filter((item) => {
@@ -149,7 +149,7 @@ function Engagement({
       );
     }
     if (userAuth.uid === mapObject.owner.ownerId) {
-      console.log(`user owns map, update comments.`);
+      // console.log(`user owns map, update comments.`);
       const userRef = doc(db, "users", userAuth.uid);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -165,9 +165,9 @@ function Engagement({
     }
     if (userAuth.uid !== mapObject.owner.ownerId) {
       if (isMapSharedWith().includes(mapObject.mapID)) {
-        console.log(
-          `update mapsSharedWithUser comments state on the front end`
-        );
+        // console.log(
+        //   `update mapsSharedWithUser comments state on the front end`
+        // );
         setMapsSharedWithUser((prevState) =>
           prevState.map((map) => {
             if (id === map[0]) {
@@ -178,7 +178,7 @@ function Engagement({
           })
         );
       }
-      console.log(`update owner's map comments data on Firestore`);
+      // console.log(`update owner's map comments data on Firestore`);
       const userRef = doc(db, "users", mapObject.owner.ownerId);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -196,12 +196,12 @@ function Engagement({
   const handleLike = (e) => {
     if (userAuth.uid && !userAuth.isAnonymous) {
       const iconId = e.target.closest(`div`).dataset.mapid;
+      setTargetMapId(iconId);
       if (userData.likesByUser.includes(iconId)) {
         setLikeStatus(`unliked`);
       } else {
         setLikeStatus(`liked`);
       }
-      setTargetMapId(iconId);
     }
   };
 
@@ -224,7 +224,7 @@ function Engagement({
     }
 
     if (!mapObject.isPrivate) {
-      console.log(`update publicMap likes`);
+      // console.log(`update publicMap likes`);
       const docRef = doc(db, "publicMaps", id);
       await updateDoc(docRef, {
         mapObject: JSON.parse(JSON.stringify(mapObject)),
@@ -241,7 +241,7 @@ function Engagement({
     }
 
     if (userAuth.uid === mapObject.owner.ownerId) {
-      console.log(`user owns map, update likes.`);
+      // console.log(`user owns map, update likes.`);
       const userRef = doc(db, "users", userAuth.uid);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -257,8 +257,21 @@ function Engagement({
     }
 
     if (userAuth.uid !== mapObject.owner.ownerId) {
+      // update publicMapsSaved likes state on front end
+      if (isMapSaved().includes(mapObject.mapID)) {
+        setMapsSavedByUser((prevState) =>
+          prevState.map((map) => {
+            if (id === map[0]) {
+              return [map[0], { mapObject }];
+            } else {
+              return map;
+            }
+          })
+        );
+      }
+
       if (isMapSharedWith().includes(mapObject.mapID)) {
-        console.log(`update mapsSharedWithUser likes state on the front end`);
+        // console.log(`update mapsSharedWithUser likes state on the front end`);
         setMapsSharedWithUser((prevState) =>
           prevState.map((map) => {
             if (id === map[0]) {
@@ -269,7 +282,7 @@ function Engagement({
           })
         );
       }
-      console.log(`update owner's map likes data on Firestore`);
+      // console.log(`update owner's map likes data on Firestore`);
       const userRef = doc(db, "users", mapObject.owner.ownerId);
       const userObject = await getDoc(userRef);
       const maps = userObject.data().mapsOwned;
@@ -298,7 +311,6 @@ function Engagement({
       const userRef = doc(db, "users", userAuth.uid);
 
       if (isMapSaved().includes(mapObject.mapID)) {
-        console.log(`unsave`);
         const savedMapsUpdater = userData.publicMapsSaved.filter((data) => {
           if (data.mapID !== mapObject.mapID) {
             return data;
@@ -320,7 +332,6 @@ function Engagement({
           publicMapsSaved: savedMapsUpdater,
         });
       } else {
-        console.log(`save`);
         setMapsSavedByUser([
           ...mapsSavedByUser,
           [mapObject.mapID, { mapObject: mapObject }],
@@ -758,13 +769,20 @@ function Engagement({
           </div>
         </div>
       </div>
-      {/* <button
+      <button
         onClick={() =>
-          console.log({ userData, userAuth, mapObject, mapsSavedByUser })
+          console.log({
+            userData,
+            // userAuth,
+            mapObject,
+            publicMaps,
+            mapsSavedByUser,
+            mapsSharedWithUser,
+          })
         }
       >
         Check State
-      </button> */}
+      </button>
     </div>
   );
 }
