@@ -342,9 +342,7 @@ const CreateOrEditMap = (props) => {
   };
 
   const deleteMarkerAndData = (e) => {
-    console.log(`delete marker`);
     const itemId = e.target.closest(`button`).dataset.itemid;
-    console.log(itemId);
     setMarkers(
       markers.filter((marker) => {
         return marker.id !== itemId ? marker : null;
@@ -361,14 +359,13 @@ const CreateOrEditMap = (props) => {
 
   const prepareToEditMarkerData = (e) => {
     const itemId = e.target.closest(`button`).dataset.itemid;
-    console.log(itemId);
     setIsEditMarkerClicked(true);
     setIdOfMarkerToEdit(itemId);
     if (mapToEditData && props.isMapToBeEdited) {
-      console.log(`edit existing marker`);
+      // console.log(`edit existing marker`);
       prepopulateMarkerToEdit(mapToEditData.markers, itemId);
     } else {
-      console.log(`edit during creation`);
+      // console.log(`edit during creation`);
       prepopulateMarkerToEdit(markers, itemId);
     }
     handleScrollHeight(document.querySelector(`#add-marker-details`));
@@ -433,7 +430,7 @@ const CreateOrEditMap = (props) => {
     setDefaultDate();
     setPlace(null);
     if (e.target.id === `cancel-marker-edit-btn`) {
-      console.log(`cancel edits to existing marker`);
+      // console.log(`cancel edits to existing marker`);
       setIsEditMarkerClicked(false);
       setIdOfMarkerToEdit(null);
     }
@@ -487,12 +484,12 @@ const CreateOrEditMap = (props) => {
 
         if (!mapToEditData.isPublished && !mapStatusValues.isPublished) {
           // map remains unpublished
-          console.log(`map remains unpublished`);
+          // console.log(`map remains unpublished`);
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
         } else if (!mapToEditData.isPublished && mapStatusValues.isPublished) {
           // map changed from unpublished to published
-          console.log(`map changed from unpublished to published`);
+          // console.log(`map changed from unpublished to published`);
           // update datePublished, isPublished, and isPrivate state
           mapToEditData.datePublished = mapStatusValues.datePublished;
           mapToEditData.isPublished = mapStatusValues.isPublished;
@@ -508,9 +505,9 @@ const CreateOrEditMap = (props) => {
         } else if (!mapToEditData.isPrivate && mapStatusValues.isPrivate) {
           // map changed from public to private --> remove map from publicMaps
           // on FE and firestore
-          console.log(
-            `map changed from public to private, remove from publicMaps on FE and firestore`
-          );
+          // console.log(
+          //   `map changed from public to private, remove from publicMaps on FE and firestore`
+          // );
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
           props.setPublicMaps(
@@ -523,9 +520,9 @@ const CreateOrEditMap = (props) => {
         } else if (mapToEditData.isPrivate && !mapStatusValues.isPrivate) {
           // map changed from private to public --> add map to publicMaps
           // on FE and firestore
-          console.log(
-            `map changed from private to public, add to publicMaps on FE and firestore`
-          );
+          // console.log(
+          //   `map changed from private to public, add to publicMaps on FE and firestore`
+          // );
           // update isPrivate state
           mapToEditData.isPrivate = mapStatusValues.isPrivate;
           props.setPublicMaps(
@@ -541,15 +538,17 @@ const CreateOrEditMap = (props) => {
           )
         ) {
           // map did NOT change privacy status AND is public AND edits were made
-          console.log(`edits made AND privacy did not change AND is public`);
+          // console.log(`edits made AND privacy did not change AND is public`);
           // update publicMaps on FE and firestore
-          props.setPublicMaps((map) => {
-            if (map[0] === mapToEditData.mapID) {
-              return [mapToEditData.mapID, { mapObject: mapToEditData }];
-            } else {
-              return map;
-            }
-          });
+          props.setPublicMaps(
+            props.publicMaps.map((map) => {
+              if (map[0] === mapToEditData.mapID) {
+                return [mapToEditData.mapID, { mapObject: mapToEditData }];
+              } else {
+                return map;
+              }
+            })
+          );
         }
 
         if (
@@ -560,7 +559,7 @@ const CreateOrEditMap = (props) => {
         ) {
           // update userData on FE and firestore
           // invoke updatePublicMapsInFirestore to handle privacy changes outline in above logic
-          console.log(`edits made: update userData with map edits`);
+          // console.log(`edits made: update userData with map edits`);
           const updatedUserMapsOwned = props.userData.mapsOwned.map((map) => {
             if (map.mapID === mapToEditData.mapID) {
               return mapToEditData;
@@ -577,12 +576,12 @@ const CreateOrEditMap = (props) => {
           // notify of no changes?
         }
 
-        console.log(
-          isEqual(
-            objectForComparison,
-            JSON.parse(JSON.stringify(mapToEditData))
-          )
-        );
+        // console.log(
+        //   isEqual(
+        //     objectForComparison,
+        //     JSON.parse(JSON.stringify(mapToEditData))
+        //   )
+        // );
         // clearTitleAndStatus();
         resetAndStartOver();
         document.querySelector(`#confirm-edit-modal`).style.display = `flex`;
