@@ -1275,22 +1275,18 @@ footer {
 
 .footer-icon {
   fill: #5e5c6c;
-  padding: 0 1rem;
   width: 1rem;
   height: 1rem;
 }
 
 .footer-icon:hover {
-  fill: black;
+  fill: #6a994e;
 }
 
 .footer-svg-link {
   height: 1rem;
   text-decoration: none;
-}
-
-#footer-svg-link:visited {
-  color: white;
+  margin: 0 1rem;
 }
 /* END FOOTER CSS */
 
