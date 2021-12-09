@@ -59,7 +59,7 @@ function Engagement({
       setComment(null);
       setTargetMapId(null);
     }
-  }, [comment, setComment]);
+  }, [targetMapId, setTargetMapId, comment, setComment]);
 
   useEffect(() => {
     if (likeStatus && targetMapId) {
@@ -169,6 +169,18 @@ function Engagement({
         //   `update mapsSharedWithUser comments state on the front end`
         // );
         setMapsSharedWithUser((prevState) =>
+          prevState.map((map) => {
+            if (id === map[0]) {
+              return [map[0], { mapObject }];
+            } else {
+              return map;
+            }
+          })
+        );
+      }
+      if (isMapSaved().includes(mapObject.mapID)) {
+        // updated mapsSavedByUser comment state on the front end
+        setMapsSavedByUser((prevState) =>
           prevState.map((map) => {
             if (id === map[0]) {
               return [map[0], { mapObject }];
@@ -769,11 +781,11 @@ function Engagement({
           </div>
         </div>
       </div>
-      <button
+      {/* <button
         onClick={() =>
           console.log({
             userData,
-            // userAuth,
+            userAuth,
             mapObject,
             publicMaps,
             mapsSavedByUser,
@@ -782,7 +794,7 @@ function Engagement({
         }
       >
         Check State
-      </button>
+      </button> */}
     </div>
   );
 }
