@@ -292,7 +292,11 @@ const CreateOrEditMap = (props) => {
   };
 
   const onMarkerClick = (e) => {
-    setMarkerClickedId(e.domEvent.explicitOriginalTarget.title);
+    const idOfMarkerClicked =
+      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
+        .value;
+    setMarkerClickedId(idOfMarkerClicked);
+    // setMarkerClickedId(e.domEvent.explicitOriginalTarget.title);
     isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
   };
 

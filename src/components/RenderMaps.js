@@ -58,7 +58,15 @@ const RenderMaps = (props) => {
   }, []);
 
   const onMarkerClick = (e) => {
-    setMarkerClickedIdInRender(e.domEvent.explicitOriginalTarget.title);
+    console.log(
+      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
+        .value
+    );
+    const idOfMarkerClicked =
+      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
+        .value;
+    setMarkerClickedIdInRender(idOfMarkerClicked);
+    // setMarkerClickedIdInRender(e.domEvent.explicitOriginalTarget.title);
     isMarkerClickedInRender
       ? setIsMarkerClickedInRender(false)
       : setIsMarkerClickedInRender(true);
@@ -82,7 +90,6 @@ const RenderMaps = (props) => {
             {sortedMarkersByDate.map((object, index) => {
               return (
                 <Marker
-                  key={`marker${index}`}
                   onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
