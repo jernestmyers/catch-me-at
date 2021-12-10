@@ -2,15 +2,11 @@
 
 this is my [capstone front end javascript project](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/javascript-final-project#assignment) from the odin project's full stack javascript curriculum. but why replicate an existing web app when i can create my own?
 
-## ---- PREVIEW: IN DEVELOPMENT ----
-
 ![gif demonstrating the app's features](./catch-me-at-preview3.gif)
 
-<!-- ![gif demonstrating the app's features](./catch-me-at-preview2.gif) -->
+## live version
 
-<!-- ## live version
-
-[click here](https://jernestmyers.github.io/photo-tag-game/) for a live version! -->
+[click here](https://catch-me-at.web.app/) for a live version!
 
 ## technologies used
 
@@ -32,6 +28,10 @@ this is my [capstone front end javascript project](https://www.theodinproject.co
 6. users can "like" maps, comment on maps, and save publicly-shared maps.
 7. imports the [date-fns](https://date-fns.org/) library to format dates and times and to dynamically sort the itinerary events in chronological order.
 
-<!-- ## areas for improvement
+## areas for improvement
 
-1. improve responsiveness across browsers and devices. -->
+1. skew the Places Autocomplete API to the user's location, if shared, in order to optimize the map search experience.
+2. add "loading" indicators to ensure data fetches are complete before user continues interacting with the site.
+3. add error handling to alert user to issues.
+4. make use of localStorage to ensure data persists appropriately on reloads or other breaks.
+5. refactor the autocomplete feature for user connections such that a user can navigate via keyboard.
