@@ -229,6 +229,7 @@ function Home(props) {
       ) : (
         <div id="home-no-userAuth">
           <TypewriterEffect
+            publicMaps={props.publicMaps}
             userAuth={props.userAuth}
             setUserAuth={props.setuserAuth}
           ></TypewriterEffect>

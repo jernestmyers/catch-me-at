@@ -10,37 +10,39 @@ function TypewriterEffect(props) {
   ];
 
   useEffect(() => {
-    const typedTextContainer = document.querySelector("#typed-text");
-    document.querySelector("#typewriter-container").style.display = `grid`;
+    if (props.publicMaps.length) {
+      const typedTextContainer = document.querySelector("#typed-text");
+      document.querySelector("#typewriter-container").style.display = `grid`;
 
-    function typeWriter(text, i, fnCallback) {
-      if (i < text.length) {
-        typedTextContainer.innerHTML =
-          text.substring(0, i + 1) + '<span aria-hidden="true"></span>';
+      function typeWriter(text, i, fnCallback) {
+        if (i < text.length) {
+          typedTextContainer.innerHTML =
+            text.substring(0, i + 1) + '<span aria-hidden="true"></span>';
 
-        setTimeout(function () {
-          if (!props.userAuth) {
-            typeWriter(text, i + 1, fnCallback);
-          }
-        }, 100);
-      } else if (typeof fnCallback == "function") {
-        setTimeout(fnCallback, 700);
+          setTimeout(function () {
+            if (!props.userAuth) {
+              typeWriter(text, i + 1, fnCallback);
+            }
+          }, 100);
+        } else if (typeof fnCallback == "function") {
+          setTimeout(fnCallback, 700);
+        }
       }
+      function StartTextAnimation(i) {
+        if (typeof placeString[i] == "undefined") {
+          setTimeout(function () {
+            StartTextAnimation(0);
+          }, 3000);
+        }
+        if (placeString[i] && !props.userAuth) {
+          typeWriter(placeString[i], 0, function () {
+            StartTextAnimation(i + 1);
+          });
+        }
+      }
+      StartTextAnimation(0);
     }
-    function StartTextAnimation(i) {
-      if (typeof placeString[i] == "undefined") {
-        setTimeout(function () {
-          StartTextAnimation(0);
-        }, 10000);
-      }
-      if (placeString[i] && !props.userAuth) {
-        typeWriter(placeString[i], 0, function () {
-          StartTextAnimation(i + 1);
-        });
-      }
-    }
-    StartTextAnimation(0);
-  }, [props.userAuth, props.setUserAuth]);
+  }, [props.userAuth, props.setUserAuth, props.publicMaps]);
 
   return (
     <div id="typewriter-container">
