@@ -23,7 +23,7 @@ function Engagement({
   mapsSharedWithUser,
   setMapsSharedWithUser,
 }) {
-  const [comment, setComment] = useState({});
+  const [comment, setComment] = useState(null);
   const [targetMapId, setTargetMapId] = useState(null);
   const [likeStatus, setLikeStatus] = useState();
   const [likesCounter, setLikesCounter] = useState();
@@ -790,6 +790,9 @@ function Engagement({
             publicMaps,
             mapsSavedByUser,
             mapsSharedWithUser,
+            likeStatus,
+            comment,
+            targetMapId,
           })
         }
       >
