@@ -292,11 +292,16 @@ const CreateOrEditMap = (props) => {
   };
 
   const onMarkerClick = (e) => {
-    const idOfMarkerClicked =
-      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
-        .value;
+    const getMarkerClicked = markers.filter((marker) => {
+      if (
+        marker.coordinates.lat === e.latLng.lat() &&
+        marker.coordinates.lng === e.latLng.lng()
+      ) {
+        return marker;
+      }
+    });
+    const idOfMarkerClicked = getMarkerClicked[0].id;
     setMarkerClickedId(idOfMarkerClicked);
-    // setMarkerClickedId(e.domEvent.explicitOriginalTarget.title);
     isMarkerClicked ? setIsMarkerClicked(false) : setIsMarkerClicked(true);
   };
 
@@ -691,7 +696,6 @@ const CreateOrEditMap = (props) => {
                   onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
-                  title={object.id}
                 ></Marker>
               );
             })}

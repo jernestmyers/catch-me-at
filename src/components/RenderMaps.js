@@ -58,15 +58,16 @@ const RenderMaps = (props) => {
   }, []);
 
   const onMarkerClick = (e) => {
-    console.log(
-      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
-        .value
-    );
-    const idOfMarkerClicked =
-      e.domEvent.explicitOriginalTarget.offsetParent.attributes["aria-label"]
-        .value;
+    const getMarkerClicked = props.mapObject.markers.filter((marker) => {
+      if (
+        marker.coordinates.lat === e.latLng.lat() &&
+        marker.coordinates.lng === e.latLng.lng()
+      ) {
+        return marker;
+      }
+    });
+    const idOfMarkerClicked = getMarkerClicked[0].id;
     setMarkerClickedIdInRender(idOfMarkerClicked);
-    // setMarkerClickedIdInRender(e.domEvent.explicitOriginalTarget.title);
     isMarkerClickedInRender
       ? setIsMarkerClickedInRender(false)
       : setIsMarkerClickedInRender(true);
@@ -93,7 +94,6 @@ const RenderMaps = (props) => {
                   onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
-                  title={object.id}
                 ></Marker>
               );
             })}
