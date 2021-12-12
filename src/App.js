@@ -122,6 +122,7 @@ function App() {
         setUserData(fetchUserData.data());
       } else {
         setDoc(doc(db, "users", userAuth.uid), getNewUserObject());
+        setUserData(getNewUserObject());
       }
     } catch (error) {
       alert(
