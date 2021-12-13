@@ -6,7 +6,7 @@ this is my [capstone front end javascript project](https://www.theodinproject.co
 
 ## live version
 
-[click here](https://catch-me-at.web.app/) for a live version!
+[click here](https://catch-me-at.firebaseapp.com/) for a live version!
 
 ## technologies used
 
