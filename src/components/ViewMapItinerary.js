@@ -36,7 +36,11 @@ function ViewMapItinerary(props) {
       }
     });
   } else {
-    mapToDisplay = [...publicMapsArray];
+    mapToDisplay = publicMapsArray.filter((map) => {
+      if (mapID === map.mapID) {
+        return map;
+      }
+    });
   }
 
   const openDeleteMapModal = () => {
