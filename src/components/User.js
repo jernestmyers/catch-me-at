@@ -51,12 +51,12 @@ function User(props) {
         !map.isPrivate &&
         !mapsSharedWithMapIds.includes(map.mapID)
       ) {
-        return map;
+        return true;
       }
     });
     const sharedMapsForDisplay = fetchedUserMaps.filter((map) => {
       if (mapsSharedWithMapIds.includes(map.mapID)) {
-        return map;
+        return true;
       }
     });
     setMapDataToDisplay([publicMapsForDisplay, sharedMapsForDisplay]);
