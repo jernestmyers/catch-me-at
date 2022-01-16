@@ -30,17 +30,9 @@ function ViewMapItinerary(props) {
       ...mapsSharedArray,
     ];
     // Passing in mapToDisplay[0] prevents duplicate rendering
-    mapToDisplay = mapsCombinedArray.filter((map) => {
-      if (mapID === map.mapID) {
-        return map;
-      }
-    });
+    mapToDisplay = mapsCombinedArray.filter((map) => mapID === map.mapID);
   } else {
-    mapToDisplay = publicMapsArray.filter((map) => {
-      if (mapID === map.mapID) {
-        return map;
-      }
-    });
+    mapToDisplay = publicMapsArray.filter((map) => mapID === map.mapID);
   }
 
   const openDeleteMapModal = () => {
@@ -59,11 +51,9 @@ function ViewMapItinerary(props) {
 
   const handleDeleteMap = (e) => {
     closeDeleteModal();
-    const updatedMapsOwned = props.userData.mapsOwned.filter((map) => {
-      if (map.mapID !== mapToDisplay[0].mapID) {
-        return map;
-      }
-    });
+    const updatedMapsOwned = props.userData.mapsOwned.filter(
+      (map) => map.mapID !== mapToDisplay[0].mapID
+    );
     updateFirestore(mapToDisplay[0], updatedMapsOwned);
     props.setUserData((prevState) => {
       return { ...prevState, mapsOwned: updatedMapsOwned };
@@ -81,11 +71,7 @@ function ViewMapItinerary(props) {
       const docRef = doc(props.db, "publicMaps", mapToDelete.mapID);
       await deleteDoc(docRef);
       props.setPublicMaps(
-        props.publicMaps.filter((map) => {
-          if (map[0] !== mapToDelete.mapID) {
-            return map;
-          }
-        })
+        props.publicMaps.filter((map) => map[0] !== mapToDelete.mapID)
       );
     }
   };
