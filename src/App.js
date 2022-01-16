@@ -101,11 +101,11 @@ function App() {
       const fetchUserIds = await getDocs(collection(db, "users"));
       setUsersCollection(fetchUserIds);
       const fetchedUserIds = storeFetchAsArray("users", fetchUserIds);
-      fetchedUserIds.filter((id) => {
+      for (const id of fetchedUserIds) {
         if (id === userAuth.uid) {
           doesUserExist = true;
         }
-      });
+      }
       return doesUserExist;
     } catch (error) {
       alert(
