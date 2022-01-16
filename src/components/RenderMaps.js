@@ -63,7 +63,7 @@ const RenderMaps = (props) => {
         marker.coordinates.lat === e.latLng.lat() &&
         marker.coordinates.lng === e.latLng.lng()
       ) {
-        return marker;
+        return true;
       }
     });
     const idOfMarkerClicked = getMarkerClicked[0].id;
