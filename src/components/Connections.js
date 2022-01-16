@@ -120,7 +120,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       const updatedRequestsReceivedData =
         userData.connections.pendingReceived.filter((connection) => {
           if (connection.userId !== id) {
-            return connection;
+            return true;
           }
         });
       Object.assign(userData.connections, {
@@ -131,7 +131,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       const updatedRequestsSentData = userData.connections.pendingSent.filter(
         (connection) => {
           if (connection.userId !== id) {
-            return connection;
+            return true;
           }
         }
       );
@@ -165,7 +165,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       const updatedRequestsSentData =
         connectionData.connections.pendingSent.filter((connection) => {
           if (connection.userId !== userAuth.uid) {
-            return connection;
+            return true;
           }
         });
       if (updateTypeRequested === `accept`) {
@@ -186,7 +186,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       const updatedRequestsReceivedData =
         connectionData.connections.pendingReceived.filter((connection) => {
           if (connection.userId !== userAuth.uid) {
-            return connection;
+            return true;
           }
         });
       Object.assign(connectionData.connections, {
