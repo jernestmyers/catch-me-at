@@ -5,7 +5,7 @@ import Home from "./components/Home.js";
 import ViewMaps from "./components/ViewMaps.js";
 import User from "./components/User.js";
 import CreateOrEditMap from "./components/CreateOrEditMap.js";
-import Connections from "./components/Connections.js";
+import Connections from "./components/Connections/Connections.js";
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config.js";
 import {
