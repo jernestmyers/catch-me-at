@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import SearchResults from "./SearchResults";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
   const [userRequestedData, setUserRequestedData] = useState();
   const [updateTypeRequested, setUpdateTypeRequested] = useState();
+  const [userSearchRequest, setUserSearchRequest] = useState("");
 
   let connectionsObject;
   if (userAuth && !userAuth.isAnonymous) {
@@ -27,25 +29,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   ]);
 
   const searchUsers = (e) => {
-    document.querySelector(`#send-request-btn`).style.display = `none`;
-    const nameContainer = document.querySelector(`#matched-users-container`);
-    nameContainer.style.display = `block`;
-    nameContainer.innerHTML = ``;
-    const string = e.target.value;
-    users.forEach((user) => {
-      if (
-        string.length &&
-        user[0] !== userAuth.uid &&
-        user[1][0].toLowerCase() === string[0].toLowerCase() &&
-        user[1].toLowerCase().includes(string.toLowerCase())
-      ) {
-        const li = document.createElement(`li`);
-        li.classList.add(`matched-users`);
-        li.textContent = user[1];
-        li.dataset.userId = user[0];
-        nameContainer.appendChild(li);
-      }
-    });
+    setUserSearchRequest(e.target.value);
   };
 
   const selectUser = (e) => {
@@ -229,7 +213,22 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
               onChange={searchUsers}
             />
             <div id="psuedo-relative">
-              <ul id="matched-users-container" onClick={selectUser}></ul>
+              <ul id="matched-users-container" onClick={selectUser}>
+                {users
+                  .filter(
+                    (user) =>
+                      userSearchRequest.length &&
+                      user[0] !== userAuth.uid &&
+                      user[1][0].toLowerCase() ===
+                        userSearchRequest[0].toLowerCase() &&
+                      user[1]
+                        .toLowerCase()
+                        .includes(userSearchRequest.toLowerCase())
+                  )
+                  .map((user) => (
+                    <SearchResults filteredUser={user}></SearchResults>
+                  ))}
+              </ul>
             </div>
             <button id="send-request-btn" onClick={handleConnectionRequest}>
               Send Request
