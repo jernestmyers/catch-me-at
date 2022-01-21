@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import SearchResults from "./SearchResults";
+import ConnectionsSearchBar from "./ConnectionsSearchBar";
+import ActiveConnections from "./ActiveConnections";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
@@ -200,15 +202,10 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       {userAuth && !userAuth.isAnonymous ? (
         <div id="connections-user-container">
           <div className="connect-div" id="search-connections-container">
-            <p>Connect with other adventurers!</p>
-            <label htmlFor="search-connections"></label>
-            <input
-              type="text"
-              id="search-connections"
-              placeholder="search for connections..."
-              onChange={searchUsers}
-              value={userSearchRequest}
-            />
+            <ConnectionsSearchBar
+              searchUsers={searchUsers}
+              userSearchRequest={userSearchRequest}
+            ></ConnectionsSearchBar>
             <div id="psuedo-relative">
               {clickedUserId ? null : (
                 <ul id="matched-users-container" onClick={selectUser}>
@@ -240,72 +237,15 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                       key={user[0]}
                       id="send-request-btn"
                       onClick={() => handleConnectionRequest(user[0], user[1])}
-                      // dataset-userid={user[0]}
-                      // dataset-username={user[1]}
                     >
                       Send Request
                     </button>
                   ))
               : null}
           </div>
-          <div className="connect-div" id="active-connects-container">
-            {connectionsObject.active.length ? (
-              <h2 id="active-connects-header">
-                {connectionsObject.active.length}
-                {connectionsObject.active.length === 1
-                  ? ` Connection`
-                  : ` Connections`}
-              </h2>
-            ) : null}
-
-            {connectionsObject.active.length
-              ? connectionsObject.active.map((connect) => {
-                  return (
-                    <div key={`active-${connect.userId}`}>
-                      <Link
-                        className="connect-link"
-                        state={{
-                          userId: connect.userId,
-                          userName: connect.userName,
-                        }}
-                        to={`../user/${connect.userId}`}
-                      >
-                        {connect.userName}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 64 64"
-                          role="img"
-                          className="inline-icons"
-                        >
-                          <path
-                            className="link-icon"
-                            data-name="layer2"
-                            fill="none"
-                            stroke="#202020"
-                            strokeMiterlimit="10"
-                            strokeWidth="2"
-                            d="M30 62h32V2H2v32"
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                          ></path>
-                          <path
-                            className="link-icon"
-                            data-name="layer1"
-                            fill="none"
-                            stroke="#202020"
-                            strokeMiterlimit="10"
-                            strokeWidth="2"
-                            d="M26 56V38H8m18 0L2 62"
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                          ></path>
-                        </svg>
-                      </Link>
-                    </div>
-                  );
-                })
-              : null}
-          </div>
+          <ActiveConnections
+            connectionsObject={connectionsObject}
+          ></ActiveConnections>
           <div className="connect-div" id="manage-connects-container">
             <h2 id="manage-header">Manage Invitations</h2>
             <div className="toggle-header">
