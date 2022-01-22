@@ -12,6 +12,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
   const [updateTypeRequested, setUpdateTypeRequested] = useState();
   const [userSearchRequest, setUserSearchRequest] = useState("");
   const [clickedUserId, setClickedUserId] = useState(null);
+  const [showReceivedRequests, setShowReceivedRequests] = useState(true);
 
   let connectionsObject;
   if (userAuth && !userAuth.isAnonymous) {
@@ -73,6 +74,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
       setUserData((prevState) => Object.assign(prevState, userData));
       setUserSearchRequest("");
       setClickedUserId(null);
+      setShowReceivedRequests(false);
       setIsUpdateNeeded(true);
     } else {
       alert(`${requestedName} is already a pending or active connection!`);
@@ -169,24 +171,6 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     await updateDoc(connectionRef, { connections: connectionData.connections });
   };
 
-  const toggleManageInvitations = (e) => {
-    document.querySelectorAll(`.manage-connects-toggle`).forEach((toggle) => {
-      toggle.classList.remove(`toggle-selected`);
-    });
-    e.target.classList.add(`toggle-selected`);
-
-    document
-      .querySelectorAll(`.pending-connects-container`)
-      .forEach((container) => {
-        container.style.display = `none`;
-      });
-    if (e.target.textContent === `Received`) {
-      document.querySelector(`#received-connections`).style.display = `flex`;
-    } else if (e.target.textContent === `Sent`) {
-      document.querySelector(`#sent-connections`).style.display = `flex`;
-    }
-  };
-
   return (
     <div id="connections-container">
       {userAuth && !userAuth.isAnonymous ? (
@@ -239,8 +223,9 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
           ></ActiveConnections>
           <ManageRequests
             connectionsObject={connectionsObject}
-            toggleManageInvitations={toggleManageInvitations}
             handleConnectionClickEvent={handleConnectionClickEvent}
+            showReceivedRequests={showReceivedRequests}
+            setShowReceivedRequests={setShowReceivedRequests}
           ></ManageRequests>
         </div>
       ) : (
