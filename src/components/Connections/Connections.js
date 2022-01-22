@@ -44,7 +44,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     setUserSearchRequest(requestedName);
   };
 
-  const handleConnectionRequest = (requestedId, requestedName) => {
+  const handleNewConnectionRequest = (requestedId, requestedName) => {
     setUpdateTypeRequested(`send`);
     setUserRequestedData({ id: requestedId, name: requestedName });
     const connectionsCombined = userData.connections.active.concat(
@@ -82,7 +82,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
   };
 
-  const handleConnectionClickEvent = (
+  const handlePendingConnectionRequest = (
     idOfSender,
     nameOfSender,
     connectionType
@@ -212,7 +212,9 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                     <button
                       key={user[0]}
                       id="send-request-btn"
-                      onClick={() => handleConnectionRequest(user[0], user[1])}
+                      onClick={() =>
+                        handleNewConnectionRequest(user[0], user[1])
+                      }
                     >
                       Send Request
                     </button>
@@ -224,7 +226,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
           ></ActiveConnections>
           <ManageRequests
             connectionsObject={connectionsObject}
-            handleConnectionClickEvent={handleConnectionClickEvent}
+            handlePendingConnectionRequest={handlePendingConnectionRequest}
             showReceivedRequests={showReceivedRequests}
             setShowReceivedRequests={setShowReceivedRequests}
           ></ManageRequests>

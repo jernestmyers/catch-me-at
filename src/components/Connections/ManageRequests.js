@@ -1,6 +1,6 @@
 export default function ManageRequests({
   connectionsObject,
-  handleConnectionClickEvent,
+  handlePendingConnectionRequest,
   showReceivedRequests,
   setShowReceivedRequests,
 }) {
@@ -45,7 +45,7 @@ export default function ManageRequests({
                 <p>{connect.userName}</p>
                 <button
                   onClick={() =>
-                    handleConnectionClickEvent(
+                    handlePendingConnectionRequest(
                       connect.userId,
                       connect.userName,
                       "accept"
@@ -56,7 +56,7 @@ export default function ManageRequests({
                 </button>
                 <button
                   onClick={() =>
-                    handleConnectionClickEvent(
+                    handlePendingConnectionRequest(
                       connect.userId,
                       connect.userName,
                       "deny"
@@ -83,7 +83,7 @@ export default function ManageRequests({
                 <p>{connect.userName}</p>
                 <button
                   onClick={() =>
-                    handleConnectionClickEvent(
+                    handlePendingConnectionRequest(
                       connect.userId,
                       connect.userName,
                       "withdraw"
