@@ -101,22 +101,16 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
     if (type === `deny` || type === `accept`) {
       const updatedRequestsReceivedData =
-        userData.connections.pendingReceived.filter((connection) => {
-          if (connection.userId !== id) {
-            return true;
-          }
-        });
+        userData.connections.pendingReceived.filter(
+          (connection) => connection.userId !== id
+        );
       Object.assign(userData.connections, {
         pendingReceived: updatedRequestsReceivedData,
       });
     }
     if (type === `withdraw`) {
       const updatedRequestsSentData = userData.connections.pendingSent.filter(
-        (connection) => {
-          if (connection.userId !== id) {
-            return true;
-          }
-        }
+        (connection) => connection.userId !== id
       );
       Object.assign(userData.connections, {
         pendingSent: updatedRequestsSentData,
@@ -146,11 +140,9 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
     if (updateTypeRequested === `accept` || updateTypeRequested === `deny`) {
       const updatedRequestsSentData =
-        connectionData.connections.pendingSent.filter((connection) => {
-          if (connection.userId !== userAuth.uid) {
-            return true;
-          }
-        });
+        connectionData.connections.pendingSent.filter(
+          (connection) => connection.userId !== userAuth.uid
+        );
       if (updateTypeRequested === `accept`) {
         const updatedActiveConnectionsData =
           connectionData.connections.active.concat({
@@ -167,11 +159,9 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
     if (updateTypeRequested === `withdraw`) {
       const updatedRequestsReceivedData =
-        connectionData.connections.pendingReceived.filter((connection) => {
-          if (connection.userId !== userAuth.uid) {
-            return true;
-          }
-        });
+        connectionData.connections.pendingReceived.filter(
+          (connection) => connection.userId !== userAuth.uid
+        );
       Object.assign(connectionData.connections, {
         pendingReceived: updatedRequestsReceivedData,
       });
