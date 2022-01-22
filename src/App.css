@@ -413,10 +413,6 @@ a.view-map-link:visited {
   grid-area: title;
 }
 
-#sent-connections {
-  display: none;
-}
-
 #search-connections-container {
   height: 105px;
 }
