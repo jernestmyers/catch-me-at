@@ -37,9 +37,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     setUserSearchRequest(e.target.value);
   };
 
-  const selectUser = (e) => {
-    const requestedId = e.target.dataset.userid;
-    const requestedName = e.target.textContent;
+  const selectUser = (requestedId, requestedName) => {
     setClickedUserId(requestedId);
     setUserSearchRequest(requestedName);
   };
@@ -209,7 +207,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
             ></ConnectionsSearchBar>
             <div id="psuedo-relative">
               {clickedUserId ? null : (
-                <ul id="matched-users-container" onClick={selectUser}>
+                <ul id="matched-users-container">
                   {users
                     .filter(
                       (user) =>
@@ -225,6 +223,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                       <SearchResults
                         key={user[0]}
                         filteredUser={user}
+                        selectUser={selectUser}
                       ></SearchResults>
                     ))}
                 </ul>
