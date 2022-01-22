@@ -37,7 +37,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     setUserSearchRequest(e.target.value);
   };
 
-  const selectUser = (requestedId, requestedName) => {
+  const selectedUser = (requestedId, requestedName) => {
     setClickedUserId(requestedId);
     setUserSearchRequest(requestedName);
   };
@@ -223,7 +223,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                       <SearchResults
                         key={user[0]}
                         filteredUser={user}
-                        selectUser={selectUser}
+                        selectUser={selectedUser}
                       ></SearchResults>
                     ))}
                 </ul>

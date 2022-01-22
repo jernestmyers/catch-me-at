@@ -1,7 +1,7 @@
-export default function SearchResults({ filteredUser, selectUser }) {
+export default function SearchResults({ filteredUser, selectedUser }) {
   return (
     <li
-      onClick={() => selectUser(filteredUser[0], filteredUser[1])}
+      onClick={() => selectedUser(filteredUser[0], filteredUser[1])}
       className="matched-users"
     >
       {filteredUser[1]}
