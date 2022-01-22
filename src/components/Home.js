@@ -206,9 +206,9 @@ function Home(props) {
       {props.userAuth ? (
         <div className="map-feed">
           <h2 className="view-maps-header">ACTIVITY FEED</h2>
-          {props.publicMaps.map((mapArray, index) => {
+          {props.publicMaps.map((mapArray) => {
             return (
-              <div key={`home-map-${index}`}>
+              <div key={`home-map-${mapArray[1].mapObject.mapID}`}>
                 <RenderMaps
                   db={props.db}
                   userAuth={props.userAuth}

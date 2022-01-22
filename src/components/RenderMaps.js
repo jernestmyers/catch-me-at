@@ -91,6 +91,7 @@ const RenderMaps = (props) => {
             {sortedMarkersByDate.map((object, index) => {
               return (
                 <Marker
+                  key={`marker-${object.id}`}
                   onClick={onMarkerClick}
                   label={`${index + 1}`}
                   position={object.coordinates}
@@ -102,7 +103,7 @@ const RenderMaps = (props) => {
                   if (object.id === markerClickedIdInRender) {
                     return (
                       <InfoWindow
-                        key={`info-window-${index}`}
+                        key={`info-window-${object.id}`}
                         position={{
                           lat: object.coordinates.lat,
                           lng: object.coordinates.lng,
