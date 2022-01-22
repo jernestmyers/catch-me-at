@@ -30,13 +30,15 @@ export default function ManageRequests({
         ({connectionsObject.pendingSent.length})
       </div>
       {showReceivedRequests ? (
-        <div className="pending-connects-container" id="received-connections">
+        <ul className="pending-connects-container" id="received-connections">
           {!connectionsObject.pendingReceived.length ? (
-            <p className="none-pending">empty</p>
+            <li>
+              <p className="none-pending">empty</p>
+            </li>
           ) : null}
           {connectionsObject.pendingReceived.map((connect) => {
             return (
-              <div
+              <li
                 className="manage-connects"
                 key={`received-${connect.userId}`}
               >
@@ -63,19 +65,21 @@ export default function ManageRequests({
                 >
                   Deny
                 </button>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       ) : (
-        <div className="pending-connects-container" id="sent-connections">
+        <ul className="pending-connects-container" id="sent-connections">
           {!connectionsObject.pendingSent.length ? (
-            <p className="none-pending">empty</p>
+            <li>
+              <p className="none-pending">empty</p>
+            </li>
           ) : null}
 
           {connectionsObject.pendingSent.map((connect) => {
             return (
-              <div key={`sent-${connect.userId}`} className="manage-connects">
+              <li key={`sent-${connect.userId}`} className="manage-connects">
                 <p>{connect.userName}</p>
                 <button
                   onClick={() =>
@@ -88,10 +92,10 @@ export default function ManageRequests({
                 >
                   Withdraw
                 </button>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );
