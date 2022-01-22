@@ -30,22 +30,27 @@ export default function ManageRequests({
         ) : null}
         {connectionsObject.pendingReceived.map((connect) => {
           return (
-            <div
-              className="manage-connects"
-              data-userid={connect.userId}
-              data-username={connect.userName}
-              key={`received-${connect.userId}`}
-            >
+            <div className="manage-connects" key={`received-${connect.userId}`}>
               <p>{connect.userName}</p>
               <button
-                data-connectiontype={`accept`}
-                onClick={handleConnectionClickEvent}
+                onClick={() =>
+                  handleConnectionClickEvent(
+                    connect.userId,
+                    connect.userName,
+                    "accept"
+                  )
+                }
               >
                 Accept
               </button>
               <button
-                data-connectiontype={`deny`}
-                onClick={handleConnectionClickEvent}
+                onClick={() =>
+                  handleConnectionClickEvent(
+                    connect.userId,
+                    connect.userName,
+                    "deny"
+                  )
+                }
               >
                 Deny
               </button>
@@ -60,16 +65,16 @@ export default function ManageRequests({
 
         {connectionsObject.pendingSent.map((connect) => {
           return (
-            <div
-              key={`sent-${connect.userId}`}
-              className="manage-connects"
-              data-userid={connect.userId}
-              data-username={connect.userName}
-            >
+            <div key={`sent-${connect.userId}`} className="manage-connects">
               <p>{connect.userName}</p>
               <button
-                data-connectiontype={`withdraw`}
-                onClick={handleConnectionClickEvent}
+                onClick={() =>
+                  handleConnectionClickEvent(
+                    connect.userId,
+                    connect.userName,
+                    "withdraw"
+                  )
+                }
               >
                 Withdraw
               </button>

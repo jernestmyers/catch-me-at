@@ -79,10 +79,11 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     }
   };
 
-  const handleConnectionClickEvent = (e) => {
-    const idOfSender = e.target.closest(`div`).dataset.userid;
-    const nameOfSender = e.target.closest(`div`).dataset.username;
-    const connectionType = e.target.dataset.connectiontype;
+  const handleConnectionClickEvent = (
+    idOfSender,
+    nameOfSender,
+    connectionType
+  ) => {
     setUserRequestedData({ id: idOfSender, name: nameOfSender });
     setUpdateTypeRequested(connectionType);
     updateUserConnectionData(connectionType, idOfSender, nameOfSender);
@@ -223,7 +224,7 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
                       <SearchResults
                         key={user[0]}
                         filteredUser={user}
-                        selectUser={selectedUser}
+                        selectedUser={selectedUser}
                       ></SearchResults>
                     ))}
                 </ul>
