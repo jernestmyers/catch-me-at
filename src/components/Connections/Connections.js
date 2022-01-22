@@ -5,6 +5,7 @@ import ConnectionsSearchBar from "./ConnectionsSearchBar";
 import ActiveConnections from "./ActiveConnections";
 import ManageRequests from "./ManageRequests";
 import ConnectionsGuestView from "./ConnectionsGuestView";
+import "./Connections.css";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
