@@ -11,7 +11,7 @@ export default function ManageRequests({
         <h3
           onClick={() => setShowReceivedRequests(true)}
           className={`manage-connects-toggle ${
-            showReceivedRequests ? "toggle-selected" : null
+            showReceivedRequests ? " toggle-selected" : ""
           }`}
         >
           Received
@@ -22,7 +22,7 @@ export default function ManageRequests({
         <h3
           onClick={() => setShowReceivedRequests(false)}
           className={`manage-connects-toggle ${
-            !showReceivedRequests ? "toggle-selected" : null
+            !showReceivedRequests ? " toggle-selected" : ""
           }`}
         >
           Sent
