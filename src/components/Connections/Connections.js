@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
-import SearchResults from "./SearchResults";
-import ConnectionsSearchBar from "./ConnectionsSearchBar";
 import ActiveConnections from "./ActiveConnections";
 import ManageRequests from "./ManageRequests";
 import ConnectionsGuestView from "./ConnectionsGuestView";
 import "./Connections.css";
+import ConnectionsSearchContainer from "./ConnectionsSearchContainer";
 
 function Connections({ db, userData, userAuth, users, setUserData }) {
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
@@ -176,51 +175,15 @@ function Connections({ db, userData, userAuth, users, setUserData }) {
     <div id="connections-container">
       {userAuth && !userAuth.isAnonymous ? (
         <div id="connections-user-container">
-          <div className="connect-div" id="search-connections-container">
-            <ConnectionsSearchBar
-              searchUsers={searchUsers}
-              userSearchRequest={userSearchRequest}
-            ></ConnectionsSearchBar>
-            <div id="psuedo-relative">
-              {clickedUserId ? null : (
-                <ul id="matched-users-container">
-                  {users
-                    .filter(
-                      (user) =>
-                        userSearchRequest.length &&
-                        user[0] !== userAuth.uid &&
-                        user[1][0].toLowerCase() ===
-                          userSearchRequest[0].toLowerCase() &&
-                        user[1]
-                          .toLowerCase()
-                          .includes(userSearchRequest.toLowerCase())
-                    )
-                    .map((user) => (
-                      <SearchResults
-                        key={user[0]}
-                        filteredUser={user}
-                        selectedUser={selectedUser}
-                      ></SearchResults>
-                    ))}
-                </ul>
-              )}
-            </div>
-            {clickedUserId
-              ? users
-                  .filter((user) => user[0] === clickedUserId)
-                  .map((user) => (
-                    <button
-                      key={user[0]}
-                      id="send-request-btn"
-                      onClick={() =>
-                        handleNewConnectionRequest(user[0], user[1])
-                      }
-                    >
-                      Send Request
-                    </button>
-                  ))
-              : null}
-          </div>
+          <ConnectionsSearchContainer
+            searchUsers={searchUsers}
+            userSearchRequest={userSearchRequest}
+            clickedUserId={clickedUserId}
+            users={users}
+            userAuth={userAuth}
+            selectedUser={selectedUser}
+            handleNewConnectionRequest={handleNewConnectionRequest}
+          ></ConnectionsSearchContainer>
           <ActiveConnections
             connectionsObject={connectionsObject}
           ></ActiveConnections>
